@@ -109,11 +109,13 @@ namespace BatchPrintYay
                 }
                 else
                 {
-                    rlt = new FilteredElementCollector(mainDoc)
+                    List<RevitLinkType> linkTypes = new FilteredElementCollector(mainDoc)
                         .OfClass(typeof(RevitLinkType))
                         .Cast<RevitLinkType>()
                         .Where(i => SheetSupport.GetDocTitleWithoutRvt(i.Name) == docTitle)
-                        .First();
+                        .ToList();
+                    if (linkTypes.Count == 0) throw new Exception("Cant find opened link file " + docTitle);
+                    rlt = linkTypes.First();
 
                     //проверю, не открыт ли уже документ, который пытаемся печатать
                     foreach (Document testOpenedDoc in commandData.Application.Application.Documents)
@@ -128,13 +130,15 @@ namespace BatchPrintYay
                     //иначе придется открывать документ через ссылку
                     if (openedDoc == null)
                     {
-                        Document linkDoc = new FilteredElementCollector(mainDoc)
+                        List<Document> linkDocs = new FilteredElementCollector(mainDoc)
                             .OfClass(typeof(RevitLinkInstance))
                             .Cast<RevitLinkInstance>()
                             .Select(i => i.GetLinkDocument())
                             .Where(i => i != null)
                             .Where(i => SheetSupport.GetDocTitleWithoutRvt(i.Title) == docTitle)
-                            .First();
+                            .ToList();
+                        if(linkDocs.Count == 0) throw new Exception("Cant find link file " + docTitle);
+                        Document linkDoc = linkDocs.First();
 
                         if (linkDoc.IsWorkshared)
                         {

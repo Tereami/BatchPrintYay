@@ -68,6 +68,7 @@ namespace BatchPrintYay
             {
                 printers.Add(printer);
             }
+            if (printers.Count == 0) throw new Exception("Cant find any installed printers");
             comboBoxPrinters.DataSource = printers;
 
             if (printers.Contains(_printSettings.printerName))
@@ -77,6 +78,7 @@ namespace BatchPrintYay
             else
             {
                 string selectedPrinterName = PrinterUtility.GetDefaultPrinter();
+                if (!printers.Contains(selectedPrinterName)) throw new Exception("Cant find printer " + selectedPrinterName);
                 comboBoxPrinters.SelectedItem = printers.Where(i => i.Equals(selectedPrinterName)).First();
             }
 
@@ -106,8 +108,12 @@ namespace BatchPrintYay
                 Autodesk.Revit.DB.RasterQualityType.Presentation
             };
             comboBoxRasterQuality.DataSource = rasterQualityTypes;
-            comboBoxRasterQuality.SelectedItem = rasterQualityTypes
-                .Where(i => Enum.GetName(typeof(Autodesk.Revit.DB.RasterQualityType), i).Equals(_printSettings.rasterQuality)).First();
+            try
+            {
+                comboBoxRasterQuality.SelectedItem = rasterQualityTypes
+                    .Where(i => Enum.GetName(typeof(Autodesk.Revit.DB.RasterQualityType), i).Equals(_printSettings.rasterQuality)).First();
+            }
+            catch { }
 
             List<string> colorTypes = new List<string>()
             {
@@ -133,7 +139,10 @@ namespace BatchPrintYay
                 {
                     if (!sheetNode.Checked) continue;
                     string sheetTitle = sheetNode.Text;
-                    MySheet msheet = sheetsBaseToPrint[docNodeTitle].Where(s => sheetTitle == s.ToString()).First();
+
+                    var tempSheets = sheetsBaseToPrint[docNodeTitle].Where(s => sheetTitle == s.ToString()).ToList();
+                    if (tempSheets.Count == 0) throw new Exception("Cant get sheets from TreeNode");
+                    MySheet msheet = tempSheets.First();
                     selectedSheetsInDoc.Add(msheet);
                 }
                 if (selectedSheetsInDoc.Count == 0) continue;
