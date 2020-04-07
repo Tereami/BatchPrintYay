@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BatchPrintYay", "BatchPrintYay\BatchPrintYay.csproj", "{A666B372-13FA-442A-8A18-FCE286C19CCF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		R2017|Any CPU = R2017|Any CPU
+		R2018|Any CPU = R2018|Any CPU
+		R2019|Any CPU = R2019|Any CPU
+		R2020|Any CPU = R2020|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A666B372-13FA-442A-8A18-FCE286C19CCF}.R2017|Any CPU.ActiveCfg = Debug|Any CPU
+		{A666B372-13FA-442A-8A18-FCE286C19CCF}.R2017|Any CPU.Build.0 = Debug|Any CPU
+		{A666B372-13FA-442A-8A18-FCE286C19CCF}.R2018|Any CPU.ActiveCfg = R2018|Any CPU
+		{A666B372-13FA-442A-8A18-FCE286C19CCF}.R2018|Any CPU.Build.0 = R2018|Any CPU
+		{A666B372-13FA-442A-8A18-FCE286C19CCF}.R2019|Any CPU.ActiveCfg = R2019|Any CPU
+		{A666B372-13FA-442A-8A18-FCE286C19CCF}.R2019|Any CPU.Build.0 = R2019|Any CPU
+		{A666B372-13FA-442A-8A18-FCE286C19CCF}.R2020|Any CPU.ActiveCfg = R2020|Any CPU
+		{A666B372-13FA-442A-8A18-FCE286C19CCF}.R2020|Any CPU.Build.0 = R2020|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D1BF727F-133F-4BC4-B5E7-9E4C212CB8C4}
+	EndGlobalSection
+EndGlobal
