@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormCreateCustomFormat));
             this.labelMsg = new System.Windows.Forms.Label();
             this.buttonOk = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
@@ -79,16 +78,18 @@
             this.label4.Size = new System.Drawing.Size(354, 40);
             this.label4.TabIndex = 4;
             this.label4.Text = "Программа может попытаться самостоятельно добавить формат в принтер. Для этого на" +
-    "жмите ОК. ";
+    "жмите ОК. Потребуются права администратора.";
             // 
             // label5
             // 
-            this.label5.Location = new System.Drawing.Point(8, 120);
+            this.label5.Location = new System.Drawing.Point(8, 131);
             this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(370, 82);
+            this.label5.Size = new System.Drawing.Size(370, 67);
             this.label5.TabIndex = 4;
-            this.label5.Text = resources.GetString("label5.Text");
+            this.label5.Text = "Если после нажатия ОК отобразилось соообщение об ошибке - значит, создание формат" +
+    "а не удалось. Обратитесь к системному администратору для запуска печати под учет" +
+    "ной записью администратора.";
             // 
             // label1
             // 
