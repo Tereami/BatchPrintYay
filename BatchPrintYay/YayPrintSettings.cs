@@ -1,4 +1,17 @@
-﻿using System;
+﻿#region License
+/*Данный код опубликован под лицензией Creative Commons Attribution-ShareAlike.
+Разрешено использовать, распространять, изменять и брать данный код за основу для производных в коммерческих и
+некоммерческих целях, при условии указания авторства и если производные лицензируются на тех же условиях.
+Код поставляется "как есть". Автор не несет ответственности за возможные последствия использования.
+Зуев Александр, 2020, все права защищены.
+This code is listed under the Creative Commons Attribution-ShareAlike license.
+You may use, redistribute, remix, tweak, and build upon this work non-commercially and commercially,
+as long as you credit the author by linking back and license your new creations under the same terms.
+This code is provided 'as is'. Author disclaims any implied warranty.
+Zuev Aleksandr, 2020, all rigths reserved.*/
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +19,8 @@ using System.Threading.Tasks;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.DB.ExtensibleStorage;
+using System.IO;
+using System.Xml.Serialization;
 
 namespace BatchPrintYay
 {
@@ -17,14 +32,9 @@ namespace BatchPrintYay
         public string printerName;
         public string outputFolder;
         public string nameConstructor;
-        //public HiddenLineViewsType hiddenLineProcessing;
-        public string hiddenLineProcessing;
-
-        //public ColorDepthType colorsType;
-        public string colorsType;
-
-        //public RasterQualityType rasterQuality;
-        public string rasterQuality;
+        public HiddenLineViewsType hiddenLineProcessing;
+        public ColorType colorsType;
+        public RasterQualityType rasterQuality;
 
         public bool mergePdfs;
         public bool printToPaper;
@@ -32,51 +42,45 @@ namespace BatchPrintYay
         public bool useOrientation;
         public bool refreshSchedules;
 
-        public string excludeColors;
+        public List<PdfColor> excludeColors;
 
         /// <summary>
-        /// Получение параметров печати из ExtensibleStorage документа
+        /// Получение параметров печати
         /// </summary>
         /// <param name="doc">Документ Revit</param>
         /// <param name="ses">Информация о параметрах печати, полученная из ExtensibleStorage</param>
-        public static YayPrintSettings GetPrintSettingsByDocument(Document doc, SupportExtensibleStorage ses)
+        public static YayPrintSettings GetPrintSettings(Document doc)
         {
-            
-
-            string xmlsettings = ses.readParamFromStorage("xmlsettings");
-            System.Xml.Serialization.XmlSerializer serializer =
-                new System.Xml.Serialization.XmlSerializer(typeof(YayPrintSettings));
+            string programdataPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+            string rbspath = Path.Combine(programdataPath, "RibbonBimStarter");
+            if (!Directory.Exists(rbspath)) Directory.CreateDirectory(rbspath);
+            string localFolder = Path.Combine(rbspath, "BatchPrintYay");
+            if (!Directory.Exists(localFolder)) Directory.CreateDirectory(localFolder);
+            string xmlpath = Path.Combine(localFolder, "settings.xml");
 
             YayPrintSettings ps;
-            using (System.IO.StringReader reader = new System.IO.StringReader(xmlsettings))
+            XmlSerializer serializer = new XmlSerializer(typeof(YayPrintSettings));
+
+            if (File.Exists(xmlpath))
             {
-                ps = (YayPrintSettings)serializer.Deserialize(reader);
+                using (StreamReader reader = new StreamReader(xmlpath))
+                {
+                    ps = (YayPrintSettings)serializer.Deserialize(reader);
+                    if (ps == null)
+                    {
+                        throw new Exception("Не удалось сериализовать: " + xmlpath);
+                    }
+                }
+            }
+            else
+            {
+                ps = YayPrintSettings.GetDefault(doc);
             }
 
             PrintManager pManager = doc.PrintManager;
             ps.printerName = pManager.PrinterName;
 
             return ps;
-
-            //printerName = ses.readParamFromStorage(PrintSettingFields.PrinterName);
-
-            //outputFolder = ses.readParamFromStorage(PrintSettingFields.OutputFolder);
-            //nameConstructor = ses.readParamFromStorage(PrintSettingFields.NameConstructor);
-
-            //string stringRasterQuality = ses.readParamFromStorage(PrintSettingFields.RasterQuality);
-            //int intRasterQuality = int.Parse(stringRasterQuality);
-            //rasterQuality = (RasterQualityType)intRasterQuality;
-
-
-            //string joinPdfs = ses.readParamFromStorage(PrintSettingFields.JoinPdf);
-            //mergePdfs = bool.Parse(joinPdfs);
-            //printToPaper = bool.Parse(ses.readParamFromStorage(PrintSettingFields.PrintToPaper));
-
-
-            //hiddenLineProcessing = (HiddenLineViewsType)int.Parse(ses.readParamFromStorage(PrintSettingFields.HiddenLineViewsType));
-            //colorsType = (ColorDepthType)int.Parse(ses.readParamFromStorage(PrintSettingFields.ColorsType));
-
-            //colorStamp = bool.Parse(ses.readParamFromStorage(PrintSettingFields.ColorStamp));
         }
 
         /// <summary>
@@ -91,12 +95,12 @@ namespace BatchPrintYay
         public YayPrintSettings(string PrinterName,
             string OutputFolder,
             string NameConstructor,
-            string HiddenLineProcessing,
-            string ColorsType,
-            string RasterQuality,
+            HiddenLineViewsType HiddenLineProcessing,
+            ColorType ColorsType,
+            RasterQualityType RasterQuality,
             bool MergePdfs,
             bool PrintToPaper,
-            string ExcludeColors)
+            List<PdfColor> ExcludeColors)
         {
             printerName = PrinterName;
             outputFolder = OutputFolder;
@@ -119,6 +123,31 @@ namespace BatchPrintYay
         }
 
 
+
+        private static YayPrintSettings GetDefault(Document doc)
+        {
+            YayPrintSettings ps = new YayPrintSettings
+            {
+                colorsType = ColorType.GrayScale,
+                excludeColors = new List<PdfColor>
+                {
+                    new PdfColor(System.Drawing.Color.FromArgb(0,0,255)),
+                    new PdfColor(System.Drawing.Color.FromArgb(192,192,192)),
+                    new PdfColor(System.Drawing.Color.FromArgb(242,242,242))
+                },
+                hiddenLineProcessing = HiddenLineViewsType.RasterProcessing,
+                mergePdfs = false,
+                nameConstructor = "<Номер листа>_<Имя листа>.pdf",
+                outputFolder = @"C:\PDF_Print",
+                printerName = doc.PrintManager.PrinterName,
+                printToPaper = false,
+                rasterQuality = RasterQualityType.High,
+                refreshSchedules = true,
+                useOrientation = false
+            };
+
+            return ps;
+        }
 
     }
 }

@@ -1,4 +1,17 @@
-﻿using System;
+﻿#region License
+/*Данный код опубликован под лицензией Creative Commons Attribution-ShareAlike.
+Разрешено использовать, распространять, изменять и брать данный код за основу для производных в коммерческих и
+некоммерческих целях, при условии указания авторства и если производные лицензируются на тех же условиях.
+Код поставляется "как есть". Автор не несет ответственности за возможные последствия использования.
+Зуев Александр, 2020, все права защищены.
+This code is listed under the Creative Commons Attribution-ShareAlike license.
+You may use, redistribute, remix, tweak, and build upon this work non-commercially and commercially,
+as long as you credit the author by linking back and license your new creations under the same terms.
+This code is provided 'as is'. Author disclaims any implied warranty.
+Zuev Aleksandr, 2020, all rigths reserved.*/
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -88,8 +101,7 @@ namespace BatchPrintYay
             radioButtonPaper.Checked = !radioButtonPDF.Checked;
 
 
-            if (_printSettings.hiddenLineProcessing ==
-                Enum.GetName(typeof(Autodesk.Revit.DB.HiddenLineViewsType), Autodesk.Revit.DB.HiddenLineViewsType.VectorProcessing))
+            if (_printSettings.hiddenLineProcessing == Autodesk.Revit.DB.HiddenLineViewsType.VectorProcessing)                
             {
                 radioButtonVector.Checked = true;
                 radioButtonRastr.Checked = false;
@@ -100,14 +112,11 @@ namespace BatchPrintYay
                 radioButtonRastr.Checked = true;
             }
 
-            List<Autodesk.Revit.DB.RasterQualityType> rasterQualityTypes = new List<Autodesk.Revit.DB.RasterQualityType>()
-            {
-                Autodesk.Revit.DB.RasterQualityType.Low,
-                Autodesk.Revit.DB.RasterQualityType.Medium,
-                Autodesk.Revit.DB.RasterQualityType.High,
-                Autodesk.Revit.DB.RasterQualityType.Presentation
-            };
-            comboBoxRasterQuality.DataSource = rasterQualityTypes;
+            List<Autodesk.Revit.DB.RasterQualityType> rasterTypes =
+                Enum.GetValues(typeof(Autodesk.Revit.DB.RasterQualityType))
+                .Cast<Autodesk.Revit.DB.RasterQualityType>()
+                .ToList();
+            comboBoxRasterQuality.DataSource = rasterTypes;
             try
             {
                 comboBoxRasterQuality.SelectedItem = rasterQualityTypes
@@ -323,6 +332,7 @@ namespace BatchPrintYay
         private void buttonExcludesColor_Click(object sender, EventArgs e)
         {
             List<Color> colors = ColorsUtils.StringToColors(_printSettings.excludeColors);
+            
             FormExcludeColors form = new FormExcludeColors(colors);
             if (form.ShowDialog() != DialogResult.OK) return;
 

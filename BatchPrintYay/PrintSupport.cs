@@ -1,4 +1,17 @@
-﻿using System;
+﻿#region License
+/*Данный код опубликован под лицензией Creative Commons Attribution-ShareAlike.
+Разрешено использовать, распространять, изменять и брать данный код за основу для производных в коммерческих и
+некоммерческих целях, при условии указания авторства и если производные лицензируются на тех же условиях.
+Код поставляется "как есть". Автор не несет ответственности за возможные последствия использования.
+Зуев Александр, 2020, все права защищены.
+This code is listed under the Creative Commons Attribution-ShareAlike license.
+You may use, redistribute, remix, tweak, and build upon this work non-commercially and commercially,
+as long as you credit the author by linking back and license your new creations under the same terms.
+This code is provided 'as is'. Author disclaims any implied warranty.
+Zuev Aleksandr, 2020, all rigths reserved.*/
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -43,7 +56,7 @@ namespace BatchPrintYay
         /// <param name="titleBlocks"></param>
         /// <param name="mSheets"></param>
         /// <returns></returns>
-        public static string PrintFormatsCheckIn(Document doc, string printerName, List<FamilyInstance> titleBlocks, List<FamilyInstance> titleblocksAsAnnotation, ref List<MySheet> mSheets)
+        public static string PrintFormatsCheckIn(Document doc, string printerName, List<FamilyInstance> titleBlocks, ref List<MySheet> mSheets)
         {
             PrintManager pManager = doc.PrintManager;
             foreach (MySheet msheet in mSheets)
@@ -54,42 +67,28 @@ namespace BatchPrintYay
                 List<FamilyInstance> tempTitleBlocks = titleBlocks
                     .Where(i => i.get_Parameter(BuiltInParameter.SHEET_NUMBER).AsString() == msheet.sheet.SheetNumber)
                     .ToList();
+
                 if (tempTitleBlocks.Count == 0)
                 {
-                    foreach(FamilyInstance annotTitleblock in titleblocksAsAnnotation)
-                    {
-                        ViewSheet vs = doc.GetElement(annotTitleblock.OwnerViewId) as ViewSheet;
-                        if (vs == null) continue;
-                        if (vs.SheetNumber == msheet.sheet.SheetNumber)
-                        {
-                            tempTitleBlocks = new List<FamilyInstance> { annotTitleblock };
-
-                            BoundingBoxXYZ box = annotTitleblock.get_BoundingBox(vs);
-                            widthMm = (box.Max.X - box.Min.X) * 304.8;
-                            heigthMm = (box.Max.Y - box.Min.Y) * 304.8;
-
-                            break;
-                        }
-                    }
-                    msheet.titleBlocks = tempTitleBlocks;
+                    return "Нет основной надписи на листе " + msheet.sheet.Name;
                 }
-                else
+
+
+                msheet.titleBlocks = tempTitleBlocks;
+                FamilyInstance titleBlock = tempTitleBlocks.First();
+
+                widthMm = titleBlock.get_Parameter(BuiltInParameter.SHEET_WIDTH).AsDouble() * 304.8;
+
+                heigthMm = titleBlock.get_Parameter(BuiltInParameter.SHEET_HEIGHT).AsDouble() * 304.8;
+
+
+                //проверяю корректность семейства основной надписи
+                string sizeCheckMessage = SheetSupport.CheckTitleblocSizeCorrects(msheet.sheet, titleBlock);
+                if (sizeCheckMessage != "")
                 {
-                    msheet.titleBlocks = tempTitleBlocks;
-                    FamilyInstance titleBlock = tempTitleBlocks.First();
-
-                    widthMm = titleBlock.get_Parameter(BuiltInParameter.SHEET_WIDTH).AsDouble() * 304.8;
-
-                    heigthMm = titleBlock.get_Parameter(BuiltInParameter.SHEET_HEIGHT).AsDouble() * 304.8;
-
-
-                    //проверяю корректность семейства основной надписи
-                    string sizeCheckMessage = SheetSupport.CheckTitleblocSizeCorrects(msheet.sheet, titleBlock);
-                    if (sizeCheckMessage != "")
-                    {
-                        return sizeCheckMessage;
-                    }
+                    return sizeCheckMessage;
                 }
+
 
                 widthMm = Math.Round(widthMm);
                 msheet.widthMm = widthMm;
@@ -156,17 +155,11 @@ namespace BatchPrintYay
                     msheet.revitPaperSize = revitPaperSize;
                 }
             }
-           
+
             return string.Empty;
         }
 
 
-        public static bool PrintSheetsInDocument(Document doc, List<MySheet> sheets)
-        {
-
-
-            return true;
-        }
 
 
 
@@ -250,9 +243,9 @@ namespace BatchPrintYay
                     + mSheet.sheet.SheetNumber + " : " + mSheet.sheet.Name + ". Назначен формат по умолчанию.";
                 Autodesk.Revit.UI.TaskDialog.Show("Error", msg);
 
-                foreach(PaperSize curPsize in pManager.PaperSizes)
+                foreach (PaperSize curPsize in pManager.PaperSizes)
                 {
-                    if(curPsize.Name.Equals("A4"))
+                    if (curPsize.Name.Equals("A4"))
                     {
                         ps.PrintParameters.PaperSize = curPsize;
                         mSheet.IsVertical = true;

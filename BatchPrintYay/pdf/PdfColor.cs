@@ -16,32 +16,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace BatchPrintYay
 {
-    public class MyDimension
-    {
-        private int _mms;
+    public enum ColorType { Monochrome, GrayScale, Color, MonochromeWithExcludes}
 
-        public int Millimeters
+    public class PdfColor
+    {
+        private Color _color;
+        private bool IsValid;
+        public int ColorCode;
+
+
+        public PdfColor()
         {
-            get { return _mms; }
-            set
-            {
-                _mms = value;
-                _feets = value / 304.8;
-            }
+            IsValid = false;
         }
 
-        private double _feets;
-        public double Feets
+        public PdfColor(Color color)
         {
-            get { return _feets; }
-            set
+            _color = color;
+            ColorCode = color.ToArgb();
+            IsValid = true;
+        }
+
+        public Color GetColor()
+        {
+            if (!IsValid)
             {
-                _feets = value;
-                _mms = (int)Math.Round((value * 304.8), 0);
+                Color newColor = Color.FromArgb(ColorCode);
+                _color = newColor;
             }
+            IsValid = true;
+            return _color;
         }
     }
 }

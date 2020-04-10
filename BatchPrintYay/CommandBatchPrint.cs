@@ -1,4 +1,17 @@
-﻿using System;
+﻿#region License
+/*Данный код опубликован под лицензией Creative Commons Attribution-ShareAlike.
+Разрешено использовать, распространять, изменять и брать данный код за основу для производных в коммерческих и
+некоммерческих целях, при условии указания авторства и если производные лицензируются на тех же условиях.
+Код поставляется "как есть". Автор не несет ответственности за возможные последствия использования.
+Зуев Александр, 2020, все права защищены.
+This code is listed under the Creative Commons Attribution-ShareAlike license.
+You may use, redistribute, remix, tweak, and build upon this work non-commercially and commercially,
+as long as you credit the author by linking back and license your new creations under the same terms.
+This code is provided 'as is'. Author disclaims any implied warranty.
+Zuev Aleksandr, 2020, all rigths reserved.*/
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -50,12 +63,21 @@ namespace BatchPrintYay
             //запись статистики по файлу
             //ProjectRating.Worker.Execute(commandData);
 
+            //очистка старых Schema при необходимости
+            try
+            {
+                Autodesk.Revit.DB.ExtensibleStorage.Schema sch =
+                     Autodesk.Revit.DB.ExtensibleStorage.Schema.Lookup(new Guid("414447EA-4228-4B87-A97C-612462722AD4"));
+                Autodesk.Revit.DB.ExtensibleStorage.Schema.EraseSchemaAndAllEntities(sch, true);
 
-            //открываю форму для настройки печати
+                Autodesk.Revit.DB.ExtensibleStorage.Schema sch2 =
+                     Autodesk.Revit.DB.ExtensibleStorage.Schema.Lookup(new Guid("414447EA-4228-4B87-A97C-612462722AD5"));
+                Autodesk.Revit.DB.ExtensibleStorage.Schema.EraseSchemaAndAllEntities(sch2, true);
+            }
+            catch { }
 
-            SupportExtensibleStorage ses = new SupportExtensibleStorage(mainDoc);
-            YayPrintSettings printSettings = YayPrintSettings.GetPrintSettingsByDocument(mainDoc, ses);
 
+            YayPrintSettings printSettings = YayPrintSettings.GetPrintSettings(mainDoc);
             FormPrint form = new FormPrint(allSheets, printSettings);
             form.ShowDialog();
 
@@ -66,18 +88,17 @@ namespace BatchPrintYay
             allSheets = form.sheetsSelected;
 
             string outputFolder = printSettings.outputFolder;
-            ses.SaveNewSettings(printSettings);
 
             //Дополнительные возможности работают только с PDFCreator
             if (printerName != "PDFCreator")
             {
-                if (!string.IsNullOrEmpty(printSettings.excludeColors) || printSettings.mergePdfs || printSettings.useOrientation)
+                if (printSettings.colorsType == ColorType.MonochromeWithExcludes || printSettings.mergePdfs || printSettings.useOrientation)
                 {
                     string errmsg = "Объединение PDF и печать \"Штампа\" в цвете поддерживаются только  для PDFCreator.";
                     errmsg += "\nВо избежание ошибок эти настройки будут отключены.";
                     TaskDialog.Show("Предупреждение", errmsg);
                     printSettings.mergePdfs = false;
-                    printSettings.excludeColors = "";
+                    printSettings.excludeColors = new List<PdfColor>();
                     printSettings.useOrientation = false;
                 }
             }
@@ -88,8 +109,6 @@ namespace BatchPrintYay
                     SupportRegistry.SetOrientationForPdfCreator(OrientationType.Automatic);
                 }
             }
-
-
             bool printToFile = form.printToFile;
             if (printToFile)
             {
@@ -197,16 +216,8 @@ namespace BatchPrintYay
                     .Where(t => t.get_Parameter(BuiltInParameter.SHEET_HEIGHT).AsDouble() > 0.6)
                     .ToList();
 
-                //список основных надписей, сделанных через типовую аннотацию
-                List<FamilyInstance> annotTitleblocks = new FilteredElementCollector(openedDoc)
-                    .WhereElementIsNotElementType()
-                    .OfCategory(BuiltInCategory.OST_GenericAnnotation)
-                    .Cast<FamilyInstance>()
-                    .Where(i => i.Symbol.FamilyName.StartsWith("020_"))
-                    .ToList();
-
                 //получаю имя формата и проверяю, настроены ли размеры бумаги в Сервере печати
-                string formatsCheckinMessage = PrintSupport.PrintFormatsCheckIn(openedDoc, printerName, titleBlocks, annotTitleblocks, ref mSheets);
+                string formatsCheckinMessage = PrintSupport.PrintFormatsCheckIn(openedDoc, printerName, titleBlocks, ref mSheets);
                 if (formatsCheckinMessage != "")
                 {
                     message = formatsCheckinMessage;
@@ -291,7 +302,7 @@ namespace BatchPrintYay
                 }
             }
             //если требуется постобработка файлов - ждем, пока они напечатаются
-            if (printSettings.colorsType == "Monochrome with excludes" || printSettings.mergePdfs)
+            if (printSettings.colorsType == ColorType.MonochromeWithExcludes || printSettings.mergePdfs)
             {
                 int watchTimer = 0;
                 while (printToFile)
@@ -313,7 +324,7 @@ namespace BatchPrintYay
             }
 
             //преобразую файл в оттенки серого при необходимости
-            if (printSettings.colorsType == "Monochrome with excludes")
+            if (printSettings.colorsType == ColorType.MonochromeWithExcludes)
             {
                 foreach (string file in fileNames)
                 {
