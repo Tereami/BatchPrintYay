@@ -292,11 +292,7 @@ namespace BatchPrintYay
                     openedDoc.Close(false);
 #if R2017
                     RevitLinkLoadResult LoadResult = rlt.Reload();
-#elif R2018
-                    LinkLoadResult loadResult = rlt.Reload();
-#elif R2019
-                    LinkLoadResult loadResult = rlt.Reload();
-#elif R2020
+#else
                     LinkLoadResult loadResult = rlt.Reload();
 #endif
                 }
