@@ -35,9 +35,10 @@ namespace BatchPrintYay
             
             string mainDocTitle = SheetSupport.GetDocTitleWithoutRvt(mainDoc.Title);
 
+            //листы из всех открытых файлов, ключ - имя файла, значение - список листов
             Dictionary<string, List<MySheet>> allSheets = SheetSupport.GetAllSheets(commandData);
 
-            //получаю выбранные листы
+            //получаю выбранные листы в диспетчере проекта
             List<ElementId> selIds = sel.GetElementIds().ToList();
             //List<MySheet> mSheets0 = new List<MySheet>();
             bool sheetsIsChecked = false;
@@ -77,7 +78,7 @@ namespace BatchPrintYay
             catch { }
 
 
-            YayPrintSettings printSettings = YayPrintSettings.GetPrintSettings(mainDoc);
+            YayPrintSettings printSettings = YayPrintSettings.GetSavedPrintSettings();
             FormPrint form = new FormPrint(allSheets, printSettings);
             form.ShowDialog();
 
@@ -88,6 +89,8 @@ namespace BatchPrintYay
             allSheets = form.sheetsSelected;
 
             string outputFolder = printSettings.outputFolder;
+
+            YayPrintSettings.SaveSettings(printSettings);
 
             //Дополнительные возможности работают только с PDFCreator
             if (printerName != "PDFCreator")
@@ -114,14 +117,17 @@ namespace BatchPrintYay
             {
                 PrintSupport.CreateFolderToPrint(mainDoc, printerName, ref outputFolder);
             }
-            List<string> fileNames = new List<string>();
-            int count = 0;
+            //List<string> pfdFileNames = new List<string>();
+            int printedSheetCount = 0;
 
+            //печатаю листы из каждого выбранного revit-файла
             foreach (string docTitle in allSheets.Keys)
             {
                 Document openedDoc = null;
 
                 RevitLinkType rlt = null;
+
+                //проверяю, текущий это документ или полученный через ссылку
                 if (docTitle == mainDocTitle)
                 {
                     openedDoc = mainDoc;
@@ -176,7 +182,7 @@ namespace BatchPrintYay
                             openedDoc = commandData.Application.Application.OpenDocumentFile(docPath);
                         }
                     }
-                }
+                } //
 
                 List<MySheet> mSheets = allSheets[docTitle];
                 if (docTitle != mainDocTitle)
@@ -264,6 +270,7 @@ namespace BatchPrintYay
 
                             string fullFilename = System.IO.Path.Combine(outputFolder, tempFilename);
 
+                            //смещаю область для печати многолистовых спецификаций
                             double offsetX = -i * msheet.widthMm / 25.4; //смещение задается в дюймах!
 
                             PrintSetting ps = PrintSupport.CreatePrintSetting(openedDoc, pManager, msheet, printSettings, offsetX, 0);
@@ -273,7 +280,8 @@ namespace BatchPrintYay
                             
 
                             PrintSupport.PrintView(msheet.sheet, pManager, ps, tempFilename);
-                            fileNames.Add(fullFilename);
+                            msheet.PdfFileName = fullFilename;
+                            printedSheetCount++;
                         }
 
                         if (printerName == "PDFCreator" && printSettings.useOrientation)
@@ -283,7 +291,7 @@ namespace BatchPrintYay
 
                         t.RollBack();
 
-                        count++;
+                        
                     }
                 }
 
@@ -304,7 +312,7 @@ namespace BatchPrintYay
                 while (printToFile)
                 {
                     int filescount = System.IO.Directory.GetFiles(outputFolder).Length;
-                    if (filescount == fileNames.Count)
+                    if (filescount == printedSheetCount)
                     {
                         break;
                     }
@@ -314,16 +322,25 @@ namespace BatchPrintYay
                     if (watchTimer > 100)
                     {
                         BalloonTip.Show("Обнаружены неполадки", "Печать PDF заняла продолжительное время или произошел сбой. Дождитесь окончания печати.");
-                        break;
+                        return Result.Failed;
                     }
                 }
             }
 
-            //преобразую файл в оттенки серого при необходимости
+            List<MySheet> printedSheets = new List<MySheet>();
+            foreach(List<MySheet> mss in allSheets.Values)
+            {
+                printedSheets.AddRange(mss);
+            }
+            List<string> pfdFileNames = printedSheets.Select(i => i.PdfFileName).ToList();
+
+            //преобразую файл в черно-белый при необходимости
             if (printSettings.colorsType == ColorType.MonochromeWithExcludes)
             {
-                foreach (string file in fileNames)
+                foreach (MySheet msheet in printedSheets)
                 {
+                    if (msheet.ForceColored) continue;
+                    string file = msheet.PdfFileName;
                     string outFile = file.Replace(".pdf", "_OUT.pdf");
 
                     pdf.PdfWorker.SetExcludeColors(printSettings.excludeColors);
@@ -336,15 +353,17 @@ namespace BatchPrintYay
                 }
             }
 
+
+
             //объединяю файлы при необходимости
             if (printSettings.mergePdfs)
             {
                 System.Threading.Thread.Sleep(500);
                 string combinedFile = System.IO.Path.Combine(outputFolder, mainDoc.Title + ".pdf");
 
-                BatchPrintYay.pdf.PdfWorker.CombineMultiplyPDFs(fileNames, combinedFile);
+                BatchPrintYay.pdf.PdfWorker.CombineMultiplyPDFs(pfdFileNames, combinedFile);
 
-                foreach (string file in fileNames)
+                foreach (string file in pfdFileNames)
                 {
                     System.IO.File.Delete(file);
                 }
@@ -362,7 +381,7 @@ namespace BatchPrintYay
             //}
 
 
-            string msg = "Напечатано листов: " + count;
+            string msg = "Напечатано листов: " + printedSheetCount;
             BalloonTip.Show("Печать завершена!", msg);
 
             return Result.Succeeded;

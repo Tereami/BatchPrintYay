@@ -37,6 +37,9 @@ namespace BatchPrintYay
         public List<FamilyInstance> titleBlocks;
         public double widthMm;
         public double heigthMm;
+
+        public bool ForceColored;
+        public string PdfFileName;
         
 
         /// <summary>
@@ -47,6 +50,17 @@ namespace BatchPrintYay
         {
             sheet = Sheet;
             SheetId = Sheet.Id.IntegerValue;
+
+            ForceColored = false;
+            Parameter isForceColoredParam = Sheet.LookupParameter("Цветной");
+            if(isForceColoredParam != null)
+            {
+                if(isForceColoredParam.HasValue)
+                {
+                    if (isForceColoredParam.AsInteger() == 1)
+                        ForceColored = true;
+                }
+            }
         }
 
         public override string ToString()

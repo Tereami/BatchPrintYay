@@ -119,8 +119,8 @@ namespace BatchPrintYay
             comboBoxRasterQuality.DataSource = rasterTypes;
             try
             {
-                comboBoxRasterQuality.SelectedItem = rasterQualityTypes
-                    .Where(i => Enum.GetName(typeof(Autodesk.Revit.DB.RasterQualityType), i).Equals(_printSettings.rasterQuality)).First();
+                comboBoxRasterQuality.SelectedItem = _printSettings.rasterQuality; 
+                //rasterQualityTypes.Where(i => Enum.GetName(typeof(Autodesk.Revit.DB.RasterQualityType), i).Equals()).First();
             }
             catch { }
 
@@ -161,13 +161,14 @@ namespace BatchPrintYay
 
 
             if (radioButtonVector.Checked)
-                _printSettings.hiddenLineProcessing =
-                    Enum.GetName(typeof(Autodesk.Revit.DB.HiddenLineViewsType), Autodesk.Revit.DB.HiddenLineViewsType.VectorProcessing);
+                _printSettings.hiddenLineProcessing = Autodesk.Revit.DB.HiddenLineViewsType.VectorProcessing;
+            //Enum.GetName(typeof(Autodesk.Revit.DB.HiddenLineViewsType), Autodesk.Revit.DB.HiddenLineViewsType.VectorProcessing);
             else
-                _printSettings.hiddenLineProcessing =
-                    Enum.GetName(typeof(Autodesk.Revit.DB.HiddenLineViewsType), Autodesk.Revit.DB.HiddenLineViewsType.RasterProcessing);
+                _printSettings.hiddenLineProcessing = Autodesk.Revit.DB.HiddenLineViewsType.RasterProcessing;
+            //Enum.GetName(typeof(Autodesk.Revit.DB.HiddenLineViewsType), Autodesk.Revit.DB.HiddenLineViewsType.RasterProcessing);
 
-            _printSettings.rasterQuality = Enum.GetName(typeof(Autodesk.Revit.DB.RasterQualityType), comboBoxRasterQuality.SelectedValue);
+            _printSettings.rasterQuality = (Autodesk.Revit.DB.RasterQualityType)comboBoxRasterQuality.SelectedValue;
+                //Enum.GetName(typeof(Autodesk.Revit.DB.RasterQualityType), comboBoxRasterQuality.SelectedValue);
             _printSettings.outputFolder = txtBoxOutputFolder.Text;
             _printSettings.printerName = comboBoxPrinters.SelectedItem.ToString();
 
@@ -194,7 +195,7 @@ namespace BatchPrintYay
             //_printSettings.colorStamp = checkBoxColorStamp.Checked;
             //_printSettings.excludeColors = textBoxExcludeColors.Text;
 
-            _printSettings.colorsType = (string)comboBoxColors.SelectedItem;
+            _printSettings.colorsType = (ColorType)comboBoxColors.SelectedItem;
 
             _printSettings.useOrientation = checkBoxOrientation.Checked;
 
@@ -316,7 +317,7 @@ namespace BatchPrintYay
 
         private void buttonHelp_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("https://docs.google.com/document/d/1KabWTegLMZMUGtzozp9iyLSgDEQ3QY8avyO9yY0KMB8");
+            System.Diagnostics.Process.Start("https://bim-starter.com/plugins/batchprint");
         }
 
         private void radioButtonRastr_CheckedChanged(object sender, EventArgs e)
@@ -331,13 +332,10 @@ namespace BatchPrintYay
 
         private void buttonExcludesColor_Click(object sender, EventArgs e)
         {
-            List<Color> colors = ColorsUtils.StringToColors(_printSettings.excludeColors);
-            
-            FormExcludeColors form = new FormExcludeColors(colors);
+            FormExcludeColors form = new FormExcludeColors(_printSettings.excludeColors);
             if (form.ShowDialog() != DialogResult.OK) return;
 
-            string colorsString = ColorsUtils.ColorsToString(form.Colors);
-            printSettings.excludeColors = colorsString;
+            printSettings.excludeColors = form.Colors;
         }
     }
 }

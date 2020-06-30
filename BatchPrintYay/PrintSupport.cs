@@ -96,6 +96,7 @@ namespace BatchPrintYay
                 msheet.heigthMm = heigthMm;
 
 
+
                 //определяю ориентацию листа
                 if (widthMm > heigthMm)
                     msheet.IsVertical = false;
@@ -222,16 +223,16 @@ namespace BatchPrintYay
             pps.UserDefinedMarginX = offsetX;
             pps.UserDefinedMarginY = offsetY;
 
-            RasterQualityType rqt = (RasterQualityType)Enum.Parse(typeof(RasterQualityType), printSettings.rasterQuality);
-            pps.RasterQuality = rqt;
+            //RasterQualityType rqt =(RasterQualityType)Enum.Parse(typeof(RasterQualityType), printSettings.rasterQuality);
+            pps.RasterQuality = printSettings.rasterQuality;
 
-            HiddenLineViewsType hlvt = (HiddenLineViewsType)Enum.Parse(typeof(HiddenLineViewsType), printSettings.hiddenLineProcessing);
-            pps.HiddenLineViews = hlvt;
+            //HiddenLineViewsType hlvt = (HiddenLineViewsType)Enum.Parse(typeof(HiddenLineViewsType), printSettings.hiddenLineProcessing);
+            pps.HiddenLineViews = printSettings.hiddenLineProcessing;
 
             ColorDepthType cdt = ColorDepthType.Color;
-            if (printSettings.colorsType == "Monochrome")
+            if (printSettings.colorsType == ColorType.Monochrome)
                 cdt = ColorDepthType.BlackLine;
-            if (printSettings.colorsType == "GrayScale")
+            if (printSettings.colorsType == ColorType.GrayScale)
                 cdt = ColorDepthType.GrayScale;
             pps.ColorDepth = cdt;
 

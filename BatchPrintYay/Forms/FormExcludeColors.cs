@@ -25,15 +25,16 @@ namespace BatchPrintYay
 {
     public partial class FormExcludeColors : Form
     {
-        public List<Color> Colors;
-        public FormExcludeColors(List<Color> colors)
+        public List<PdfColor> Colors;
+        public FormExcludeColors(List<PdfColor> colors)
         {
             InitializeComponent();
 
             Colors = colors;
-            foreach (Color c in colors)
+            foreach (PdfColor pdfc in colors)
             {
                 Button btn = new Button();
+                Color c = pdfc.GetColor();
                 btn.Size = new Size(80, 25);
                 btn.Text = c.R.ToString() + " " + c.G.ToString() + " " + c.B.ToString();
                 btn.BackColor = c;
@@ -44,12 +45,13 @@ namespace BatchPrintYay
 
         private void buttonOk_Click(object sender, EventArgs e)
         {
-            Colors = new List<Color>();
+            Colors = new List<PdfColor>();
             foreach (var btn in flowLayoutPanel1.Controls)
             {
                 Button btn2 = btn as Button;
                 Color color = btn2.BackColor;
-                Colors.Add(color);
+                PdfColor pdfc = new PdfColor(color);
+                Colors.Add(pdfc);
             }
             this.DialogResult = DialogResult.OK;
             this.Close();

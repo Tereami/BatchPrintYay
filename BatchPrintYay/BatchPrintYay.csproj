@@ -244,6 +244,7 @@
     <EmbeddedResource Include="Resources\UpdateSmall.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="BatchPrintYay.addin" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
