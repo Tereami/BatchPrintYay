@@ -124,13 +124,9 @@ namespace BatchPrintYay
             }
             catch { }
 
-            List<string> colorTypes = new List<string>()
-            {
-                "Monochrome",
-                "Monochrome with excludes",
-                "GrayScale",
-                "Color"
-            };
+            List<ColorType> colorTypes = Enum.GetValues(typeof(ColorType))
+                .Cast<ColorType>()
+                .ToList();
             comboBoxColors.DataSource = colorTypes;
             comboBoxColors.SelectedItem = _printSettings.colorsType;
         }
@@ -298,8 +294,8 @@ namespace BatchPrintYay
 
         private void comboBoxColors_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string curColorType = (string)comboBoxColors.SelectedItem;
-            if (curColorType == "Monochrome with excludes")
+            ColorType curColorType = (ColorType)comboBoxColors.SelectedItem;
+            if (curColorType == ColorType.MonochromeWithExcludes)
             {
                 buttonExcludesColor.Enabled = true;
             }
