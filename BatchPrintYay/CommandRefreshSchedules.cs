@@ -13,7 +13,24 @@ namespace BatchPrintYay
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            throw new NotImplementedException();
+            Document doc = commandData.Application.ActiveUIDocument.Document;
+
+            List<ViewSheet> sheets = new FilteredElementCollector(doc)
+                .OfClass(typeof(ViewSheet))
+                .Cast<ViewSheet>()
+                .Where(i => !i.IsPlaceholder)
+                .ToList();
+
+            using (Transaction t = new Transaction(doc))
+            {
+                t.Start("Обновление спецификаций");
+                foreach (ViewSheet sheet in sheets)
+                {
+                    SchedulesRefresh.Start(doc, sheet);
+                }
+                t.Commit();
+            }
+            return Result.Succeeded;
         }
     }
 }
