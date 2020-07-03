@@ -3,7 +3,7 @@
   <AddIn Type="Application">    
     <Name>BatchPrintYay</Name>
     <Assembly>
-      C:\Users\azuev\Source\Repos\Tereami\BatchPrintYay\BatchPrintYay\bin\R2018\BatchPrintYay.dll
+      BatchPrintYay.dll
     </Assembly>
     <ClientId>a666b372-13fa-442a-8a18-fce286c19ccf</ClientId>
     <FullClassName>BatchPrintYay.App</FullClassName>

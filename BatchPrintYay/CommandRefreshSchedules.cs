@@ -21,14 +21,9 @@ namespace BatchPrintYay
                 .Where(i => !i.IsPlaceholder)
                 .ToList();
 
-            using (Transaction t = new Transaction(doc))
+            foreach (ViewSheet sheet in sheets)
             {
-                t.Start("Обновление спецификаций");
-                foreach (ViewSheet sheet in sheets)
-                {
-                    SchedulesRefresh.Start(doc, sheet);
-                }
-                t.Commit();
+                SchedulesRefresh.Start(doc, sheet);
             }
             return Result.Succeeded;
         }
