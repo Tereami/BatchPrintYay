@@ -63,7 +63,7 @@ namespace BatchPrintYay.pdf
             {
                 PdfLiteral oper = (PdfLiteral)operands[operands.Count - 1];
 
-                System.Diagnostics.Debug.WriteLine("[Debug] Opr: " + oper.ToString());
+                //System.Diagnostics.Debug.WriteLine("[Debug] Opr: " + oper.ToString());
 
                 PdfContentOperatorHandler operHandler = null;
 

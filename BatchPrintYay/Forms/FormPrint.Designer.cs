@@ -126,10 +126,12 @@
             // radioButtonPDF
             // 
             this.radioButtonPDF.AutoSize = true;
+            this.radioButtonPDF.Checked = true;
             this.radioButtonPDF.Location = new System.Drawing.Point(122, 70);
             this.radioButtonPDF.Name = "radioButtonPDF";
             this.radioButtonPDF.Size = new System.Drawing.Size(56, 17);
             this.radioButtonPDF.TabIndex = 12;
+            this.radioButtonPDF.TabStop = true;
             this.radioButtonPDF.Text = "В PDF";
             this.radioButtonPDF.UseVisualStyleBackColor = true;
             this.radioButtonPDF.CheckedChanged += new System.EventHandler(this.radioButtonPDF_CheckedChanged);
@@ -137,12 +139,10 @@
             // radioButtonPaper
             // 
             this.radioButtonPaper.AutoSize = true;
-            this.radioButtonPaper.Checked = true;
             this.radioButtonPaper.Location = new System.Drawing.Point(9, 70);
             this.radioButtonPaper.Name = "radioButtonPaper";
             this.radioButtonPaper.Size = new System.Drawing.Size(77, 17);
             this.radioButtonPaper.TabIndex = 11;
-            this.radioButtonPaper.TabStop = true;
             this.radioButtonPaper.Text = "На бумагу";
             this.radioButtonPaper.UseVisualStyleBackColor = true;
             this.radioButtonPaper.CheckedChanged += new System.EventHandler(this.radioButtonPaper_CheckedChanged);
@@ -184,9 +184,9 @@
             this.label6.Enabled = false;
             this.label6.Location = new System.Drawing.Point(6, 144);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(144, 13);
+            this.label6.Size = new System.Drawing.Size(168, 13);
             this.label6.TabIndex = 7;
-            this.label6.Text = "Конструктор имени файла:";
+            this.label6.Text = "Конструктор имени файла PDF:";
             // 
             // buttonBrowse
             // 
@@ -201,7 +201,6 @@
             // 
             // txtBoxOutputFolder
             // 
-            this.txtBoxOutputFolder.Enabled = false;
             this.txtBoxOutputFolder.Location = new System.Drawing.Point(9, 113);
             this.txtBoxOutputFolder.Name = "txtBoxOutputFolder";
             this.txtBoxOutputFolder.Size = new System.Drawing.Size(223, 20);
@@ -374,9 +373,9 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(12, 426);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(97, 13);
+            this.label7.Size = new System.Drawing.Size(67, 13);
             this.label7.TabIndex = 0;
-            this.label7.Text = "v2020.04.07 21:24";
+            this.label7.Text = "v2020.07.03";
             // 
             // treeView1
             // 

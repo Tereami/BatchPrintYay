@@ -64,9 +64,7 @@
   <ItemGroup>
     <Reference Include="itextsharp, Version=5.5.13.1, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
       <HintPath>..\packages\iTextSharp.5.5.13.1\lib\itextsharp.dll</HintPath>
-    </Reference>
-    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.7.2\lib\net45\NLog.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
@@ -171,6 +169,7 @@
     <Compile Include="App.cs" />
     <Compile Include="BalloonTip.cs" />
     <Compile Include="CommandBatchPrint.cs" />
+    <Compile Include="CommandRefreshSchedules.cs" />
     <Compile Include="Forms\FormExcludeColors.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -201,6 +200,7 @@
     <Compile Include="Forms\FormPrint.Designer.cs">
       <DependentUpon>FormPrint.cs</DependentUpon>
     </Compile>
+    <Compile Include="Logger.cs" />
     <Compile Include="MyDimension.cs" />
     <Compile Include="MySheet.cs" />
     <Compile Include="pdf\PdfColor.cs" />
@@ -256,13 +256,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="BatchPrintYay.addin" />
-    <Content Include="NLog.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <None Include="NLog.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="formats.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

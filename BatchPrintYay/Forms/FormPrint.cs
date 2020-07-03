@@ -71,9 +71,8 @@ namespace BatchPrintYay
             //заполняю параметры печати
             _printSettings = printSettings;
             textBoxNameConstructor.Text = printSettings.nameConstructor;
-            txtBoxOutputFolder.Text = @"C:\PDF Print";
+            txtBoxOutputFolder.Text = printSettings.outputFolder;
             checkBoxMergePdfs.Checked = printSettings.mergePdfs;
-            //checkBoxColorStamp.Checked = printSettings.colorStamp;
 
 
             List<string> printers = new List<string>();
@@ -235,8 +234,8 @@ namespace BatchPrintYay
 
         private void radioButtonPDF_CheckedChanged(object sender, EventArgs e)
         {
-            //txtBoxOutputFolder.Enabled = true;
-            //buttonBrowse.Enabled = true;
+            txtBoxOutputFolder.Enabled = true;
+            buttonBrowse.Enabled = true;
             textBoxNameConstructor.Enabled = true;
             btnOpenNameConstructor.Enabled = true;
             label5.Enabled = true;
@@ -244,13 +243,9 @@ namespace BatchPrintYay
             checkBoxMergePdfs.Enabled = true;
             checkBoxOrientation.Enabled = true;
 
-            List<string> colorTypes = new List<string>()
-            {
-                "Monochrome",
-                "Monochrome with excludes",
-                "GrayScale",
-                "Color"
-            };
+            List<ColorType> colorTypes = Enum.GetValues(typeof(ColorType))
+                .Cast<ColorType>()
+                .ToList();
             comboBoxColors.DataSource = colorTypes;
             comboBoxColors.SelectedItem = _printSettings.colorsType;
         }
@@ -266,14 +261,9 @@ namespace BatchPrintYay
             checkBoxMergePdfs.Enabled = false;
             checkBoxOrientation.Enabled = false;
 
-            List<string> colorTypes = new List<string>()
-            {
-                "Monochrome",
-                "GrayScale",
-                "Color"
-            };
+            List<ColorType> colorTypes = new List<ColorType> { ColorType.Color, ColorType.GrayScale, ColorType.Monochrome };
             comboBoxColors.DataSource = colorTypes;
-            comboBoxColors.SelectedItem = "Monochrome";
+            comboBoxColors.SelectedItem = ColorType.Monochrome;
         }
 
         private void checkBoxMergePdfs_CheckedChanged(object sender, EventArgs e)
