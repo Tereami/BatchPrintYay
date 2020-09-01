@@ -375,7 +375,7 @@
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(67, 13);
             this.label7.TabIndex = 0;
-            this.label7.Text = "v2020.07.03";
+            this.label7.Text = "v2020.09.01";
             // 
             // treeView1
             // 

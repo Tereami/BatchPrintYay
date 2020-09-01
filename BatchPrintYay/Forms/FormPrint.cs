@@ -303,7 +303,7 @@ namespace BatchPrintYay
 
         private void buttonHelp_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("https://bim-starter.com/plugins/batchprint");
+            System.Diagnostics.Process.Start("http://bim-starter.com/plugins/batchprint");
         }
 
         private void radioButtonRastr_CheckedChanged(object sender, EventArgs e)

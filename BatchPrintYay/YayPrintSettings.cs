@@ -29,18 +29,18 @@ namespace BatchPrintYay
     /// </summary>
     public class YayPrintSettings
     {
-        public string printerName;
-        public string outputFolder;
-        public string nameConstructor;
-        public HiddenLineViewsType hiddenLineProcessing;
-        public ColorType colorsType;
-        public RasterQualityType rasterQuality;
+        public string printerName = new System.Drawing.Printing.PrinterSettings().PrinterName;
+        public string outputFolder = @"C:\PDF_Print";
+        public string nameConstructor = "<Номер листа>_<Имя листа>.pdf";
+        public HiddenLineViewsType hiddenLineProcessing = HiddenLineViewsType.VectorProcessing;
+        public ColorType colorsType = ColorType.Monochrome;
+        public RasterQualityType rasterQuality = RasterQualityType.High;
 
-        public bool mergePdfs;
-        public bool printToPaper;
+        public bool mergePdfs = false;
+        public bool printToPaper = false;
         //public bool colorStamp;
-        public bool useOrientation;
-        public bool refreshSchedules;
+        public bool useOrientation = false;
+        public bool refreshSchedules = true;
 
         public List<PdfColor> excludeColors;
 
@@ -63,13 +63,13 @@ namespace BatchPrintYay
                     if (ps == null)
                     {
                         TaskDialog.Show("Внимание", "Не удалось получить сохраненные настройки печати");
-                        ps = GetDefault();
+                        ps = new YayPrintSettings();
                     }
                 }
             }
             else
             {
-                ps = GetDefault();
+                ps = new YayPrintSettings();
             }
 
             //PrintManager pManager = doc.PrintManager;
@@ -92,45 +92,14 @@ namespace BatchPrintYay
 
         private static string ActivateFolder()
         {
-            string programdataPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-            string rbspath = Path.Combine(programdataPath, "RibbonBimStarter");
-            if (!Directory.Exists(rbspath)) Directory.CreateDirectory(rbspath);
-            string localFolder = Path.Combine(rbspath, "BatchPrintYay");
+            string appdataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string bspath = Path.Combine(appdataPath, "bim-starter");
+            if (!Directory.Exists(bspath)) Directory.CreateDirectory(bspath);
+            string localFolder = Path.Combine(bspath, "BatchPrintYay");
             if (!Directory.Exists(localFolder)) Directory.CreateDirectory(localFolder);
             string xmlpath = Path.Combine(localFolder, "settings.xml");
             return xmlpath;
         }
-
-        ///// <summary>
-        ///// Сохранение параметров печати, заданных пользователем
-        ///// </summary>
-        ///// <param name="PrinterName"></param>
-        ///// <param name="OutputFolder"></param>
-        ///// <param name="NameConstructor"></param>
-        ///// <param name="HiddenLineProcessing"></param>
-        ///// <param name="ColorsType"></param>
-        ///// <param name="RasterQuality"></param>
-        //public YayPrintSettings(string PrinterName,
-        //    string OutputFolder,
-        //    string NameConstructor,
-        //    HiddenLineViewsType HiddenLineProcessing,
-        //    ColorType ColorsType,
-        //    RasterQualityType RasterQuality,
-        //    bool MergePdfs,
-        //    bool PrintToPaper,
-        //    List<PdfColor> ExcludeColors)
-        //{
-        //    printerName = PrinterName;
-        //    outputFolder = OutputFolder;
-        //    nameConstructor = NameConstructor;
-        //    hiddenLineProcessing = HiddenLineProcessing;
-        //    colorsType = ColorsType;
-        //    rasterQuality = RasterQuality;
-        //    mergePdfs = MergePdfs;
-        //    printToPaper = PrintToPaper;
-        //    excludeColors = ExcludeColors;
-        //    useOrientation = false;
-        //}
 
         /// <summary>
         /// Беспараметрический конструктор для сериализатора
@@ -142,33 +111,33 @@ namespace BatchPrintYay
 
 
 
-        private static YayPrintSettings GetDefault()
-        {
-            System.Drawing.Printing.PrinterSettings winPrint =
-                new System.Drawing.Printing.PrinterSettings();
-            string winPrinterName = winPrint.PrinterName;
-            YayPrintSettings ps = new YayPrintSettings
-            {
-                colorsType = ColorType.GrayScale,
-                excludeColors = new List<PdfColor>
-                {
-                    new PdfColor(System.Drawing.Color.FromArgb(0,0,255)),
-                    new PdfColor(System.Drawing.Color.FromArgb(192,192,192)),
-                    new PdfColor(System.Drawing.Color.FromArgb(242,242,242))
-                },
-                hiddenLineProcessing = HiddenLineViewsType.RasterProcessing,
-                mergePdfs = false,
-                nameConstructor = "<Номер листа>_<Имя листа>.pdf",
-                outputFolder = @"C:\PDF_Print",
-                printerName = winPrinterName, //doc.PrintManager.PrinterName,
-                printToPaper = false,
-                rasterQuality = RasterQualityType.High,
-                refreshSchedules = true,
-                useOrientation = false
-            };
+        //private static YayPrintSettings GetDefault()
+        //{
+        //    System.Drawing.Printing.PrinterSettings winPrint =
+        //        new System.Drawing.Printing.PrinterSettings();
+        //    string winPrinterName = winPrint.PrinterName;
+        //    YayPrintSettings ps = new YayPrintSettings
+        //    {
+        //        colorsType = ColorType.GrayScale,
+        //        excludeColors = new List<PdfColor>
+        //        {
+        //            new PdfColor(System.Drawing.Color.FromArgb(0,0,255)),
+        //            new PdfColor(System.Drawing.Color.FromArgb(192,192,192)),
+        //            new PdfColor(System.Drawing.Color.FromArgb(242,242,242))
+        //        },
+        //        hiddenLineProcessing = HiddenLineViewsType.RasterProcessing,
+        //        mergePdfs = false,
+        //        nameConstructor = "<Номер листа>_<Имя листа>.pdf",
+        //        outputFolder = @"C:\PDF_Print",
+        //        printerName = winPrinterName, //doc.PrintManager.PrinterName,
+        //        printToPaper = false,
+        //        rasterQuality = RasterQualityType.High,
+        //        refreshSchedules = true,
+        //        useOrientation = false
+        //    };
 
-            return ps;
-        }
+        //    return ps;
+        //}
 
     }
 }
