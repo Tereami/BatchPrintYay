@@ -24,10 +24,14 @@ namespace BatchPrintYay
 {
     public static class PrinterUtility
     {
-        public static PaperSize GetPaperSize(string printerName, double widthMM, double heigthMM)
+        public static PaperSize GetPaperSize(string printerName, double widthMM, double heigthMM, Logger logger)
         {
+            logger.Write("   пробую получить размер бумаги: ширина " + widthMM.ToString("F3") + "мм, высота " + heigthMM.ToString("F3"));
+
             int widthInches = (int)Math.Round(100 * widthMM / 25.4);
             int heigthInches = (int)Math.Round(100 * heigthMM / 25.4);
+
+            logger.Write("    после перевода в дюймы: " + widthInches + " х " + heigthInches);
             PrinterSettings prntSettings = new PrinterSettings();
             prntSettings.PrinterName = printerName;
             PrinterSettings.PaperSizeCollection sizes = prntSettings.PaperSizes;
@@ -36,25 +40,41 @@ namespace BatchPrintYay
             {
                 int curWidth = size.Width;
                 int curHeigth = size.Height;
+                logger.Write("   проверяю размер бумаги " + size.PaperName + " размер в дюймах " + curWidth.ToString() + " x " + curHeigth.ToString());
 
-                bool check1 = IntEquals(widthInches, curWidth);
-                bool check2 = IntEquals(heigthInches, curHeigth);
+                bool check1 = IntEquals(widthInches, curWidth, 5);
+                bool check2 = IntEquals(heigthInches, curHeigth, 5);
 
-                if (check1 && check2) return size;
+                if (check1 && check2)
+                {
+                    logger.Write("    Формат найден, ширина равна ширине, высота равна высоте");
+                    return size;
+                }
+                else
+                {
+                    bool check3 = IntEquals(widthInches, curHeigth, 5);
+                    bool check4 = IntEquals(heigthInches, curWidth, 5);
+                    if (check3 && check4)
+                    {
+                        logger.Write("    Ширина равна высоте, высота равна ширине - тоже подходит");
+                        return size;
+                    }
+                    else
+                    {
+                        logger.Write("    Формат не подходит");
+                    }
 
-                bool check3 = IntEquals(widthInches, curHeigth);
-                bool check4 = IntEquals(heigthInches, curWidth);
-
-                if (check3 && check4) return size;
+                }
             }
 
+            logger.Write("    Подходящий формат не найден");
             return null;
         }
 
-        private static bool IntEquals(int i1, int i2)
+        private static bool IntEquals(int i1, int i2, int delta)
         {
             int c = Math.Abs(i1 - i2);
-            if (c <= 3) return true;
+            if (c <= delta) return true;
             return false;
         }
 

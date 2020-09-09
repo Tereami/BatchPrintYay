@@ -83,7 +83,7 @@ namespace BatchPrintYay.pdf
         }
 
 
-        public static bool CombineMultiplyPDFs(List<string> names, string outFile)
+        public static bool CombineMultiplyPDFs(List<string> names, string outFile, Logger logger)
         {
             bool merged = false;
 
@@ -99,14 +99,20 @@ namespace BatchPrintYay.pdf
                     for (int i = 0; i < names.Count; i++)
                     {
                         string fileName = names[i];
+                        logger.Write("Обрабатывается файл " + fileName);
                         reader = new PdfReader(fileName);
                         writer.AddDocument(reader);
                         reader.Close();
+                        logger.Write("Файл успешно объединен");
                     }
                 }
                 catch
                 {
-                    if (reader != null) reader.Close();
+                    if (reader != null)
+                    {
+                        logger.Write("Не удалось объединить файл");
+                        reader.Close();
+                    }
                 }
                 finally
                 {
@@ -114,11 +120,8 @@ namespace BatchPrintYay.pdf
                 }
 
             }
-
+            logger.Write("Объединено в файл: " + outFile);
             return merged;
-
         }
-
-
     }
 }

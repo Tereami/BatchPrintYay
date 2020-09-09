@@ -81,9 +81,11 @@ namespace BatchPrintYay
             return sheets;
         }
 
-        public static string CheckTitleblocSizeCorrects(ViewSheet sheet, FamilyInstance titleBlock)
+        public static string CheckTitleblocSizeCorrects(ViewSheet sheet, FamilyInstance titleBlock, Logger logger)
         {
             string message = "";
+
+            logger.Write("    ID основной надписи " + titleBlock.Id.IntegerValue.ToString());
 
             double widthMm = titleBlock.get_Parameter(BuiltInParameter.SHEET_WIDTH).AsDouble() * 304.8;
             widthMm = Math.Round(widthMm);
@@ -96,8 +98,10 @@ namespace BatchPrintYay
             Parameter checkWidthParam = titleBlock.LookupParameter("Ширина");
             if (checkWidthParam != null)
             {
+                
                 widthMmCheck = checkWidthParam.AsDouble() * 304.8;
                 widthMmCheck = Math.Round(widthMmCheck);
+                logger.Write("    Есть параметр экземпляра Ширина = " + widthMmCheck.ToString("F3"));
             }
 
             Parameter checkHeigthParam = titleBlock.LookupParameter("Высота");
@@ -105,12 +109,22 @@ namespace BatchPrintYay
             {
                 heigthMmCheck = checkHeigthParam.AsDouble() * 304.8;
                 heigthMmCheck = Math.Round(heigthMmCheck);
+                logger.Write("    Есть параметр экземпляра Высота = " + heigthMmCheck.ToString("F3"));
             }
 
-            if (widthMmCheck == -1 || heigthMmCheck == -1) return string.Empty;
-
-            if (widthMm != widthMmCheck || heigthMm != heigthMmCheck)
+            if (widthMmCheck == -1 || heigthMmCheck == -1)
             {
+                logger.Write("    Семейство основной надписи не Weandrevit, проверить размеры не удалось");
+                return string.Empty;
+            }
+
+            double epsilon = 2.0;
+            bool widthEquals = DoubleEquals(widthMm, widthMmCheck, epsilon);
+            bool heightEquals = DoubleEquals(heigthMm, heigthMmCheck, epsilon);
+
+            if (!widthEquals || !heightEquals)
+            {
+                logger.Write("    Проблема с размерами листа! Не совпадает ширина или высота более чем на " + epsilon.ToString("F3") + "мм");
                 message += "Лист '" + sheet.SheetNumber + " : " + sheet.Name;
                 message += "'. Не удалось определить размеры основной надписи.\n";
                 if (widthMm != widthMmCheck)
@@ -124,8 +138,19 @@ namespace BatchPrintYay
 
                 message += "Проверьте семейство основной надписи на элементы, выступающие за край листа, или обновите семейство.";
             }
+            else
+            {
+                logger.Write("    Размеры основной надписи корректны");
+            }
 
             return message;
+        }
+
+        private static bool DoubleEquals(double d1, double d2, double epsilon)
+        {
+            double c = Math.Abs(d1 - d2);
+            if (c <= epsilon) return true;
+            return false;
         }
     }
 }

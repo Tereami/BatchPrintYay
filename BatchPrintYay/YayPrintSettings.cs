@@ -42,7 +42,12 @@ namespace BatchPrintYay
         public bool useOrientation = false;
         public bool refreshSchedules = true;
 
-        public List<PdfColor> excludeColors;
+        public List<PdfColor> excludeColors = new List<PdfColor>
+                {
+                    new PdfColor(System.Drawing.Color.FromArgb(0,0,255)),
+                    new PdfColor(System.Drawing.Color.FromArgb(192,192,192)),
+                    new PdfColor(System.Drawing.Color.FromArgb(242,242,242))
+                };
 
 
         /// <summary>
@@ -54,7 +59,7 @@ namespace BatchPrintYay
 
             YayPrintSettings ps;
             XmlSerializer serializer = new XmlSerializer(typeof(YayPrintSettings));
-            
+
             if (File.Exists(xmlpath))
             {
                 using (StreamReader reader = new StreamReader(xmlpath))
