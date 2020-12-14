@@ -42,12 +42,18 @@ namespace BatchPrintYay
         public bool useOrientation = false;
         public bool refreshSchedules = true;
 
-        public List<PdfColor> excludeColors = new List<PdfColor>
+        public static List<PdfColor> GetStandardExcludeColors()
+        {
+            List<PdfColor> list = new List<PdfColor>
                 {
                     new PdfColor(System.Drawing.Color.FromArgb(0,0,255)),
                     new PdfColor(System.Drawing.Color.FromArgb(192,192,192)),
                     new PdfColor(System.Drawing.Color.FromArgb(242,242,242))
                 };
+            return list;
+        }
+
+        public List<PdfColor> excludeColors;
 
 
         /// <summary>
@@ -77,8 +83,10 @@ namespace BatchPrintYay
                 ps = new YayPrintSettings();
             }
 
-            //PrintManager pManager = doc.PrintManager;
-            //ps.printerName = pManager.PrinterName;
+            if(ps.excludeColors == null || ps.excludeColors.Count == 0)
+            {
+                ps.excludeColors = YayPrintSettings.GetStandardExcludeColors();
+            }
 
             return ps;
         }

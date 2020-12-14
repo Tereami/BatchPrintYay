@@ -34,6 +34,7 @@
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.buttonAdd = new System.Windows.Forms.Button();
             this.buttonDelete = new System.Windows.Forms.Button();
+            this.buttonReset = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -95,6 +96,16 @@
             this.buttonDelete.UseVisualStyleBackColor = true;
             this.buttonDelete.Click += new System.EventHandler(this.buttonDelete_Click);
             // 
+            // buttonReset
+            // 
+            this.buttonReset.Location = new System.Drawing.Point(130, 109);
+            this.buttonReset.Name = "buttonReset";
+            this.buttonReset.Size = new System.Drawing.Size(75, 23);
+            this.buttonReset.TabIndex = 3;
+            this.buttonReset.Text = "Сбросить";
+            this.buttonReset.UseVisualStyleBackColor = true;
+            this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
+            // 
             // FormExcludeColors
             // 
             this.AcceptButton = this.buttonOk;
@@ -102,13 +113,16 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
             this.ClientSize = new System.Drawing.Size(212, 275);
+            this.Controls.Add(this.buttonReset);
             this.Controls.Add(this.buttonDelete);
             this.Controls.Add(this.buttonAdd);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOk);
             this.Controls.Add(this.label1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            this.MaximumSize = new System.Drawing.Size(218, 500);
+            this.MinimumSize = new System.Drawing.Size(218, 297);
             this.Name = "FormExcludeColors";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Исключения цветов";
@@ -124,5 +138,6 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Button buttonAdd;
         private System.Windows.Forms.Button buttonDelete;
+        private System.Windows.Forms.Button buttonReset;
     }
 }

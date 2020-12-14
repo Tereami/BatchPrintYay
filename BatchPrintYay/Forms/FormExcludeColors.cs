@@ -31,21 +31,12 @@ namespace BatchPrintYay
             InitializeComponent();
 
             Colors = colors;
-            foreach (PdfColor pdfc in colors)
-            {
-                Button btn = new Button();
-                Color c = pdfc.GetColor();
-                btn.Size = new Size(80, 25);
-                btn.Text = c.R.ToString() + " " + c.G.ToString() + " " + c.B.ToString();
-                btn.BackColor = c;
-                btn.Click += buttonColor_Click;
-                flowLayoutPanel1.Controls.Add(btn);
-            }
+            RefreshColors();
         }
 
         private void buttonOk_Click(object sender, EventArgs e)
         {
-            Colors = new List<PdfColor>();
+            Colors.Clear();
             foreach (var btn in flowLayoutPanel1.Controls)
             {
                 Button btn2 = btn as Button;
@@ -89,6 +80,27 @@ namespace BatchPrintYay
         private void buttonDelete_Click(object sender, EventArgs e)
         {
             flowLayoutPanel1.Controls.RemoveAt(flowLayoutPanel1.Controls.Count - 1);
+        }
+
+        private void buttonReset_Click(object sender, EventArgs e)
+        {
+            Colors = YayPrintSettings.GetStandardExcludeColors();
+            RefreshColors();
+        }
+
+        private void RefreshColors()
+        {
+            flowLayoutPanel1.Controls.Clear();
+            foreach (PdfColor pdfc in Colors)
+            {
+                Button btn = new Button();
+                Color c = pdfc.GetColor();
+                btn.Size = new Size(80, 25);
+                btn.Text = c.R.ToString() + " " + c.G.ToString() + " " + c.B.ToString();
+                btn.BackColor = c;
+                btn.Click += buttonColor_Click;
+                flowLayoutPanel1.Controls.Add(btn);
+            }
         }
     }
 }
