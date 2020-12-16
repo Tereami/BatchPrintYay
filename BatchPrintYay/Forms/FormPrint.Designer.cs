@@ -54,7 +54,7 @@
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
+            this.labelVersion = new System.Windows.Forms.Label();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.buttonHelp = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
@@ -367,15 +367,15 @@
             this.label4.TabIndex = 6;
             this.label4.Text = "Листы для печати:";
             // 
-            // label7
+            // labelVersion
             // 
-            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(12, 426);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(67, 13);
-            this.label7.TabIndex = 0;
-            this.label7.Text = "v2020.09.09";
+            this.labelVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelVersion.AutoSize = true;
+            this.labelVersion.Location = new System.Drawing.Point(12, 426);
+            this.labelVersion.Name = "labelVersion";
+            this.labelVersion.Size = new System.Drawing.Size(67, 13);
+            this.labelVersion.TabIndex = 0;
+            this.labelVersion.Text = "v2020.09.09";
             // 
             // treeView1
             // 
@@ -406,7 +406,7 @@
             this.Controls.Add(this.label4);
             this.Controls.Add(this.buttonHelp);
             this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.label7);
+            this.Controls.Add(this.labelVersion);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -451,7 +451,7 @@
         private System.Windows.Forms.RadioButton radioButtonPDF;
         private System.Windows.Forms.RadioButton radioButtonPaper;
         private System.Windows.Forms.CheckBox checkBoxMergePdfs;
-        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label labelVersion;
         private System.Windows.Forms.TreeView treeView1;
         private System.Windows.Forms.CheckBox checkBoxOrientation;
         private System.Windows.Forms.Button buttonHelp;
