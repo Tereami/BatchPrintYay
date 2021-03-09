@@ -240,11 +240,15 @@ namespace BatchPrintYay
                 }
                 logger.Write("Листов для печати найдено в данном файле: " + mSheets.Count.ToString());
 
+                logger.Write(": " + mSheets.Count.ToString());
                 PrintManager pManager = openedDoc.PrintManager;
+                logger.Write("Текущий выбранный принтер: " + pManager.PrinterName);
+                logger.Write("Попытка назначить принтер: " + printerName);
                 pManager.SelectNewPrintDriver(printerName);
                 pManager = openedDoc.PrintManager;
                 pManager.PrintRange = PrintRange.Current;
                 pManager.Apply();
+                logger.Write("Настройки менеджера печати успешно применены");
 
 
                 //список основных надписей нужен потому, что размеры листа хранятся в них
@@ -285,8 +289,15 @@ namespace BatchPrintYay
                     {
                         t.Start("Профили печати");
 
-                        string fileName = msheet.NameByConstructor(printSettings.nameConstructor);
-
+                        string fileName = "";
+                        if (printSettings.mergePdfs)
+                        {
+                            fileName = msheet.sheet.SheetNumber + "_" + msheet.sheet.Name + ".pdf";
+                        }
+                        else
+                        {
+                            fileName = msheet.NameByConstructor(printSettings.nameConstructor);
+                        }
                         if (printerName == "PDFCreator" && printSettings.useOrientation)
                         {
                             if (msheet.IsVertical)

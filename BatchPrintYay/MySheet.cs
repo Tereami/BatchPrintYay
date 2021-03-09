@@ -73,16 +73,16 @@ namespace BatchPrintYay
         /// Формирует имя листа на базе строки-"конструктора", содержащего имена параметров,
         /// которые будут заменены на значения параметров из данного листа
         /// </summary>
-        /// <param name="Constructor">Строка конструктора. Имена параметров должны быть включены в треугольные скобки.</param>
+        /// <param name="constructor">Строка конструктора. Имена параметров должны быть включены в треугольные скобки.</param>
         /// <returns>Сформированное имя листа</returns>
-        public string NameByConstructor(string Constructor)
+        public string NameByConstructor(string constructor)
         {
             string name = "";
 
-            string prefix = Constructor.Split('<').First();
+            string prefix = constructor.Split('<').First();
             name = name + prefix;
 
-            string[] sa = Constructor.Split('<');
+            string[] sa = constructor.Split('<');
             for(int i = 0; i < sa.Length; i++)
             {
                 string s = sa[i];
