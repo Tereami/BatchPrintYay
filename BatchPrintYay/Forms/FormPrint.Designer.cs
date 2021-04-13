@@ -375,7 +375,7 @@
             this.labelVersion.Name = "labelVersion";
             this.labelVersion.Size = new System.Drawing.Size(67, 13);
             this.labelVersion.TabIndex = 0;
-            this.labelVersion.Text = "v2020.09.09";
+            this.labelVersion.Text = "v2021.04.13";
             // 
             // treeView1
             // 

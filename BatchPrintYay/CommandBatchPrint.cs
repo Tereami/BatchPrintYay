@@ -140,9 +140,9 @@ namespace BatchPrintYay
                 Debug.WriteLine("Создана папка для печати: " + outputFolder);
             }
             //List<string> pfdFileNames = new List<string>();
-            int printedSheetCount = 0;
-
+            
             //печатаю листы из каждого выбранного revit-файла
+            List<MySheet> printedSheets = new List<MySheet>();
             foreach (string docTitle in allSheets.Keys)
             {
                 Document openedDoc = null;
@@ -311,8 +311,6 @@ namespace BatchPrintYay
                             }
                         }
 
-
-
                         for (int i = 0; i < msheet.titleBlocks.Count; i++)
                         {
                             string tempFilename = "";
@@ -343,7 +341,7 @@ namespace BatchPrintYay
                             PrintSupport.PrintView(msheet.sheet, pManager, ps, tempFilename);
                             Debug.WriteLine("Лист успешно отправлен на принтер");
                             msheet.PdfFileName = fullFilename;
-                            printedSheetCount++;
+                            printedSheets.Add(new MySheet(msheet));
                         }
 
                         if (printerName == "PDFCreator" && printSettings.useOrientation)
@@ -369,17 +367,17 @@ namespace BatchPrintYay
                     Debug.WriteLine("Ссылочный документ закрыт");
                 }
             }
+            int printedSheetsCount = printedSheets.Count;
             //если требуется постобработка файлов - ждем, пока они напечатаются
             if (printSettings.colorsType == ColorType.MonochromeWithExcludes || printSettings.mergePdfs)
             {
-                Debug.WriteLine(" ");
-                Debug.WriteLine("Включена постобработка файлов; ожидание окончания печати. Требуемое число файлов " + printedSheetCount);
+                Debug.WriteLine("Включена постобработка файлов; ожидание окончания печати. Требуемое число файлов " + printedSheetsCount.ToString());
                 int watchTimer = 0;
                 while (printToFile)
                 {
                     int filescount = System.IO.Directory.GetFiles(outputFolder).Length;
                     Debug.WriteLine("Итерация №" + watchTimer + ", файлов напечатано " + filescount);
-                    if (filescount == printedSheetCount)
+                    if (filescount == printedSheetsCount)
                     {
                         break;
                     }
@@ -396,11 +394,7 @@ namespace BatchPrintYay
                 }
             }
 
-            List<MySheet> printedSheets = new List<MySheet>();
-            foreach(List<MySheet> mss in allSheets.Values)
-            {
-                printedSheets.AddRange(mss);
-            }
+            
             List<string> pdfFileNames = printedSheets.Select(i => i.PdfFileName).ToList();
             Debug.WriteLine("PDF файлы которые должны быть напечатаны:");
             foreach(string pdfname in pdfFileNames)
@@ -473,9 +467,9 @@ namespace BatchPrintYay
             //}
 
 
-            string msg = "Напечатано листов: " + printedSheetCount;
+            string msg = "Напечатано листов: " + printedSheetsCount;
             BalloonTip.Show("Печать завершена!", msg);
-            Debug.WriteLine("Печать успешно завершена, напечатано листов " + printedSheetCount);
+            Debug.WriteLine("Печать успешно завершена, напечатано листов " + printedSheetsCount);
             return Result.Succeeded;
         }
     }

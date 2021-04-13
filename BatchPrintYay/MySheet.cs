@@ -64,6 +64,22 @@ namespace BatchPrintYay
             }
         }
 
+        public MySheet(MySheet oldSheet)
+        {
+            sheet = oldSheet.sheet;
+            revitPaperSize = oldSheet.revitPaperSize;
+            windowsPaperSize = oldSheet.windowsPaperSize;
+            pSetting = oldSheet.pSetting;
+            IsVertical = oldSheet.IsVertical;
+            SheetId = oldSheet.sheet.Id.IntegerValue;
+            IsPrintable = oldSheet.IsPrintable;
+            titleBlocks = oldSheet.titleBlocks;
+            widthMm = oldSheet.widthMm;
+            heigthMm = oldSheet.heigthMm;
+            ForceColored = oldSheet.ForceColored;
+            PdfFileName = oldSheet.PdfFileName;
+        }
+
         public override string ToString()
         {
             string name = sheet.SheetNumber + " - " + sheet.Name;
