@@ -10,7 +10,7 @@ as long as you credit the author by linking back and license your new creations 
 This code is provided 'as is'. Author disclaims any implied warranty.
 Zuev Aleksandr, 2020, all rigths reserved.*/
 #endregion
-
+#region usings
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +20,7 @@ using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using System.Windows.Media.Imaging;
-
+#endregion
 
 namespace BatchPrintYay
 {

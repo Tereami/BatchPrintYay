@@ -10,15 +10,15 @@ as long as you credit the author by linking back and license your new creations 
 This code is provided 'as is'. Author disclaims any implied warranty.
 Zuev Aleksandr, 2020, all rigths reserved.*/
 #endregion
-
+#region usings
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
-using Autodesk.Revit.ApplicationServices;
+#endregion
 
 namespace BatchPrintYay
 {
@@ -67,6 +67,14 @@ namespace BatchPrintYay
             return result;
         }
 
+        public static string ClearIllegalCharacters(string line)
+        {
+            string regexSearch = new string(System.IO.Path.GetInvalidFileNameChars()) 
+                + new string(System.IO.Path.GetInvalidPathChars());
+            Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
+            string line2 = r.Replace(line, "");
+            return line2;
+        }
 
         private static List<MySheet> GetSheetsFromDocument(Document doc)
         {
@@ -81,11 +89,11 @@ namespace BatchPrintYay
             return sheets;
         }
 
-        public static string CheckTitleblocSizeCorrects(ViewSheet sheet, FamilyInstance titleBlock, Logger logger)
+        public static string CheckTitleblocSizeCorrects(ViewSheet sheet, FamilyInstance titleBlock)
         {
             string message = "";
 
-            logger.Write("    ID основной надписи " + titleBlock.Id.IntegerValue.ToString());
+            Debug.WriteLine("    ID основной надписи " + titleBlock.Id.IntegerValue.ToString());
 
             double widthMm = titleBlock.get_Parameter(BuiltInParameter.SHEET_WIDTH).AsDouble() * 304.8;
             widthMm = Math.Round(widthMm);
@@ -101,7 +109,7 @@ namespace BatchPrintYay
                 
                 widthMmCheck = checkWidthParam.AsDouble() * 304.8;
                 widthMmCheck = Math.Round(widthMmCheck);
-                logger.Write("    Есть параметр экземпляра Ширина = " + widthMmCheck.ToString("F3"));
+                Debug.WriteLine("    Есть параметр экземпляра Ширина = " + widthMmCheck.ToString("F3"));
             }
 
             Parameter checkHeigthParam = titleBlock.LookupParameter("Высота");
@@ -109,12 +117,12 @@ namespace BatchPrintYay
             {
                 heigthMmCheck = checkHeigthParam.AsDouble() * 304.8;
                 heigthMmCheck = Math.Round(heigthMmCheck);
-                logger.Write("    Есть параметр экземпляра Высота = " + heigthMmCheck.ToString("F3"));
+                Debug.WriteLine("    Есть параметр экземпляра Высота = " + heigthMmCheck.ToString("F3"));
             }
 
             if (widthMmCheck == -1 || heigthMmCheck == -1)
             {
-                logger.Write("    Семейство основной надписи не Weandrevit, проверить размеры не удалось");
+                Debug.WriteLine("    Семейство основной надписи не Weandrevit, проверить размеры не удалось");
                 return string.Empty;
             }
 
@@ -124,7 +132,7 @@ namespace BatchPrintYay
 
             if (!widthEquals || !heightEquals)
             {
-                logger.Write("    Проблема с размерами листа! Не совпадает ширина или высота более чем на " + epsilon.ToString("F3") + "мм");
+                Debug.WriteLine("    Проблема с размерами листа! Не совпадает ширина или высота более чем на " + epsilon.ToString("F3") + "мм");
                 message += "Лист '" + sheet.SheetNumber + " : " + sheet.Name;
                 message += "'. Не удалось определить размеры основной надписи.\n";
                 if (widthMm != widthMmCheck)
@@ -140,7 +148,7 @@ namespace BatchPrintYay
             }
             else
             {
-                logger.Write("    Размеры основной надписи корректны");
+                Debug.WriteLine("    Размеры основной надписи корректны");
             }
 
             return message;

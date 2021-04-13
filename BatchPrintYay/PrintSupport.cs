@@ -10,19 +10,18 @@ as long as you credit the author by linking back and license your new creations 
 This code is provided 'as is'. Author disclaims any implied warranty.
 Zuev Aleksandr, 2020, all rigths reserved.*/
 #endregion
-
+#region usings
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using Autodesk.Revit.DB;
+#endregion
 
 namespace BatchPrintYay
 {
     public static class PrintSupport
     {
-
         public static string CreateFolderToPrint(Document doc, string printerName, ref string outputFolder)
         {
             string folder2 = doc.Title + "_" + DateTime.Now.ToString();
@@ -35,7 +34,9 @@ namespace BatchPrintYay
             }
             catch
             {
-                return "Невозможно сохранить файлы папку\n" + outputFolder + "\nВыберите другой путь.";
+                string msg = "Невозможно сохранить файлы папку " + outputFolder + ". Выберите другой путь.";
+                Debug.WriteLine(msg);
+                return msg;
             }
 
             outputFolder = outputFolder.Replace("\\", "\\\\");
@@ -56,13 +57,13 @@ namespace BatchPrintYay
         /// <param name="titleBlocks"></param>
         /// <param name="mSheets"></param>
         /// <returns></returns>
-        public static string PrintFormatsCheckIn(Document doc, string printerName, List<FamilyInstance> titleBlocks, ref List<MySheet> mSheets, Logger logger)
+        public static string PrintFormatsCheckIn(Document doc, string printerName, List<FamilyInstance> titleBlocks, ref List<MySheet> mSheets)
         {
             PrintManager pManager = doc.PrintManager;
             foreach (MySheet msheet in mSheets)
             {
-                logger.Write(" ");
-                logger.Write(" Проверяется лист " + msheet.sheet.Name);
+                Debug.WriteLine(" ");
+                Debug.WriteLine(" Проверяется лист " + msheet.sheet.Name);
                 double widthMm = 0;
                 double heigthMm = 0;
 
@@ -70,7 +71,7 @@ namespace BatchPrintYay
                     .Where(i => i.get_Parameter(BuiltInParameter.SHEET_NUMBER).AsString() == msheet.sheet.SheetNumber)
                     .ToList();
 
-                logger.Write(" На листе найдено основных надписей: " + tempTitleBlocks.Count.ToString());
+                Debug.WriteLine(" На листе найдено основных надписей: " + tempTitleBlocks.Count.ToString());
                 if (tempTitleBlocks.Count == 0)
                 {
                     return " Нет основной надписи на листе " + msheet.sheet.Name;
@@ -80,16 +81,16 @@ namespace BatchPrintYay
 
                 msheet.titleBlocks = tempTitleBlocks;
                 FamilyInstance titleBlock = tempTitleBlocks.First();
-                logger.Write(" На листе использована основная надпись Id " + titleBlock.Id.IntegerValue.ToString());
+                Debug.WriteLine(" На листе использована основная надпись Id " + titleBlock.Id.IntegerValue.ToString());
 
                 widthMm = titleBlock.get_Parameter(BuiltInParameter.SHEET_WIDTH).AsDouble() * 304.8;
-                logger.Write(" BuiltInParameter.SHEET_WIDTH = " + widthMm.ToString("F3"));
+                Debug.WriteLine(" BuiltInParameter.SHEET_WIDTH = " + widthMm.ToString("F3"));
 
                 heigthMm = titleBlock.get_Parameter(BuiltInParameter.SHEET_HEIGHT).AsDouble() * 304.8;
-                logger.Write(" BuiltInParameter.SHEET_HEIGHT = " + heigthMm.ToString("F3"));
+                Debug.WriteLine(" BuiltInParameter.SHEET_HEIGHT = " + heigthMm.ToString("F3"));
 
-                logger.Write(" Проверяю корректность семейства основной надписи");
-                string sizeCheckMessage = SheetSupport.CheckTitleblocSizeCorrects(msheet.sheet, titleBlock, logger);
+                Debug.WriteLine(" Проверяю корректность семейства основной надписи");
+                string sizeCheckMessage = SheetSupport.CheckTitleblocSizeCorrects(msheet.sheet, titleBlock);
                 if (sizeCheckMessage != "")
                 {
                     return sizeCheckMessage;
@@ -106,21 +107,21 @@ namespace BatchPrintYay
                 //определяю ориентацию листа
                 if (widthMm > heigthMm)
                 {
-                    logger.Write(" Это лист вертикальной ориентации");
+                    Debug.WriteLine(" Это лист вертикальной ориентации");
                     msheet.IsVertical = false;
                 }
                 else
                 {
-                    logger.Write(" Это лист горизонтальной ориентации");
+                    Debug.WriteLine(" Это лист горизонтальной ориентации");
                     msheet.IsVertical = true;
                 }
 
-                System.Drawing.Printing.PaperSize winPaperSize = PrinterUtility.GetPaperSize(printerName, widthMm, heigthMm, logger);
+                System.Drawing.Printing.PaperSize winPaperSize = PrinterUtility.GetPaperSize(printerName, widthMm, heigthMm);
                 
 
                 if (winPaperSize != null) //есть подходящий формат
                 {
-                    logger.Write(" Найден формат листа Windows: " + winPaperSize.PaperName);
+                    Debug.WriteLine(" Найден формат листа Windows: " + winPaperSize.PaperName);
                     pManager = doc.PrintManager;
                     string paperSizeName = winPaperSize.PaperName;
                     PaperSize revitPaperSize = PrintSupport.SearchRevitPaperSizeByName(pManager, paperSizeName);
@@ -130,33 +131,33 @@ namespace BatchPrintYay
                     {
                         string message = "Не удалось применить формат листа Revit. Попробуйте запустить печать еще раз. Лист: ";
                         message += msheet.sheet.SheetNumber + " : " + msheet.sheet.Name + ". Формат " + paperSizeName;
-                        logger.Write("  " + message);
+                        Debug.WriteLine("  " + message);
                         return message;
                     }
 
-                    logger.Write(" Найден формат листа Revit: " + revitPaperSize.Name);
+                    Debug.WriteLine(" Найден формат листа Revit: " + revitPaperSize.Name);
                     msheet.revitPaperSize = revitPaperSize;
                 }
                 else //нет такого формата, нужно добавить в Сервер печати
                 {
                     string paperSizeName = widthMm.ToString("F0") + "x" + heigthMm.ToString("F0");
-                    logger.Write("Формат бумаги в Windows не найден! " + paperSizeName);
+                    Debug.WriteLine("Формат бумаги в Windows не найден! " + paperSizeName);
                     FormCreateCustomFormat formccf = new FormCreateCustomFormat(msheet.sheet.Title, paperSizeName);
                     formccf.ShowDialog();
                     if (formccf.DialogResult != System.Windows.Forms.DialogResult.OK) return "cancel";
 
                     paperSizeName = "UnknownFormat_" + paperSizeName;
-                    logger.Write(" Попытка добавления формата листа в сервер печати " + paperSizeName);
+                    Debug.WriteLine(" Попытка добавления формата листа в сервер печати " + paperSizeName);
 
                     try
                     {
                         PrinterUtility.AddFormatToAnyPdfPrinter(paperSizeName, widthMm / 10, heigthMm / 10);
-                        logger.Write(" Формат успешно добавлен!");
+                        Debug.WriteLine(" Формат успешно добавлен!");
                     }
                     catch (Exception ex)
                     {
                         string msg = "Не удалось создать формат " + paperSizeName + ". Возможно, отсутствуют права администратора.\n" + ex.Message;
-                        logger.Write("  " + msg);
+                        Debug.WriteLine("  " + msg);
                         return msg;
                     }
 
@@ -166,17 +167,17 @@ namespace BatchPrintYay
 
                     pManager = doc.PrintManager;
 
-                    logger.Write(" Повторно пытаюсь найти нужный формат листа " + paperSizeName);
+                    Debug.WriteLine(" Повторно пытаюсь найти нужный формат листа " + paperSizeName);
                     PaperSize revitPaperSize = PrintSupport.SearchRevitPaperSizeByName(pManager, paperSizeName);
                     if (revitPaperSize == null)
                     {
                         string message = "Обнаружен лист нестандартного формата. Попробуйте запустить печать еще раз. Лист: ";
                         message += msheet.sheet.SheetNumber + " : " + msheet.sheet.Name + ". Формат " + paperSizeName;
-                        logger.Write("  " + message);
+                        Debug.WriteLine("  " + message);
                         return message;
                     }
 
-                    logger.Write(" Формат найден и успешно применен: " + revitPaperSize.Name);
+                    Debug.WriteLine(" Формат найден и успешно применен: " + revitPaperSize.Name);
                     msheet.revitPaperSize = revitPaperSize;
                 }
             }

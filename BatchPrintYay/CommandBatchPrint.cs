@@ -10,16 +10,15 @@ as long as you credit the author by linking back and license your new creations 
 This code is provided 'as is'. Author disclaims any implied warranty.
 Zuev Aleksandr, 2020, all rigths reserved.*/
 #endregion
-
+#region usings
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
-
+#endregion
 
 namespace BatchPrintYay
 {
@@ -28,12 +27,11 @@ namespace BatchPrintYay
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            
+            Debug.Listeners.Clear();
+            Debug.Listeners.Add(new RbsLogger.Logger("BatchPrint"));
+            Debug.WriteLine("Print started");
+
             App.assemblyPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
-
-
-            Logger logger = new Logger();
-            logger.Write("Print started");
 
             Selection sel = commandData.Application.ActiveUIDocument.Selection;
             Document mainDoc = commandData.Application.ActiveUIDocument.Document;
@@ -62,7 +60,7 @@ namespace BatchPrintYay
             if (!sheetsIsChecked)
             {
                 message = "Не выбраны листы. Выберите листы в Диспетчере проекта через Shift.";
-                logger.Write("Печать остановлена, не выбраны листы");
+                Debug.WriteLine("Печать остановлена, не выбраны листы");
                 return Result.Failed;
             }
 
@@ -71,7 +69,7 @@ namespace BatchPrintYay
             //ProjectRating.Worker.Execute(commandData);
 
             //очистка старых Schema при необходимости
-            try
+            /*try
             {
                 Autodesk.Revit.DB.ExtensibleStorage.Schema sch =
                      Autodesk.Revit.DB.ExtensibleStorage.Schema.Lookup(new Guid("414447EA-4228-4B87-A97C-612462722AD4"));
@@ -80,38 +78,38 @@ namespace BatchPrintYay
                 Autodesk.Revit.DB.ExtensibleStorage.Schema sch2 =
                      Autodesk.Revit.DB.ExtensibleStorage.Schema.Lookup(new Guid("414447EA-4228-4B87-A97C-612462722AD5"));
                 Autodesk.Revit.DB.ExtensibleStorage.Schema.EraseSchemaAndAllEntities(sch2, true);
-                logger.Write("Schema очищены");
+                Debug.WriteLine("Schema очищены");
             }
             catch
             {
-                logger.Write("Не удалось очистить Schema");
+                Debug.WriteLine("Не удалось очистить Schema");
             }
-
+            */
 
             YayPrintSettings printSettings = YayPrintSettings.GetSavedPrintSettings();
             FormPrint form = new FormPrint(allSheets, printSettings);
             form.ShowDialog();
 
             if (form.DialogResult != System.Windows.Forms.DialogResult.OK) return Result.Cancelled;
-            logger.Write("В окне печати нажат ОК, переход к печати");
+            Debug.WriteLine("В окне печати нажат ОК, переход к печати");
             printSettings = form.printSettings;
 
             string printerName = printSettings.printerName;
             allSheets = form.sheetsSelected;
-            logger.Write("Выбранные для печати листы");
+            Debug.WriteLine("Выбранные для печати листы");
             foreach(var kvp in allSheets)
             {
-                logger.Write(" Файл " + kvp.Key);
+                Debug.WriteLine(" Файл " + kvp.Key);
                 foreach(MySheet ms in kvp.Value)
                 {
-                    logger.Write("  Лист " + ms.sheet.Name);
+                    Debug.WriteLine("  Лист " + ms.sheet.Name);
                 }
             }
 
             string outputFolder = printSettings.outputFolder;
 
             YayPrintSettings.SaveSettings(printSettings);
-            logger.Write("Настройки печати сохранены");
+            Debug.WriteLine("Настройки печати сохранены");
 
             //Дополнительные возможности работают только с PDFCreator
             if (printerName != "PDFCreator")
@@ -124,7 +122,7 @@ namespace BatchPrintYay
                     printSettings.mergePdfs = false;
                     printSettings.excludeColors = new List<PdfColor>();
                     printSettings.useOrientation = false;
-                    logger.Write("Выбранные настройки несовместимы с принтером " + printerName);
+                    Debug.WriteLine("Выбранные настройки несовместимы с принтером " + printerName);
                 }
             }
             else
@@ -132,14 +130,14 @@ namespace BatchPrintYay
                 if (!printSettings.useOrientation)
                 {
                     SupportRegistry.SetOrientationForPdfCreator(OrientationType.Automatic);
-                    logger.Write("Установлена ориентация листа Automatic");
+                    Debug.WriteLine("Установлена ориентация листа Automatic");
                 }
             }
             bool printToFile = form.printToFile;
             if (printToFile)
             {
                 PrintSupport.CreateFolderToPrint(mainDoc, printerName, ref outputFolder);
-                logger.Write("Создана папка для печати: " + outputFolder);
+                Debug.WriteLine("Создана папка для печати: " + outputFolder);
             }
             //List<string> pfdFileNames = new List<string>();
             int printedSheetCount = 0;
@@ -148,7 +146,7 @@ namespace BatchPrintYay
             foreach (string docTitle in allSheets.Keys)
             {
                 Document openedDoc = null;
-                logger.Write("Печать листов из файла " + docTitle);
+                Debug.WriteLine("Печать листов из файла " + docTitle);
 
                 RevitLinkType rlt = null;
 
@@ -156,7 +154,7 @@ namespace BatchPrintYay
                 if (docTitle == mainDocTitle)
                 {
                     openedDoc = mainDoc;
-                    logger.Write("Это не ссылочный документ");
+                    Debug.WriteLine("Это не ссылочный документ");
                 }
                 else
                 {
@@ -175,14 +173,14 @@ namespace BatchPrintYay
                         if (testOpenedDoc.Title == docTitle || testOpenedDoc.Title.StartsWith(docTitle) || docTitle.StartsWith(testOpenedDoc.Title))
                         {
                             openedDoc = testOpenedDoc;
-                            logger.Write("Это открытый ссылочный документ");
+                            Debug.WriteLine("Это открытый ссылочный документ");
                         }
                     }
 
                     //иначе придется открывать документ через ссылку
                     if (openedDoc == null)
                     {
-                        logger.Write("Это закрытый ссылочный документ, пытаюсь его открыть");
+                        Debug.WriteLine("Это закрытый ссылочный документ, пытаюсь его открыть");
                         List<Document> linkDocs = new FilteredElementCollector(mainDoc)
                             .OfClass(typeof(RevitLinkInstance))
                             .Cast<RevitLinkInstance>()
@@ -195,7 +193,7 @@ namespace BatchPrintYay
 
                         if (linkDoc.IsWorkshared)
                         {
-                            logger.Write("Это файл совместной работы, открываю с отсоединением");
+                            Debug.WriteLine("Это файл совместной работы, открываю с отсоединением");
                             ModelPath mpath = linkDoc.GetWorksharingCentralModelPath();
                             OpenOptions oo = new OpenOptions();
                             oo.DetachFromCentralOption = DetachFromCentralOption.DetachAndPreserveWorksets;
@@ -206,13 +204,13 @@ namespace BatchPrintYay
                         }
                         else
                         {
-                            logger.Write("Это однопользательский файл");
+                            Debug.WriteLine("Это однопользательский файл");
                             rlt.Unload(new SaveCoordinates());
                             string docPath = linkDoc.PathName;
                             openedDoc = commandData.Application.Application.OpenDocumentFile(docPath);
                         }
                     }
-                    logger.Write("Файл-ссылка успешно открыт");
+                    Debug.WriteLine("Файл-ссылка успешно открыт");
                 } //
                 
 
@@ -238,17 +236,17 @@ namespace BatchPrintYay
                     }
                     mSheets = tempSheets;
                 }
-                logger.Write("Листов для печати найдено в данном файле: " + mSheets.Count.ToString());
+                Debug.WriteLine("Листов для печати найдено в данном файле: " + mSheets.Count.ToString());
 
-                logger.Write(": " + mSheets.Count.ToString());
+                Debug.WriteLine(": " + mSheets.Count.ToString());
                 PrintManager pManager = openedDoc.PrintManager;
-                logger.Write("Текущий выбранный принтер: " + pManager.PrinterName);
-                logger.Write("Попытка назначить принтер: " + printerName);
+                Debug.WriteLine("Текущий выбранный принтер: " + pManager.PrinterName);
+                Debug.WriteLine("Попытка назначить принтер: " + printerName);
                 pManager.SelectNewPrintDriver(printerName);
                 pManager = openedDoc.PrintManager;
                 pManager.PrintRange = PrintRange.Current;
                 pManager.Apply();
-                logger.Write("Настройки менеджера печати успешно применены");
+                Debug.WriteLine("Настройки менеджера печати успешно применены");
 
 
                 //список основных надписей нужен потому, что размеры листа хранятся в них
@@ -259,29 +257,29 @@ namespace BatchPrintYay
                     .Cast<FamilyInstance>()
                     .Where(t => t.get_Parameter(BuiltInParameter.SHEET_HEIGHT).AsDouble() > 0.6)
                     .ToList();
-                logger.Write("Найдено основных надписей: " + titleBlocks.Count.ToString());
+                Debug.WriteLine("Найдено основных надписей: " + titleBlocks.Count.ToString());
 
 
                 //получаю имя формата и проверяю, настроены ли размеры бумаги в Сервере печати
-                string formatsCheckinMessage = PrintSupport.PrintFormatsCheckIn(openedDoc, printerName, titleBlocks, ref mSheets, logger);
+                string formatsCheckinMessage = PrintSupport.PrintFormatsCheckIn(openedDoc, printerName, titleBlocks, ref mSheets);
                 if (formatsCheckinMessage != "")
                 {
                     message = formatsCheckinMessage;
-                    logger.Write("Проверка форматов листов неудачна: " + message);
+                    Debug.WriteLine("Проверка форматов листов неудачна: " + message);
                     return Result.Failed;
                 }
-                logger.Write("Проверка форматов листов выполнена успешно, переход к печати");
+                Debug.WriteLine("Проверка форматов листов выполнена успешно, переход к печати");
 
 
                 //печатаю каждый лист
                 foreach (MySheet msheet in mSheets)
                 {
-                    logger.Write(" ");
-                    logger.Write("Печатается лист: " + msheet.sheet.Name);
+                    Debug.WriteLine(" ");
+                    Debug.WriteLine("Печатается лист: " + msheet.sheet.Name);
                     if (printSettings.refreshSchedules)
                     {
                         SchedulesRefresh.Start(openedDoc, msheet.sheet);
-                        logger.Write("Спецификации обновлены успешно");
+                        Debug.WriteLine("Спецификации обновлены успешно");
                     }
                 
 
@@ -292,7 +290,8 @@ namespace BatchPrintYay
                         string fileName = "";
                         if (printSettings.mergePdfs)
                         {
-                            fileName = msheet.sheet.SheetNumber + "_" + msheet.sheet.Name + ".pdf";
+                            string sheetNumber = SheetSupport.ClearIllegalCharacters(msheet.sheet.SheetNumber);
+                            fileName = sheetNumber + "_" + msheet.sheet.Name + ".pdf";
                         }
                         else
                         {
@@ -303,12 +302,12 @@ namespace BatchPrintYay
                             if (msheet.IsVertical)
                             {
                                 SupportRegistry.SetOrientationForPdfCreator(OrientationType.Portrait);
-                                logger.Write("Принудительно установлена Portrait ориентация");
+                                Debug.WriteLine("Принудительно установлена Portrait ориентация");
                             }
                             if (!msheet.IsVertical)
                             {
                                 SupportRegistry.SetOrientationForPdfCreator(OrientationType.Landscape);
-                                logger.Write("Принудительно установлена Landscape ориентация");
+                                Debug.WriteLine("Принудительно установлена Landscape ориентация");
                             }
                         }
 
@@ -319,30 +318,30 @@ namespace BatchPrintYay
                             string tempFilename = "";
                             if(msheet.titleBlocks.Count > 1)
                             {
-                                logger.Write("На листе более 1 основной надписи! Печать части №" + i.ToString());
+                                Debug.WriteLine("На листе более 1 основной надписи! Печать части №" + i.ToString());
                                 tempFilename = fileName.Replace(".pdf", "_" +  i.ToString() + ".pdf");
                             }
                             else
                             {
-                                logger.Write("На листе 1 основная надпись Id " + msheet.titleBlocks.First().Id.IntegerValue.ToString());
+                                Debug.WriteLine("На листе 1 основная надпись Id " + msheet.titleBlocks.First().Id.IntegerValue.ToString());
                                 tempFilename = fileName;
                             }
 
                             string fullFilename = System.IO.Path.Combine(outputFolder, tempFilename);
-                            logger.Write("Печать в файл " + fullFilename);
+                            Debug.WriteLine("Печать в файл " + fullFilename);
 
                             //смещаю область для печати многолистовых спецификаций
                             double offsetX = -i * msheet.widthMm / 25.4; //смещение задается в дюймах!
-                            logger.Write("Смещение печати по X: " + offsetX.ToString("F3"));
+                            Debug.WriteLine("Смещение печати по X: " + offsetX.ToString("F3"));
 
                             PrintSetting ps = PrintSupport.CreatePrintSetting(openedDoc, pManager, msheet, printSettings, offsetX, 0);
 
                             pManager.PrintSetup.CurrentPrintSetting = ps;
-                            logger.Write("Настройки печати применены, " + ps.Name);
+                            Debug.WriteLine("Настройки печати применены, " + ps.Name);
 
 
                             PrintSupport.PrintView(msheet.sheet, pManager, ps, tempFilename);
-                            logger.Write("Лист успешно отправлен на принтер");
+                            Debug.WriteLine("Лист успешно отправлен на принтер");
                             msheet.PdfFileName = fullFilename;
                             printedSheetCount++;
                         }
@@ -367,19 +366,19 @@ namespace BatchPrintYay
 #else
                     LinkLoadResult loadResult = rlt.Reload();
 #endif
-                    logger.Write("Ссылочный документ закрыт");
+                    Debug.WriteLine("Ссылочный документ закрыт");
                 }
             }
             //если требуется постобработка файлов - ждем, пока они напечатаются
             if (printSettings.colorsType == ColorType.MonochromeWithExcludes || printSettings.mergePdfs)
             {
-                logger.Write(" ");
-                logger.Write("Включена постобработка файлов; ожидание окончания печати. Требуемое число файлов " + printedSheetCount);
+                Debug.WriteLine(" ");
+                Debug.WriteLine("Включена постобработка файлов; ожидание окончания печати. Требуемое число файлов " + printedSheetCount);
                 int watchTimer = 0;
                 while (printToFile)
                 {
                     int filescount = System.IO.Directory.GetFiles(outputFolder).Length;
-                    logger.Write("Итерация №" + watchTimer + ", файлов напечатано " + filescount);
+                    Debug.WriteLine("Итерация №" + watchTimer + ", файлов напечатано " + filescount);
                     if (filescount == printedSheetCount)
                     {
                         break;
@@ -391,7 +390,7 @@ namespace BatchPrintYay
                     if (watchTimer > 100)
                     {
                         BalloonTip.Show("Обнаружены неполадки", "Печать PDF заняла продолжительное время или произошел сбой. Дождитесь окончания печати.");
-                        logger.Write("Не удалось дождаться окончания печати");
+                        Debug.WriteLine("Не удалось дождаться окончания печати");
                         return Result.Failed;
                     }
                 }
@@ -403,32 +402,32 @@ namespace BatchPrintYay
                 printedSheets.AddRange(mss);
             }
             List<string> pdfFileNames = printedSheets.Select(i => i.PdfFileName).ToList();
-            logger.Write("PDF файлы которые должны быть напечатаны:");
+            Debug.WriteLine("PDF файлы которые должны быть напечатаны:");
             foreach(string pdfname in pdfFileNames)
             {
-                logger.Write("  " + pdfname);
+                Debug.WriteLine("  " + pdfname);
             }
-            logger.Write("PDF файлы напечатанные по факту:");
+            Debug.WriteLine("PDF файлы напечатанные по факту:");
             foreach (string pdfnameOut in System.IO.Directory.GetFiles(outputFolder, "*.pdf"))
             {
-                logger.Write("  " + pdfnameOut);
+                Debug.WriteLine("  " + pdfnameOut);
             }
 
             //преобразую файл в черно-белый при необходимости
             if (printSettings.colorsType == ColorType.MonochromeWithExcludes)
             {
-                logger.Write("Преобразование PDF файла в черно-белый");
+                Debug.WriteLine("Преобразование PDF файла в черно-белый");
                 foreach (MySheet msheet in printedSheets)
                 {
                     if (msheet.ForceColored)
                     {
-                        logger.Write("Лист не преобразовывается в черно-белый: " + msheet.sheet.Name);
+                        Debug.WriteLine("Лист не преобразовывается в черно-белый: " + msheet.sheet.Name);
                         continue;
                     }
 
                     string file = msheet.PdfFileName;
                     string outFile = file.Replace(".pdf", "_OUT.pdf");
-                    logger.Write("Файл будет преобразован из " + file + " в " + outFile);
+                    Debug.WriteLine("Файл будет преобразован из " + file + " в " + outFile);
 
                     pdf.PdfWorker.SetExcludeColors(printSettings.excludeColors);
                     pdf.PdfWorker.ConvertToGrayScale(file, outFile);
@@ -437,7 +436,7 @@ namespace BatchPrintYay
 
                     System.IO.File.Delete(file);
                     System.IO.File.Move(outFile, file);
-                    logger.Write("Лист успешно преобразован");
+                    Debug.WriteLine("Лист успешно преобразован");
                 }
             }
 
@@ -446,25 +445,25 @@ namespace BatchPrintYay
             //объединяю файлы при необходимости
             if (printSettings.mergePdfs)
             {
-                logger.Write(" ");
-                logger.Write("\nОбъединение PDF файлов");
+                Debug.WriteLine(" ");
+                Debug.WriteLine("\nОбъединение PDF файлов");
                 System.Threading.Thread.Sleep(500);
                 string combinedFile = System.IO.Path.Combine(outputFolder, mainDoc.Title + ".pdf");
 
-                BatchPrintYay.pdf.PdfWorker.CombineMultiplyPDFs(pdfFileNames, combinedFile, logger);
+                BatchPrintYay.pdf.PdfWorker.CombineMultiplyPDFs(pdfFileNames, combinedFile);
 
                 foreach (string file in pdfFileNames)
                 {
                     System.IO.File.Delete(file);
-                    logger.Write("Удален файл " + file);
+                    Debug.WriteLine("Удален файл " + file);
                 }
-                logger.Write("Объединено успешно");
+                Debug.WriteLine("Объединено успешно");
             }
 
             if (printToFile)
             {
                 System.Diagnostics.Process.Start(outputFolder);
-                logger.Write("Открыта папка " + outputFolder);
+                Debug.WriteLine("Открыта папка " + outputFolder);
             }
 
             //восстанавливаю настройки PDFCreator
@@ -476,7 +475,7 @@ namespace BatchPrintYay
 
             string msg = "Напечатано листов: " + printedSheetCount;
             BalloonTip.Show("Печать завершена!", msg);
-            logger.Write("Печать успешно завершена, напечатано листов " + printedSheetCount);
+            Debug.WriteLine("Печать успешно завершена, напечатано листов " + printedSheetCount);
             return Result.Succeeded;
         }
     }

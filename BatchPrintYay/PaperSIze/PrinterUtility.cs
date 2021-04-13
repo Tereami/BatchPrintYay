@@ -14,7 +14,7 @@ Zuev Aleksandr, 2020, all rigths reserved.*/
 using System;
 using System.Text;
 using System.Runtime.InteropServices;
-
+using System.Diagnostics;
 using System.ComponentModel;
 using System.Drawing.Printing;
 using System.Collections.Generic;
@@ -24,14 +24,14 @@ namespace BatchPrintYay
 {
     public static class PrinterUtility
     {
-        public static PaperSize GetPaperSize(string printerName, double widthMM, double heigthMM, Logger logger)
+        public static PaperSize GetPaperSize(string printerName, double widthMM, double heigthMM)
         {
-            logger.Write("   пробую получить размер бумаги: ширина " + widthMM.ToString("F3") + "мм, высота " + heigthMM.ToString("F3"));
+            Debug.WriteLine("   пробую получить размер бумаги: ширина " + widthMM.ToString("F3") + "мм, высота " + heigthMM.ToString("F3"));
 
             int widthInches = (int)Math.Round(100 * widthMM / 25.4);
             int heigthInches = (int)Math.Round(100 * heigthMM / 25.4);
 
-            logger.Write("    после перевода в дюймы: " + widthInches + " х " + heigthInches);
+            Debug.WriteLine("    после перевода в дюймы: " + widthInches + " х " + heigthInches);
             PrinterSettings prntSettings = new PrinterSettings();
             prntSettings.PrinterName = printerName;
             PrinterSettings.PaperSizeCollection sizes = prntSettings.PaperSizes;
@@ -40,14 +40,14 @@ namespace BatchPrintYay
             {
                 int curWidth = size.Width;
                 int curHeigth = size.Height;
-                logger.Write("   проверяю размер бумаги " + size.PaperName + " размер в дюймах " + curWidth.ToString() + " x " + curHeigth.ToString());
+                Debug.WriteLine("   проверяю размер бумаги " + size.PaperName + " размер в дюймах " + curWidth.ToString() + " x " + curHeigth.ToString());
 
                 bool check1 = IntEquals(widthInches, curWidth, 5);
                 bool check2 = IntEquals(heigthInches, curHeigth, 5);
 
                 if (check1 && check2)
                 {
-                    logger.Write("    Формат найден, ширина равна ширине, высота равна высоте");
+                    Debug.WriteLine("    Формат найден, ширина равна ширине, высота равна высоте");
                     return size;
                 }
                 else
@@ -56,18 +56,18 @@ namespace BatchPrintYay
                     bool check4 = IntEquals(heigthInches, curWidth, 5);
                     if (check3 && check4)
                     {
-                        logger.Write("    Ширина равна высоте, высота равна ширине - тоже подходит");
+                        Debug.WriteLine("    Ширина равна высоте, высота равна ширине - тоже подходит");
                         return size;
                     }
                     else
                     {
-                        logger.Write("    Формат не подходит");
+                        Debug.WriteLine("    Формат не подходит");
                     }
 
                 }
             }
 
-            logger.Write("    Подходящий формат не найден");
+            Debug.WriteLine("    Подходящий формат не найден");
             return null;
         }
 

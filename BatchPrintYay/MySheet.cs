@@ -10,13 +10,14 @@ as long as you credit the author by linking back and license your new creations 
 This code is provided 'as is'. Author disclaims any implied warranty.
 Zuev Aleksandr, 2020, all rigths reserved.*/
 #endregion
-
+#region usings
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Autodesk.Revit.DB;
+#endregion
 
 namespace BatchPrintYay
 {
@@ -69,6 +70,8 @@ namespace BatchPrintYay
             return name;
         }
 
+        
+
         /// <summary>
         /// Формирует имя листа на базе строки-"конструктора", содержащего имена параметров,
         /// которые будут заменены на значения параметров из данного листа
@@ -91,7 +94,8 @@ namespace BatchPrintYay
                 string paramName = s.Split('>').First();
                 string separator = s.Split('>').Last();
 
-                string val = this.GetParameterValueBySheetOrProject(sheet, paramName);
+                string val1 = this.GetParameterValueBySheetOrProject(sheet, paramName);
+                string val = SheetSupport.ClearIllegalCharacters(val1);
 
                 name = name + val;
                 name = name + separator;

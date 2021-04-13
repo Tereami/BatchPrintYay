@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using iTextSharp.text.pdf;
 using iTextSharp.text;
@@ -83,7 +84,7 @@ namespace BatchPrintYay.pdf
         }
 
 
-        public static bool CombineMultiplyPDFs(List<string> names, string outFile, Logger logger)
+        public static bool CombineMultiplyPDFs(List<string> names, string outFile)
         {
             bool merged = false;
 
@@ -99,18 +100,18 @@ namespace BatchPrintYay.pdf
                     for (int i = 0; i < names.Count; i++)
                     {
                         string fileName = names[i];
-                        logger.Write("Обрабатывается файл " + fileName);
+                        Debug.WriteLine("Обрабатывается файл " + fileName);
                         reader = new PdfReader(fileName);
                         writer.AddDocument(reader);
                         reader.Close();
-                        logger.Write("Файл успешно объединен");
+                        Debug.WriteLine("Файл успешно объединен");
                     }
                 }
                 catch
                 {
                     if (reader != null)
                     {
-                        logger.Write("Не удалось объединить файл");
+                        Debug.WriteLine("Не удалось объединить файл");
                         reader.Close();
                     }
                 }
@@ -120,7 +121,7 @@ namespace BatchPrintYay.pdf
                 }
 
             }
-            logger.Write("Объединено в файл: " + outFile);
+            Debug.WriteLine("Объединено в файл: " + outFile);
             return merged;
         }
     }

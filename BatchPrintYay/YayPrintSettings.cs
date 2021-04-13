@@ -10,9 +10,10 @@ as long as you credit the author by linking back and license your new creations 
 This code is provided 'as is'. Author disclaims any implied warranty.
 Zuev Aleksandr, 2020, all rigths reserved.*/
 #endregion
-
+#region usings
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +22,7 @@ using Autodesk.Revit.UI;
 using Autodesk.Revit.DB.ExtensibleStorage;
 using System.IO;
 using System.Xml.Serialization;
+#endregion
 
 namespace BatchPrintYay
 {
@@ -74,6 +76,7 @@ namespace BatchPrintYay
                     if (ps == null)
                     {
                         TaskDialog.Show("Внимание", "Не удалось получить сохраненные настройки печати");
+                        Debug.WriteLine("Unable to get print setiings, set to default");
                         ps = new YayPrintSettings();
                     }
                 }
