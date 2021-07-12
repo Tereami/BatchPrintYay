@@ -287,16 +287,17 @@ namespace BatchPrintYay
                     {
                         t.Start("Профили печати");
 
-                        string fileName = "";
+                        string fileName0 = "";
                         if (printSettings.mergePdfs)
                         {
-                            string sheetNumber = SheetSupport.ClearIllegalCharacters(msheet.sheet.SheetNumber);
-                            fileName = sheetNumber + "_" + msheet.sheet.Name + ".pdf";
+                            fileName0 = msheet.sheet.SheetNumber + "_" + msheet.sheet.Name + ".pdf";
                         }
                         else
                         {
-                            fileName = msheet.NameByConstructor(printSettings.nameConstructor);
+                            fileName0 = msheet.NameByConstructor(printSettings.nameConstructor);
                         }
+                        string fileName = SheetSupport.ClearIllegalCharacters(fileName0);
+
                         if (printerName == "PDFCreator" && printSettings.useOrientation)
                         {
                             if (msheet.IsVertical)

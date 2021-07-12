@@ -395,7 +395,7 @@ namespace BatchPrintYay.pdf
                 image = pdfImage.GetDrawingImage() as Bitmap;
 
 
-                string strFile = "C:\\PDF Print\\pdf" + bmpfileidx.ToString() + ".bmp";
+                string strFile = "C:\\PDF_Print\\pdf" + bmpfileidx.ToString() + ".bmp";
                 image.Save(strFile);
                 bmpfileidx++;
             }
@@ -408,7 +408,7 @@ namespace BatchPrintYay.pdf
                         byte[] streamBuffer = PdfReader.GetStreamBytes(prStream);
                         image = this.CreateBitmapFromFlateDecodeImage(streamBuffer, imageWidth, imageHeight, imageBpp);
 
-                        string strFile = "C:\\PDF Print\\pdf_" + bmpfileidx.ToString() + ".bmp";
+                        string strFile = "C:\\PDF_Print\\pdf_" + bmpfileidx.ToString() + ".bmp";
                         image.Save(strFile);
                         bmpfileidx++;
                     }
@@ -580,9 +580,10 @@ namespace BatchPrintYay.pdf
             g.DrawImage(original, new System.Drawing.Rectangle(0, 0, original.Width, original.Height), 0, 0, original.Width, original.Height, GraphicsUnit.Pixel, attributes);
             g.Dispose();
 
-            string strFile = "C:\\PDF Print\\pdfgray_" + bmpfileidx.ToString() + ".bmp";
+            string strFile = "C:\\PDF_Print\\pdfgray_" + bmpfileidx.ToString() + ".bmp";
             newBitmap.Save(strFile);
             bmpfileidx++;
+            
 
             return newBitmap;
         }
@@ -603,7 +604,7 @@ namespace BatchPrintYay.pdf
                 }
             }
 
-            string strFile = "C:\\PDF Print\\pdfbw_" + bmpfileidx.ToString() + ".bmp";
+            string strFile = "C:\\PDF_Print\\pdfbw_" + bmpfileidx.ToString() + ".bmp";
             newBitmap.Save(strFile);
             bmpfileidx++;
 
