@@ -206,8 +206,8 @@ namespace BatchPrintYay
                         else
                         {
                             Debug.WriteLine("Это однопользательский файл");
-                            rlt.Unload(new SaveCoordinates());
                             string docPath = linkDoc.PathName;
+                            rlt.Unload(new SaveCoordinates());
                             openedDoc = commandData.Application.Application.OpenDocumentFile(docPath);
                         }
                     }
