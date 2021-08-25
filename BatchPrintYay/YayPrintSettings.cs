@@ -40,9 +40,15 @@ namespace BatchPrintYay
 
         public bool mergePdfs = false;
         public bool printToPaper = false;
-        //public bool colorStamp;
         public bool useOrientation = false;
         public bool refreshSchedules = true;
+
+        public bool exportToDwg = false;
+        public string dwgNameConstructor = "<Номер проекта>_<Орг.КомплектЧертежей>_<Номер листа>.dwg";
+        public string selectedDwgExportProfileName = "Monochrome";
+        [XmlIgnore]
+        public List<ExportDWGSettings> dwgProfiles = new List<ExportDWGSettings>();
+        
 
         public static List<PdfColor> GetStandardExcludeColors()
         {
@@ -124,36 +130,5 @@ namespace BatchPrintYay
         {
 
         }
-
-
-
-        //private static YayPrintSettings GetDefault()
-        //{
-        //    System.Drawing.Printing.PrinterSettings winPrint =
-        //        new System.Drawing.Printing.PrinterSettings();
-        //    string winPrinterName = winPrint.PrinterName;
-        //    YayPrintSettings ps = new YayPrintSettings
-        //    {
-        //        colorsType = ColorType.GrayScale,
-        //        excludeColors = new List<PdfColor>
-        //        {
-        //            new PdfColor(System.Drawing.Color.FromArgb(0,0,255)),
-        //            new PdfColor(System.Drawing.Color.FromArgb(192,192,192)),
-        //            new PdfColor(System.Drawing.Color.FromArgb(242,242,242))
-        //        },
-        //        hiddenLineProcessing = HiddenLineViewsType.RasterProcessing,
-        //        mergePdfs = false,
-        //        nameConstructor = "<Номер листа>_<Имя листа>.pdf",
-        //        outputFolder = @"C:\PDF_Print",
-        //        printerName = winPrinterName, //doc.PrintManager.PrinterName,
-        //        printToPaper = false,
-        //        rasterQuality = RasterQualityType.High,
-        //        refreshSchedules = true,
-        //        useOrientation = false
-        //    };
-
-        //    return ps;
-        //}
-
     }
 }

@@ -112,7 +112,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(212, 275);
+            this.ClientSize = new System.Drawing.Size(214, 275);
             this.Controls.Add(this.buttonReset);
             this.Controls.Add(this.buttonDelete);
             this.Controls.Add(this.buttonAdd);
@@ -121,7 +121,7 @@
             this.Controls.Add(this.buttonOk);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-            this.MaximumSize = new System.Drawing.Size(218, 500);
+            this.MaximumSize = new System.Drawing.Size(230, 500);
             this.MinimumSize = new System.Drawing.Size(218, 297);
             this.Name = "FormExcludeColors";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

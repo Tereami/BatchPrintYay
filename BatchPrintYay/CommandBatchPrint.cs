@@ -87,6 +87,7 @@ namespace BatchPrintYay
             */
 
             YayPrintSettings printSettings = YayPrintSettings.GetSavedPrintSettings();
+            printSettings.dwgProfiles = DwgSupport.GetAllDwgExportSettingsNames(mainDoc);
             FormPrint form = new FormPrint(allSheets, printSettings);
             form.ShowDialog();
 
@@ -270,6 +271,23 @@ namespace BatchPrintYay
                 }
                 Debug.WriteLine("Проверка форматов листов выполнена успешно, переход к печати");
 
+                //если включен экспорт dwg - нахожу параметры экспорта по имени 
+                DWGExportOptions dwgOptions = null;
+                if(printSettings.exportToDwg)
+                {
+                    List<ExportDWGSettings> curDwgSettings = DwgSupport.GetAllDwgExportSettingsNames(openedDoc)
+                        .Where(i => i.Name == printSettings.selectedDwgExportProfileName)
+                        .ToList();
+                    if(curDwgSettings.Count == 0)
+                    {
+                        TaskDialog.Show("Ошибка", "В файле " + openedDoc.Title + " не найден dwg профиль " + printSettings.selectedDwgExportProfileName);
+                        dwgOptions = DwgSupport.GetAllDwgExportSettingsNames(openedDoc).First().GetDWGExportOptions();
+                    }
+                    else
+                    {
+                        dwgOptions = curDwgSettings.First().GetDWGExportOptions();
+                    }
+                }
 
                 //печатаю каждый лист
                 foreach (MySheet msheet in mSheets)
@@ -354,6 +372,13 @@ namespace BatchPrintYay
 
                         
                     }
+
+                    //если включен dwg - то ещё экспортирую этот лист
+                    if(printSettings.exportToDwg)
+                    {
+                        List<ElementId> sheetsIds = new List<ElementId> { msheet.sheet.Id };
+                        openedDoc.Export(outputFolder, msheet.NameByConstructor(printSettings.dwgNameConstructor), sheetsIds, dwgOptions);
+                    }
                 }
 
                 if (rlt != null)
@@ -378,7 +403,7 @@ namespace BatchPrintYay
                 int watchTimer = 0;
                 while (printToFile)
                 {
-                    int filescount = System.IO.Directory.GetFiles(outputFolder).Length;
+                    int filescount = System.IO.Directory.GetFiles(outputFolder, "*.pdf").Length;
                     Debug.WriteLine("Итерация №" + watchTimer + ", файлов напечатано " + filescount);
                     if (filescount == printedSheetsCount)
                     {

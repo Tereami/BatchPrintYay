@@ -129,6 +129,15 @@ namespace BatchPrintYay
                 .ToList();
             comboBoxColors.DataSource = colorTypes;
             comboBoxColors.SelectedItem = _printSettings.colorsType;
+
+            checkBoxExportDwg.Checked = _printSettings.exportToDwg;
+            textBoxDwgNameConstructor.Text = _printSettings.dwgNameConstructor;
+            List<string> dwgExportSettingsList = _printSettings.dwgProfiles.Select(i => i.Name).ToList();
+            comboBoxDwgProfiles.DataSource = dwgExportSettingsList;
+            if (dwgExportSettingsList.Contains(_printSettings.selectedDwgExportProfileName))
+            {
+                comboBoxDwgProfiles.SelectedItem = _printSettings.selectedDwgExportProfileName;
+            }
         }
 
         private void btnOk_Click(object sender, EventArgs e)
@@ -196,6 +205,10 @@ namespace BatchPrintYay
             _printSettings.useOrientation = checkBoxOrientation.Checked;
 
             _printSettings.refreshSchedules = checkBoxRefresh.Checked;
+
+            _printSettings.exportToDwg = checkBoxExportDwg.Checked;
+            _printSettings.dwgNameConstructor = textBoxDwgNameConstructor.Text;
+            _printSettings.selectedDwgExportProfileName = comboBoxDwgProfiles.SelectedItem.ToString();
 
             this.Close();
         }
@@ -323,6 +336,23 @@ namespace BatchPrintYay
             if (form.ShowDialog() != DialogResult.OK) return;
 
             printSettings.excludeColors = form.Colors;
+        }
+
+        private void treeView1_AfterCheck(object sender, TreeViewEventArgs e)
+        {
+            TreeNode parentNode = e.Node;
+            foreach (TreeNode child in parentNode.Nodes)
+            {
+                child.Checked = parentNode.Checked;
+            }
+        }
+
+        private void checkBoxExportDwg_CheckedChanged(object sender, EventArgs e)
+        {
+            comboBoxDwgProfiles.Enabled = checkBoxExportDwg.Checked;
+            label1.Enabled = checkBoxExportDwg.Checked;
+            textBoxDwgNameConstructor.Enabled = checkBoxExportDwg.Checked;
+            label7.Enabled = checkBoxExportDwg.Checked;
         }
     }
 }

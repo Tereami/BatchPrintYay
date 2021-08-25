@@ -57,9 +57,16 @@
             this.labelVersion = new System.Windows.Forms.Label();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.buttonHelp = new System.Windows.Forms.Button();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.checkBoxExportDwg = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.comboBoxDwgProfiles = new System.Windows.Forms.ComboBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.textBoxDwgNameConstructor = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -78,7 +85,7 @@
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.comboBoxPrinters);
-            this.groupBox1.Location = new System.Drawing.Point(250, 12);
+            this.groupBox1.Location = new System.Drawing.Point(312, 12);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(277, 257);
             this.groupBox1.TabIndex = 0;
@@ -239,11 +246,10 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.radioButtonRastr);
             this.groupBox2.Controls.Add(this.radioButtonVector);
             this.groupBox2.Controls.Add(this.comboBoxRasterQuality);
-            this.groupBox2.Location = new System.Drawing.Point(250, 275);
+            this.groupBox2.Location = new System.Drawing.Point(312, 275);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(278, 50);
             this.groupBox2.TabIndex = 0;
@@ -292,11 +298,10 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.Controls.Add(this.buttonExcludesColor);
             this.groupBox3.Controls.Add(this.comboBoxColors);
             this.groupBox3.Controls.Add(this.label2);
-            this.groupBox3.Location = new System.Drawing.Point(250, 331);
+            this.groupBox3.Location = new System.Drawing.Point(312, 331);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(278, 72);
             this.groupBox3.TabIndex = 1;
@@ -339,7 +344,7 @@
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOk.Location = new System.Drawing.Point(290, 416);
+            this.btnOk.Location = new System.Drawing.Point(352, 530);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 4;
@@ -350,7 +355,7 @@
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.Location = new System.Drawing.Point(371, 416);
+            this.btnCancel.Location = new System.Drawing.Point(433, 530);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 5;
@@ -371,11 +376,11 @@
             // 
             this.labelVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelVersion.AutoSize = true;
-            this.labelVersion.Location = new System.Drawing.Point(12, 426);
+            this.labelVersion.Location = new System.Drawing.Point(12, 540);
             this.labelVersion.Name = "labelVersion";
             this.labelVersion.Size = new System.Drawing.Size(67, 13);
             this.labelVersion.TabIndex = 0;
-            this.labelVersion.Text = "v2021.04.13";
+            this.labelVersion.Text = "v2021.08.25";
             // 
             // treeView1
             // 
@@ -383,13 +388,14 @@
             this.treeView1.FullRowSelect = true;
             this.treeView1.Location = new System.Drawing.Point(12, 28);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(232, 375);
+            this.treeView1.Size = new System.Drawing.Size(294, 492);
             this.treeView1.TabIndex = 9;
+            this.treeView1.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterCheck);
             // 
             // buttonHelp
             // 
             this.buttonHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonHelp.Location = new System.Drawing.Point(452, 416);
+            this.buttonHelp.Location = new System.Drawing.Point(515, 530);
             this.buttonHelp.Name = "buttonHelp";
             this.buttonHelp.Size = new System.Drawing.Size(75, 23);
             this.buttonHelp.TabIndex = 5;
@@ -397,11 +403,76 @@
             this.buttonHelp.UseVisualStyleBackColor = true;
             this.buttonHelp.Click += new System.EventHandler(this.buttonHelp_Click);
             // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.textBoxDwgNameConstructor);
+            this.groupBox4.Controls.Add(this.label7);
+            this.groupBox4.Controls.Add(this.comboBoxDwgProfiles);
+            this.groupBox4.Controls.Add(this.label1);
+            this.groupBox4.Controls.Add(this.checkBoxExportDwg);
+            this.groupBox4.Location = new System.Drawing.Point(312, 409);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(278, 111);
+            this.groupBox4.TabIndex = 4;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Другие опции";
+            // 
+            // checkBoxExportDwg
+            // 
+            this.checkBoxExportDwg.AutoSize = true;
+            this.checkBoxExportDwg.Location = new System.Drawing.Point(9, 18);
+            this.checkBoxExportDwg.Margin = new System.Windows.Forms.Padding(2);
+            this.checkBoxExportDwg.Name = "checkBoxExportDwg";
+            this.checkBoxExportDwg.Size = new System.Drawing.Size(148, 17);
+            this.checkBoxExportDwg.TabIndex = 10;
+            this.checkBoxExportDwg.Text = "Экспортировать в DWG";
+            this.checkBoxExportDwg.UseVisualStyleBackColor = true;
+            this.checkBoxExportDwg.CheckedChanged += new System.EventHandler(this.checkBoxExportDwg_CheckedChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(9, 43);
+            this.label1.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(56, 13);
+            this.label1.TabIndex = 10;
+            this.label1.Text = "Профиль:";
+            // 
+            // comboBoxDwgProfiles
+            // 
+            this.comboBoxDwgProfiles.Enabled = false;
+            this.comboBoxDwgProfiles.FormattingEnabled = true;
+            this.comboBoxDwgProfiles.Location = new System.Drawing.Point(73, 40);
+            this.comboBoxDwgProfiles.Name = "comboBoxDwgProfiles";
+            this.comboBoxDwgProfiles.Size = new System.Drawing.Size(192, 21);
+            this.comboBoxDwgProfiles.TabIndex = 11;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(9, 66);
+            this.label7.Margin = new System.Windows.Forms.Padding(3, 2, 3, 1);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(174, 13);
+            this.label7.TabIndex = 12;
+            this.label7.Text = "Конструктор имени файла DWG:";
+            // 
+            // textBoxDwgNameConstructor
+            // 
+            this.textBoxDwgNameConstructor.Enabled = false;
+            this.textBoxDwgNameConstructor.Location = new System.Drawing.Point(9, 83);
+            this.textBoxDwgNameConstructor.Name = "textBoxDwgNameConstructor";
+            this.textBoxDwgNameConstructor.Size = new System.Drawing.Size(256, 20);
+            this.textBoxDwgNameConstructor.TabIndex = 10;
+            this.textBoxDwgNameConstructor.Text = "<Номер проекта>_<Орг.КомплектЧертежей>_<Номер листа>.dwg";
+            // 
             // FormPrint
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(539, 447);
+            this.ClientSize = new System.Drawing.Size(601, 561);
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.treeView1);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.buttonHelp);
@@ -421,6 +492,8 @@
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -457,5 +530,11 @@
         private System.Windows.Forms.Button buttonHelp;
         private System.Windows.Forms.CheckBox checkBoxRefresh;
         private System.Windows.Forms.Button buttonExcludesColor;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.ComboBox comboBoxDwgProfiles;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox checkBoxExportDwg;
+        private System.Windows.Forms.TextBox textBoxDwgNameConstructor;
     }
 }
