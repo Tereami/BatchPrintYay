@@ -41,6 +41,8 @@ namespace BatchPrintYay
 
         public bool ForceColored;
         public string PdfFileName;
+
+        public int SheetNumberInt = -1;
         
 
         /// <summary>
@@ -51,6 +53,7 @@ namespace BatchPrintYay
         {
             sheet = Sheet;
             SheetId = Sheet.Id.IntegerValue;
+            SheetNumberInt = GetSheetNumberAsInt();
 
             ForceColored = false;
             Parameter isForceColoredParam = Sheet.LookupParameter("Цветной");
@@ -67,6 +70,7 @@ namespace BatchPrintYay
         public MySheet(MySheet oldSheet)
         {
             sheet = oldSheet.sheet;
+            SheetNumberInt = oldSheet.SheetNumberInt;
             revitPaperSize = oldSheet.revitPaperSize;
             windowsPaperSize = oldSheet.windowsPaperSize;
             pSetting = oldSheet.pSetting;
@@ -216,8 +220,8 @@ namespace BatchPrintYay
             MySheet ms = obj as MySheet;
             if(ms != null)
             {
-                int thisSheetNumber = this.GetSheetNumberAsInt();
-                int compareSheetNumber = ms.GetSheetNumberAsInt();
+                int thisSheetNumber = this.SheetNumberInt;
+                int compareSheetNumber = ms.SheetNumberInt;
                 int resuls = thisSheetNumber.CompareTo(compareSheetNumber);
                 return resuls;
             }

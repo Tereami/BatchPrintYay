@@ -369,6 +369,8 @@ namespace BatchPrintYay
                 }
             }
             int printedSheetsCount = printedSheets.Count;
+            printedSheets.Sort();
+
             //если требуется постобработка файлов - ждем, пока они напечатаются
             if (printSettings.colorsType == ColorType.MonochromeWithExcludes || printSettings.mergePdfs)
             {
