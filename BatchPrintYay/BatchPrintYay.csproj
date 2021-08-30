@@ -198,6 +198,7 @@
     <Compile Include="BalloonTip.cs" />
     <Compile Include="CommandBatchPrint.cs" />
     <Compile Include="CommandRefreshSchedules.cs" />
+    <Compile Include="DwgSupport.cs" />
     <Compile Include="Forms\FormExcludeColors.cs">
       <SubType>Form</SubType>
     </Compile>

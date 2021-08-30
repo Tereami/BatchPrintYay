@@ -58,11 +58,11 @@
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.buttonHelp = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.checkBoxExportDwg = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.comboBoxDwgProfiles = new System.Windows.Forms.ComboBox();
-            this.label7 = new System.Windows.Forms.Label();
             this.textBoxDwgNameConstructor = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.comboBoxDwgProfiles = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.checkBoxExportDwg = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -380,7 +380,7 @@
             this.labelVersion.Name = "labelVersion";
             this.labelVersion.Size = new System.Drawing.Size(67, 13);
             this.labelVersion.TabIndex = 0;
-            this.labelVersion.Text = "v2021.08.25";
+            this.labelVersion.Text = "v2021.08.30";
             // 
             // treeView1
             // 
@@ -417,36 +417,14 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Другие опции";
             // 
-            // checkBoxExportDwg
+            // textBoxDwgNameConstructor
             // 
-            this.checkBoxExportDwg.AutoSize = true;
-            this.checkBoxExportDwg.Location = new System.Drawing.Point(9, 18);
-            this.checkBoxExportDwg.Margin = new System.Windows.Forms.Padding(2);
-            this.checkBoxExportDwg.Name = "checkBoxExportDwg";
-            this.checkBoxExportDwg.Size = new System.Drawing.Size(148, 17);
-            this.checkBoxExportDwg.TabIndex = 10;
-            this.checkBoxExportDwg.Text = "Экспортировать в DWG";
-            this.checkBoxExportDwg.UseVisualStyleBackColor = true;
-            this.checkBoxExportDwg.CheckedChanged += new System.EventHandler(this.checkBoxExportDwg_CheckedChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 43);
-            this.label1.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(56, 13);
-            this.label1.TabIndex = 10;
-            this.label1.Text = "Профиль:";
-            // 
-            // comboBoxDwgProfiles
-            // 
-            this.comboBoxDwgProfiles.Enabled = false;
-            this.comboBoxDwgProfiles.FormattingEnabled = true;
-            this.comboBoxDwgProfiles.Location = new System.Drawing.Point(73, 40);
-            this.comboBoxDwgProfiles.Name = "comboBoxDwgProfiles";
-            this.comboBoxDwgProfiles.Size = new System.Drawing.Size(192, 21);
-            this.comboBoxDwgProfiles.TabIndex = 11;
+            this.textBoxDwgNameConstructor.Enabled = false;
+            this.textBoxDwgNameConstructor.Location = new System.Drawing.Point(9, 83);
+            this.textBoxDwgNameConstructor.Name = "textBoxDwgNameConstructor";
+            this.textBoxDwgNameConstructor.Size = new System.Drawing.Size(256, 20);
+            this.textBoxDwgNameConstructor.TabIndex = 10;
+            this.textBoxDwgNameConstructor.Text = "<Номер проекта>_<Орг.КомплектЧертежей>_<Номер листа>.dwg";
             // 
             // label7
             // 
@@ -458,14 +436,36 @@
             this.label7.TabIndex = 12;
             this.label7.Text = "Конструктор имени файла DWG:";
             // 
-            // textBoxDwgNameConstructor
+            // comboBoxDwgProfiles
             // 
-            this.textBoxDwgNameConstructor.Enabled = false;
-            this.textBoxDwgNameConstructor.Location = new System.Drawing.Point(9, 83);
-            this.textBoxDwgNameConstructor.Name = "textBoxDwgNameConstructor";
-            this.textBoxDwgNameConstructor.Size = new System.Drawing.Size(256, 20);
-            this.textBoxDwgNameConstructor.TabIndex = 10;
-            this.textBoxDwgNameConstructor.Text = "<Номер проекта>_<Орг.КомплектЧертежей>_<Номер листа>.dwg";
+            this.comboBoxDwgProfiles.Enabled = false;
+            this.comboBoxDwgProfiles.FormattingEnabled = true;
+            this.comboBoxDwgProfiles.Location = new System.Drawing.Point(73, 40);
+            this.comboBoxDwgProfiles.Name = "comboBoxDwgProfiles";
+            this.comboBoxDwgProfiles.Size = new System.Drawing.Size(192, 21);
+            this.comboBoxDwgProfiles.TabIndex = 11;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(9, 43);
+            this.label1.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(56, 13);
+            this.label1.TabIndex = 10;
+            this.label1.Text = "Профиль:";
+            // 
+            // checkBoxExportDwg
+            // 
+            this.checkBoxExportDwg.AutoSize = true;
+            this.checkBoxExportDwg.Location = new System.Drawing.Point(9, 18);
+            this.checkBoxExportDwg.Margin = new System.Windows.Forms.Padding(2);
+            this.checkBoxExportDwg.Name = "checkBoxExportDwg";
+            this.checkBoxExportDwg.Size = new System.Drawing.Size(148, 17);
+            this.checkBoxExportDwg.TabIndex = 10;
+            this.checkBoxExportDwg.Text = "Экспортировать в DWG";
+            this.checkBoxExportDwg.UseVisualStyleBackColor = true;
+            this.checkBoxExportDwg.CheckedChanged += new System.EventHandler(this.checkBoxExportDwg_CheckedChanged);
             // 
             // FormPrint
             // 
