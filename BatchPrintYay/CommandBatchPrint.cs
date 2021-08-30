@@ -405,7 +405,7 @@ namespace BatchPrintYay
                 {
                     int filescount = System.IO.Directory.GetFiles(outputFolder, "*.pdf").Length;
                     Debug.WriteLine("Итерация №" + watchTimer + ", файлов напечатано " + filescount);
-                    if (filescount == printedSheetsCount)
+                    if (filescount >= printedSheetsCount)
                     {
                         break;
                     }
