@@ -22,31 +22,30 @@ namespace BatchPrintYay
 {
     public static class PrintSupport
     {
-        public static string CreateFolderToPrint(Document doc, string printerName, ref string outputFolder)
+        public static string CreateFolderToPrint(Document doc, string printerName, string outputFolder)
         {
-            string folder2 = doc.Title + "_" + DateTime.Now.ToString();
-            folder2 = folder2.Replace(':', ' ');
+            string docTitle = SheetSupport.ClearIllegalCharacters(doc.Title);
+            string docTitle2 = docTitle.Replace(".rvt", "");
+            string folder2 = docTitle2 + "_" + DateTime.Now.ToString("yyyy MM dd H mm ss");
 
-            outputFolder = System.IO.Path.Combine(outputFolder, folder2);
+            string newFolder = System.IO.Path.Combine(outputFolder, folder2);
             try
             {
-                System.IO.Directory.CreateDirectory(outputFolder);
+                System.IO.Directory.CreateDirectory(newFolder);
             }
             catch
             {
-                string msg = "Невозможно сохранить файлы папку " + outputFolder + ". Выберите другой путь.";
+                string msg = "Невозможно сохранить файлы папку " + newFolder + ". Выберите другой путь.";
                 Debug.WriteLine(msg);
                 return msg;
             }
 
-            outputFolder = outputFolder.Replace("\\", "\\\\");
-
             //пробуем настроить PDFCreator через реестр Windows, для автоматической печати в папку
             if (printerName == "PDFCreator")
             {
-                SupportRegistry.ActivateSettingsForPDFCreator(outputFolder);
+                SupportRegistry.ActivateSettingsForPDFCreator(newFolder);
             }
-            return string.Empty;
+            return newFolder;
         }
 
 
@@ -200,7 +199,7 @@ namespace BatchPrintYay
         {
             pManager.PrintSetup.CurrentPrintSetting = ps;
 
-            fileName = "C:\\" + fileName;
+            fileName = @"C:\" + fileName;
 
             pManager.PrintToFileName = fileName;
             pManager.Apply();

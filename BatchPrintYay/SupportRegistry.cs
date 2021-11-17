@@ -28,6 +28,7 @@ namespace BatchPrintYay
 
         public static void ActivateSettingsForPDFCreator(string outputFolder)
         {
+            string outputFolderDoubleSlashes = outputFolder.Replace("\\", "\\\\");
             try
             {
                 Microsoft.Win32.Registry.SetValue(
@@ -39,7 +40,7 @@ namespace BatchPrintYay
                 Microsoft.Win32.Registry.SetValue(
                     "HKEY_CURRENT_USER\\Software\\pdfforge\\PDFCreator\\Settings\\ConversionProfiles\\0", "OpenWithPdfArchitect", "False");
                 Microsoft.Win32.Registry.SetValue(
-                    "HKEY_CURRENT_USER\\Software\\pdfforge\\PDFCreator\\Settings\\ConversionProfiles\\0", "TargetDirectory", outputFolder);
+                    "HKEY_CURRENT_USER\\Software\\pdfforge\\PDFCreator\\Settings\\ConversionProfiles\\0", "TargetDirectory", outputFolderDoubleSlashes);
             }
             catch
             {

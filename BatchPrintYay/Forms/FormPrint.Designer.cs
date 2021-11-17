@@ -378,9 +378,9 @@
             this.labelVersion.AutoSize = true;
             this.labelVersion.Location = new System.Drawing.Point(12, 540);
             this.labelVersion.Name = "labelVersion";
-            this.labelVersion.Size = new System.Drawing.Size(67, 13);
+            this.labelVersion.Size = new System.Drawing.Size(97, 13);
             this.labelVersion.TabIndex = 0;
-            this.labelVersion.Text = "v2021.08.30";
+            this.labelVersion.Text = "v2021.11.17 16:35";
             // 
             // treeView1
             // 

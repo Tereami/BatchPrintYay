@@ -107,7 +107,7 @@ namespace BatchPrintYay
                 }
             }
 
-            string outputFolder = printSettings.outputFolder;
+            string outputFolderCommon = printSettings.outputFolder;
 
             YayPrintSettings.SaveSettings(printSettings);
             Debug.WriteLine("Настройки печати сохранены");
@@ -135,9 +135,10 @@ namespace BatchPrintYay
                 }
             }
             bool printToFile = form.printToFile;
+            string outputFolder = "";
             if (printToFile)
             {
-                PrintSupport.CreateFolderToPrint(mainDoc, printerName, ref outputFolder);
+                outputFolder =  PrintSupport.CreateFolderToPrint(mainDoc, printerName, outputFolderCommon);
                 Debug.WriteLine("Создана папка для печати: " + outputFolder);
             }
             //List<string> pfdFileNames = new List<string>();
@@ -377,7 +378,8 @@ namespace BatchPrintYay
                     if(printSettings.exportToDwg)
                     {
                         List<ElementId> sheetsIds = new List<ElementId> { msheet.sheet.Id };
-                        openedDoc.Export(outputFolder, msheet.NameByConstructor(printSettings.dwgNameConstructor), sheetsIds, dwgOptions);
+                        string sheetname = msheet.NameByConstructor(printSettings.dwgNameConstructor);
+                        openedDoc.Export(outputFolder, sheetname, sheetsIds, dwgOptions);
                     }
                 }
 
