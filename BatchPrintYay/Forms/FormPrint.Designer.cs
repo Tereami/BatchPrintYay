@@ -50,7 +50,6 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.buttonExcludesColor = new System.Windows.Forms.Button();
             this.comboBoxColors = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
@@ -63,6 +62,8 @@
             this.comboBoxDwgProfiles = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.checkBoxExportDwg = new System.Windows.Forms.CheckBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.textBoxAlwaysColorParamName = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -104,7 +105,6 @@
             this.checkBoxRefresh.TabIndex = 13;
             this.checkBoxRefresh.Text = "Обновить спецификации";
             this.checkBoxRefresh.UseVisualStyleBackColor = true;
-            this.checkBoxRefresh.CheckedChanged += new System.EventHandler(this.checkBoxMergePdfs_CheckedChanged);
             // 
             // checkBoxOrientation
             // 
@@ -178,7 +178,6 @@
             // 
             // textBoxNameConstructor
             // 
-            this.textBoxNameConstructor.Enabled = false;
             this.textBoxNameConstructor.Location = new System.Drawing.Point(9, 161);
             this.textBoxNameConstructor.Name = "textBoxNameConstructor";
             this.textBoxNameConstructor.Size = new System.Drawing.Size(223, 20);
@@ -298,23 +297,24 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.textBoxAlwaysColorParamName);
+            this.groupBox3.Controls.Add(this.label8);
             this.groupBox3.Controls.Add(this.buttonExcludesColor);
             this.groupBox3.Controls.Add(this.comboBoxColors);
-            this.groupBox3.Controls.Add(this.label2);
             this.groupBox3.Location = new System.Drawing.Point(312, 331);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(278, 72);
+            this.groupBox3.Size = new System.Drawing.Size(278, 71);
             this.groupBox3.TabIndex = 1;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Вывод на печать";
+            this.groupBox3.Text = "Цветовая схема";
             // 
             // buttonExcludesColor
             // 
-            this.buttonExcludesColor.Location = new System.Drawing.Point(80, 41);
+            this.buttonExcludesColor.Location = new System.Drawing.Point(177, 16);
             this.buttonExcludesColor.Name = "buttonExcludesColor";
-            this.buttonExcludesColor.Size = new System.Drawing.Size(192, 23);
+            this.buttonExcludesColor.Size = new System.Drawing.Size(88, 22);
             this.buttonExcludesColor.TabIndex = 3;
-            this.buttonExcludesColor.Text = "Исключения цветов";
+            this.buttonExcludesColor.Text = "Исключения";
             this.buttonExcludesColor.UseVisualStyleBackColor = true;
             this.buttonExcludesColor.Click += new System.EventHandler(this.buttonExcludesColor_Click);
             // 
@@ -325,26 +325,17 @@
             "Черные линии",
             "Оттенки серого",
             "Цвет"});
-            this.comboBoxColors.Location = new System.Drawing.Point(80, 15);
+            this.comboBoxColors.Location = new System.Drawing.Point(9, 17);
             this.comboBoxColors.Name = "comboBoxColors";
-            this.comboBoxColors.Size = new System.Drawing.Size(192, 21);
+            this.comboBoxColors.Size = new System.Drawing.Size(165, 21);
             this.comboBoxColors.TabIndex = 2;
             this.comboBoxColors.Text = "Оттенки серого";
             this.comboBoxColors.SelectedIndexChanged += new System.EventHandler(this.comboBoxColors_SelectedIndexChanged);
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 18);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(41, 13);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Цвета:";
-            // 
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOk.Location = new System.Drawing.Point(352, 530);
+            this.btnOk.Location = new System.Drawing.Point(352, 531);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 4;
@@ -355,7 +346,7 @@
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.Location = new System.Drawing.Point(433, 530);
+            this.btnCancel.Location = new System.Drawing.Point(433, 531);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 5;
@@ -376,11 +367,11 @@
             // 
             this.labelVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelVersion.AutoSize = true;
-            this.labelVersion.Location = new System.Drawing.Point(12, 540);
+            this.labelVersion.Location = new System.Drawing.Point(12, 541);
             this.labelVersion.Name = "labelVersion";
             this.labelVersion.Size = new System.Drawing.Size(97, 13);
             this.labelVersion.TabIndex = 0;
-            this.labelVersion.Text = "v2021.11.17 16:35";
+            this.labelVersion.Text = "v2022.05.22 20:50";
             // 
             // treeView1
             // 
@@ -388,14 +379,14 @@
             this.treeView1.FullRowSelect = true;
             this.treeView1.Location = new System.Drawing.Point(12, 28);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(294, 492);
+            this.treeView1.Size = new System.Drawing.Size(294, 491);
             this.treeView1.TabIndex = 9;
             this.treeView1.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterCheck);
             // 
             // buttonHelp
             // 
             this.buttonHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonHelp.Location = new System.Drawing.Point(515, 530);
+            this.buttonHelp.Location = new System.Drawing.Point(515, 531);
             this.buttonHelp.Name = "buttonHelp";
             this.buttonHelp.Size = new System.Drawing.Size(75, 23);
             this.buttonHelp.TabIndex = 5;
@@ -410,7 +401,7 @@
             this.groupBox4.Controls.Add(this.comboBoxDwgProfiles);
             this.groupBox4.Controls.Add(this.label1);
             this.groupBox4.Controls.Add(this.checkBoxExportDwg);
-            this.groupBox4.Location = new System.Drawing.Point(312, 409);
+            this.groupBox4.Location = new System.Drawing.Point(312, 408);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(278, 111);
             this.groupBox4.TabIndex = 4;
@@ -467,11 +458,29 @@
             this.checkBoxExportDwg.UseVisualStyleBackColor = true;
             this.checkBoxExportDwg.CheckedChanged += new System.EventHandler(this.checkBoxExportDwg_CheckedChanged);
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(12, 47);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(118, 13);
+            this.label8.TabIndex = 4;
+            this.label8.Text = "Оставлять цветными:";
+            // 
+            // textBoxAlwaysColorParamName
+            // 
+            this.textBoxAlwaysColorParamName.Location = new System.Drawing.Point(136, 44);
+            this.textBoxAlwaysColorParamName.Name = "textBoxAlwaysColorParamName";
+            this.textBoxAlwaysColorParamName.Size = new System.Drawing.Size(129, 20);
+            this.textBoxAlwaysColorParamName.TabIndex = 5;
+            this.textBoxAlwaysColorParamName.Text = "Цветной";
+            this.textBoxAlwaysColorParamName.WordWrap = false;
+            // 
             // FormPrint
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(601, 561);
+            this.ClientSize = new System.Drawing.Size(601, 562);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.treeView1);
             this.Controls.Add(this.label4);
@@ -509,7 +518,6 @@
         private System.Windows.Forms.RadioButton radioButtonVector;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.ComboBox comboBoxColors;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox comboBoxRasterQuality;
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Button btnCancel;
@@ -536,5 +544,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox checkBoxExportDwg;
         private System.Windows.Forms.TextBox textBoxDwgNameConstructor;
+        private System.Windows.Forms.TextBox textBoxAlwaysColorParamName;
+        private System.Windows.Forms.Label label8;
     }
 }

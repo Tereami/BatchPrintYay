@@ -129,6 +129,7 @@ namespace BatchPrintYay
                 .ToList();
             comboBoxColors.DataSource = colorTypes;
             comboBoxColors.SelectedItem = _printSettings.colorsType;
+            textBoxAlwaysColorParamName.Text = _printSettings.alwaysColorParamName;
 
             checkBoxExportDwg.Checked = _printSettings.exportToDwg;
             textBoxDwgNameConstructor.Text = _printSettings.dwgNameConstructor;
@@ -201,6 +202,7 @@ namespace BatchPrintYay
             //_printSettings.excludeColors = textBoxExcludeColors.Text;
 
             _printSettings.colorsType = (ColorType)comboBoxColors.SelectedItem;
+            _printSettings.alwaysColorParamName = textBoxAlwaysColorParamName.Text;
 
             _printSettings.useOrientation = checkBoxOrientation.Checked;
 
@@ -208,7 +210,8 @@ namespace BatchPrintYay
 
             _printSettings.exportToDwg = checkBoxExportDwg.Checked;
             _printSettings.dwgNameConstructor = textBoxDwgNameConstructor.Text;
-            _printSettings.selectedDwgExportProfileName = comboBoxDwgProfiles.SelectedItem.ToString();
+            if(comboBoxDwgProfiles.SelectedItem != null)
+                _printSettings.selectedDwgExportProfileName = comboBoxDwgProfiles.SelectedItem.ToString();
 
             this.Close();
         }
@@ -302,10 +305,12 @@ namespace BatchPrintYay
             if (curColorType == ColorType.MonochromeWithExcludes)
             {
                 buttonExcludesColor.Enabled = true;
+                textBoxAlwaysColorParamName.Enabled = true;
             }
             else
             {
                 buttonExcludesColor.Enabled = false;
+                textBoxAlwaysColorParamName.Enabled = false;
             }
         }
 

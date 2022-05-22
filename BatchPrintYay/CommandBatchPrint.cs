@@ -38,8 +38,12 @@ namespace BatchPrintYay
             
             string mainDocTitle = SheetSupport.GetDocTitleWithoutRvt(mainDoc.Title);
 
+            YayPrintSettings printSettings = YayPrintSettings.GetSavedPrintSettings();
+            printSettings.dwgProfiles = DwgSupport.GetAllDwgExportSettingsNames(mainDoc);
+
+
             //листы из всех открытых файлов, ключ - имя файла, значение - список листов
-            Dictionary<string, List<MySheet>> allSheets = SheetSupport.GetAllSheets(commandData);
+            Dictionary<string, List<MySheet>> allSheets = SheetSupport.GetAllSheets(commandData, printSettings);
 
             //получаю выбранные листы в диспетчере проекта
             List<ElementId> selIds = sel.GetElementIds().ToList();
@@ -86,8 +90,6 @@ namespace BatchPrintYay
             }
             */
 
-            YayPrintSettings printSettings = YayPrintSettings.GetSavedPrintSettings();
-            printSettings.dwgProfiles = DwgSupport.GetAllDwgExportSettingsNames(mainDoc);
             FormPrint form = new FormPrint(allSheets, printSettings);
             form.ShowDialog();
 
@@ -231,7 +233,7 @@ namespace BatchPrintYay
                         {
                             if (ms.SheetId == vs.Id.IntegerValue)
                             {
-                                MySheet newMs = new MySheet(vs);
+                                MySheet newMs = new MySheet(vs, printSettings.alwaysColorParamName);
                                 tempSheets.Add(newMs);
                             }
                         }
@@ -309,13 +311,21 @@ namespace BatchPrintYay
                         string fileName0 = "";
                         if (printSettings.mergePdfs)
                         {
-                            fileName0 = msheet.sheet.SheetNumber + "_" + msheet.sheet.Name + ".pdf";
+                            string guid = Guid.NewGuid().ToString();
+                            fileName0 = msheet.sheet.SheetNumber + "_" + guid + ".pdf";
                         }
                         else
                         {
                             fileName0 = msheet.NameByConstructor(printSettings.nameConstructor);
                         }
                         string fileName = SheetSupport.ClearIllegalCharacters(fileName0);
+                        if(fileName.Length > 128)
+                        {
+                            Debug.WriteLine("Имя листа длиннее 128 символов, будет урезано");
+                            string cutname = fileName.Substring(0, 63);
+                            cutname += fileName.Substring(fileName.Length - 64);
+                            fileName = cutname;
+                        }
 
                         if (printerName == "PDFCreator" && printSettings.useOrientation)
                         {
@@ -344,9 +354,14 @@ namespace BatchPrintYay
                                 Debug.WriteLine("На листе 1 основная надпись Id " + msheet.titleBlocks.First().Id.IntegerValue.ToString());
                                 tempFilename = fileName;
                             }
-
+                            
                             string fullFilename = System.IO.Path.Combine(outputFolder, tempFilename);
-                            Debug.WriteLine("Печать в файл " + fullFilename);
+                            Debug.WriteLine("Полное имя файла: " + fullFilename);
+
+                            if(fullFilename.Length > 256)
+                            {
+                                throw new Exception("Слишком длинное имя файла " + fullFilename);
+                            }
 
                             //смещаю область для печати многолистовых спецификаций
                             double offsetX = -i * msheet.widthMm / 25.4; //смещение задается в дюймах!

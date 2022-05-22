@@ -49,14 +49,14 @@ namespace BatchPrintYay
         /// Инициализация класса, без объявления формата листа и параметров печати
         /// </summary>
         /// <param name="Sheet"></param>
-        public MySheet(ViewSheet Sheet)
+        public MySheet(ViewSheet Sheet, string forceColoredParamName)
         {
             sheet = Sheet;
             SheetId = Sheet.Id.IntegerValue;
             SheetNumberInt = GetSheetNumberAsInt();
 
             ForceColored = false;
-            Parameter isForceColoredParam = Sheet.LookupParameter("Цветной");
+            Parameter isForceColoredParam = Sheet.LookupParameter(forceColoredParamName);
             if(isForceColoredParam != null)
             {
                 if(isForceColoredParam.HasValue)

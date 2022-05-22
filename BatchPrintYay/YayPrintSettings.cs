@@ -37,6 +37,7 @@ namespace BatchPrintYay
         public HiddenLineViewsType hiddenLineProcessing = HiddenLineViewsType.VectorProcessing;
         public ColorType colorsType = ColorType.Monochrome;
         public RasterQualityType rasterQuality = RasterQualityType.High;
+        public string alwaysColorParamName = "Цветной";
 
         public bool mergePdfs = false;
         public bool printToPaper = false;

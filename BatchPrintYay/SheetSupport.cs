@@ -29,7 +29,7 @@ namespace BatchPrintYay
         /// </summary>
         /// <param name="commandData"></param>
         /// <returns></returns>
-        public static Dictionary<string, List<MySheet>> GetAllSheets(ExternalCommandData commandData)
+        public static Dictionary<string, List<MySheet>> GetAllSheets(ExternalCommandData commandData, YayPrintSettings printSets)
         {
             Dictionary<string, List<MySheet>> data = new Dictionary<string, List<MySheet>>();
             Document mainDoc = commandData.Application.ActiveUIDocument.Document;
@@ -40,7 +40,7 @@ namespace BatchPrintYay
                 .Cast<RevitLinkInstance>()
                 .ToList();
 
-            List<MySheet> mainSheets = GetSheetsFromDocument(mainDoc);
+            List<MySheet> mainSheets = GetSheetsFromDocument(mainDoc, printSets);
             data.Add(mainDocTitle, mainSheets);
 
             foreach (RevitLinkInstance rli in links)
@@ -51,7 +51,7 @@ namespace BatchPrintYay
                 if (data.ContainsKey(linkDocTitle)) continue;
 
                 RevitLinkType rlt = mainDoc.GetElement(rli.GetTypeId()) as RevitLinkType;
-                List<MySheet> curSheets = GetSheetsFromDocument(linkDoc);
+                List<MySheet> curSheets = GetSheetsFromDocument(linkDoc, printSets);
                 
                 data.Add(linkDocTitle, curSheets);
             }
@@ -77,13 +77,13 @@ namespace BatchPrintYay
             return line2;
         }
 
-        private static List<MySheet> GetSheetsFromDocument(Document doc)
+        private static List<MySheet> GetSheetsFromDocument(Document doc, YayPrintSettings printSets)
         {
             List<MySheet> sheets = new FilteredElementCollector(doc)
                     .WhereElementIsNotElementType()
                     .OfClass(typeof(ViewSheet))
                     .Cast<ViewSheet>()
-                    .Select(i => new MySheet(i))
+                    .Select(i => new MySheet(i, printSets.alwaysColorParamName))
                     .ToList();
 
             sheets.Sort();
