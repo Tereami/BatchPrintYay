@@ -33,11 +33,11 @@ namespace BatchPrintYay
     {
         public string printerName = new System.Drawing.Printing.PrinterSettings().PrinterName;
         public string outputFolder = @"C:\PDF_Print";
-        public string nameConstructor = "<Номер листа>_<Имя листа>.pdf";
+        public string nameConstructor = MyStrings.DefaultPDFfilename;
         public HiddenLineViewsType hiddenLineProcessing = HiddenLineViewsType.VectorProcessing;
         public ColorType colorsType = ColorType.Monochrome;
         public RasterQualityType rasterQuality = RasterQualityType.High;
-        public string alwaysColorParamName = "Цветной";
+        public string alwaysColorParamName = MyStrings.DefaultAlwaysColoredParamname;
 
         public bool mergePdfs = false;
         public bool printToPaper = false;
@@ -45,7 +45,7 @@ namespace BatchPrintYay
         public bool refreshSchedules = true;
 
         public bool exportToDwg = false;
-        public string dwgNameConstructor = "<Номер проекта>_<Орг.КомплектЧертежей>_<Номер листа>.dwg";
+        public string dwgNameConstructor = MyStrings.DefaultDwgName;
         public string selectedDwgExportProfileName = "Monochrome";
         [XmlIgnore]
         public List<ExportDWGSettings> dwgProfiles = new List<ExportDWGSettings>();
@@ -82,7 +82,7 @@ namespace BatchPrintYay
                     ps = (YayPrintSettings)serializer.Deserialize(reader);
                     if (ps == null)
                     {
-                        TaskDialog.Show("Внимание", "Не удалось получить сохраненные настройки печати");
+                        TaskDialog.Show("Warning", MyStrings.MessageUnableToGetSavedPrintSettings);
                         Debug.WriteLine("Unable to get print setiings, set to default");
                         ps = new YayPrintSettings();
                     }

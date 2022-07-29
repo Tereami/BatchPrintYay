@@ -94,7 +94,7 @@ namespace BatchPrintYay
         {
             string message = "";
 
-            Debug.WriteLine("    ID основной надписи " + titleBlock.Id.IntegerValue.ToString());
+            Debug.WriteLine("   Titleblock ID " + titleBlock.Id.IntegerValue.ToString());
 
             double widthMm = titleBlock.get_Parameter(BuiltInParameter.SHEET_WIDTH).AsDouble() * 304.8;
             widthMm = Math.Round(widthMm);
@@ -110,7 +110,7 @@ namespace BatchPrintYay
                 
                 widthMmCheck = checkWidthParam.AsDouble() * 304.8;
                 widthMmCheck = Math.Round(widthMmCheck);
-                Debug.WriteLine("    Есть параметр экземпляра Ширина = " + widthMmCheck.ToString("F3"));
+                Debug.WriteLine(MyStrings.MessageParameterExists + " Ширина = " + widthMmCheck.ToString("F3"));
             }
 
             Parameter checkHeigthParam = titleBlock.LookupParameter("Высота");
@@ -118,12 +118,12 @@ namespace BatchPrintYay
             {
                 heigthMmCheck = checkHeigthParam.AsDouble() * 304.8;
                 heigthMmCheck = Math.Round(heigthMmCheck);
-                Debug.WriteLine("    Есть параметр экземпляра Высота = " + heigthMmCheck.ToString("F3"));
+                Debug.WriteLine(MyStrings.MessageParameterExists + " Высота = " + heigthMmCheck.ToString("F3"));
             }
 
             if (widthMmCheck == -1 || heigthMmCheck == -1)
             {
-                Debug.WriteLine("    Семейство основной надписи не Weandrevit, проверить размеры не удалось");
+                Debug.WriteLine("    Titleblock is not from Weandrevit template, unable to check size");
                 return string.Empty;
             }
 
@@ -133,23 +133,25 @@ namespace BatchPrintYay
 
             if (!widthEquals || !heightEquals)
             {
-                Debug.WriteLine("    Проблема с размерами листа! Не совпадает ширина или высота более чем на " + epsilon.ToString("F3") + "мм");
-                message += "Лист '" + sheet.SheetNumber + " : " + sheet.Name;
-                message += "'. Не удалось определить размеры основной надписи.\n";
+                Debug.WriteLine(MyStrings.MessageSheetSizeProblem + epsilon.ToString("F3") + " mm");
+                message += "Sheet '" + sheet.SheetNumber + " : " + sheet.Name;
+                message += "'. " + MyStrings.MessageUnableToGetTitleblockSize;
                 if (widthMm != widthMmCheck)
                 {
-                    message += "Параметр 'Ширина': " + widthMmCheck.ToString("F0") + "мм, 'Ширина листа': " + widthMm.ToString("F0") + "мм.\n";
+                    message += "'Ширина': " + widthMmCheck.ToString("F0") + "мм, '" + 
+                        MyStrings.ParameterBultinSheetWidth + "': " + widthMm.ToString("F0") + "мм.\n";
                 }
                 if (heigthMm != heigthMmCheck)
                 {
-                    message += "Параметр 'Высота': " + heigthMmCheck.ToString("F0") + "мм, 'Высота листа': " + heigthMm.ToString("F0") + "мм.\n";
+                    message += "'Высота': " + heigthMmCheck.ToString("F0") + "мм, '" + 
+                        MyStrings.ParameterBultinSheetHeight + "': " + heigthMm.ToString("F0") + "мм.\n";
                 }
 
-                message += "Проверьте семейство основной надписи на элементы, выступающие за край листа, или обновите семейство.";
+                message += MyStrings.MessageCheckTitleblockSize;
             }
             else
             {
-                Debug.WriteLine("    Размеры основной надписи корректны");
+                Debug.WriteLine("    Incorrect titleblock size");
             }
 
             return message;

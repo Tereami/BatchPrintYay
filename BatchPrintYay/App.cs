@@ -35,31 +35,26 @@ namespace BatchPrintYay
 
         public Result OnStartup(UIControlledApplication application)
         {
-            string tabName = "Weandrevit";
+            string tabName = "BIM-STARTER TEST";
             try { application.CreateRibbonTab(tabName); } catch { }
 
             assemblyPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
 
-            RibbonPanel panel1 = application.CreateRibbonPanel(tabName, "Печать2");
+            RibbonPanel panel1 = application.CreateRibbonPanel(tabName, "Print test");
 
             PushButton btnCreate = panel1.AddItem(new PushButtonData(
-                "CreateHoleTask",
-                "Печать",
+                "BatchPrint",
+                "Batch print",
                 assemblyPath,
                 "BatchPrintYay.CommandBatchPrint")
                 ) as PushButton;
-            btnCreate.LargeImage = PngImageSource("BatchPrintYay.Resources.PrintBig.png");
-            btnCreate.Image = PngImageSource("BatchPrintYay.Resources.PrintSmall.png");
-            btnCreate.ToolTip = "Пакетная печать выбранных листов в формат PDF";
 
             PushButton btnRefresh = panel1.AddItem(new PushButtonData(
                 "RefreshSchedules",
-                "Обновить спец-и",
+                "Refresh\nschedules",
                 assemblyPath,
                 "BatchPrintYay.CommandRefreshSchedules")
                 ) as PushButton;
-            btnRefresh.LargeImage = PngImageSource("BatchPrintYay.Resources.UpdateBig.png");
-            btnRefresh.Image = PngImageSource("BatchPrintYay.Resources.UpdateSmall.png");
 
 
             return Result.Succeeded;

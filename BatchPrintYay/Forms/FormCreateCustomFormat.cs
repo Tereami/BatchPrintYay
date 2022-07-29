@@ -50,7 +50,8 @@ namespace BatchPrintYay
 
         private void FormCreateCustomFormat_Load(object sender, EventArgs e)
         {
-            labelMsg.Text = "На листе '" + msgSheetName + "' применен лист с размерами " + msgSheetSize + ".";
+            labelSheetName.Text = msgSheetName;
+            labelSheetDimensions.Text = msgSheetSize;
         }
     }
 }

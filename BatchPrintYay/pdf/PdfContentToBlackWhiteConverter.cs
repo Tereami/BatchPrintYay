@@ -588,6 +588,7 @@ namespace BatchPrintYay.pdf
             return newBitmap;
         }
 
+        /*
         private Bitmap ConvertToBlackWhite(Bitmap original)
         {
             Bitmap newBitmap = new Bitmap(original.Width, original.Height);
@@ -610,11 +611,13 @@ namespace BatchPrintYay.pdf
 
             return newBitmap;
         }
+        */
 
         #endregion
 
         #region CMYK_To_RGB
 
+        /*
         private BaseColor Convert_CMYK_To_RGB(float c, float m, float y, float k)
         {
             int red = (int)((1 - c) * (1 - k) * 255.0);
@@ -623,26 +626,20 @@ namespace BatchPrintYay.pdf
 
             return new BaseColor(red, green, blue);
         }
+        */
 
         #endregion
 
-
-        #region Convert_RGB_To_Grayscale
-
+        /*
         private GrayColor Convert_RGB_To_Grayscale(float r, float g, float b)
         {
             return this.Convert_RGB_To_Grayscale(new BaseColor(r, g, b));
         }
-
-        #endregion
-
-        #region Convert_RGB_To_Grayscale
+        */
 
         private GrayColor Convert_RGB_To_Grayscale(BaseColor color)
         {
             return new GrayColor((int)((color.R * 0.30f) + (color.G * 0.59) + (color.B * 0.11)));
         }
-
-        #endregion
     }
 }

@@ -256,6 +256,11 @@
     </Compile>
     <Compile Include="MyDimension.cs" />
     <Compile Include="MySheet.cs" />
+    <Compile Include="MyStrings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MyStrings.resx</DependentUpon>
+    </Compile>
     <Compile Include="pdf\PdfColor.cs" />
     <Compile Include="pdf\PdfContentModifier.cs" />
     <Compile Include="pdf\PdfContentOperatorHandler.cs" />
@@ -280,21 +285,38 @@
     <Compile Include="SupportRegistry.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\FormCreateCustomFormat.ru-RU.resx">
+      <DependentUpon>FormCreateCustomFormat.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormExcludeColors.resx">
       <DependentUpon>FormExcludeColors.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormCreateCustomFormat.resx">
       <DependentUpon>FormCreateCustomFormat.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormExcludeColors.ru-RU.resx">
+      <DependentUpon>FormExcludeColors.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\formNameConstructor.resx">
+      <DependentUpon>formNameConstructor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\formNameConstructor.ru-RU.resx">
       <DependentUpon>formNameConstructor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormPrint.resx">
       <DependentUpon>FormPrint.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormPrint.ru-RU.resx">
+      <DependentUpon>FormPrint.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\MessageBox.resx">
       <DependentUpon>MessageBox.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MyStrings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MyStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MyStrings.ru-RU.resx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

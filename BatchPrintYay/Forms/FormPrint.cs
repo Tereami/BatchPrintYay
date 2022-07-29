@@ -192,7 +192,7 @@ namespace BatchPrintYay
             }
             else
             {
-                _printSettings.nameConstructor = "<Номер листа>_<Имя листа>.pdf";
+                _printSettings.nameConstructor = MyStrings.DefaultPDFfilename;
             }
             _printSettings.mergePdfs = checkBoxMergePdfs.Checked;
             _printSettings.printToPaper = radioButtonPaper.Checked;

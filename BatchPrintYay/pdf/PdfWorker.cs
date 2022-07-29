@@ -92,7 +92,7 @@ namespace BatchPrintYay.pdf
             {
                 Document doc = new Document();
                 PdfCopy writer = new PdfCopy(doc, stream);
-                if (writer == null) throw new Exception("Не удалось создать файл: " + outFile);
+                if (writer == null) throw new Exception("Unable to create file: " + outFile);
                 PdfReader reader = null;
                 try
                 {
@@ -100,18 +100,18 @@ namespace BatchPrintYay.pdf
                     for (int i = 0; i < names.Count; i++)
                     {
                         string fileName = names[i];
-                        Debug.WriteLine("Обрабатывается файл " + fileName);
+                        Debug.WriteLine("File is processed: " + fileName);
                         reader = new PdfReader(fileName);
                         writer.AddDocument(reader);
                         reader.Close();
-                        Debug.WriteLine("Файл успешно объединен");
+                        Debug.WriteLine("File merged succefully");
                     }
                 }
                 catch
                 {
                     if (reader != null)
                     {
-                        Debug.WriteLine("Не удалось объединить файл");
+                        Debug.WriteLine("Unable to merge file");
                         reader.Close();
                     }
                 }
@@ -121,7 +121,7 @@ namespace BatchPrintYay.pdf
                 }
 
             }
-            Debug.WriteLine("Объединено в файл: " + outFile);
+            Debug.WriteLine("Merged to file: " + outFile);
             return merged;
         }
     }

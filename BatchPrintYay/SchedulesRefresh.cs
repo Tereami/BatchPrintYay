@@ -35,7 +35,7 @@ namespace BatchPrintYay
 
             using (Transaction t = new Transaction(doc))
             {
-                t.Start("Обновление спецификаций 1");
+                t.Start(MyStrings.TransactionSchedulesRefresh + " 1");
 
                 foreach (ScheduleSheetInstance ssi in ssis)
                 {
@@ -54,7 +54,7 @@ namespace BatchPrintYay
 
             using (Transaction t2 = new Transaction(doc))
             {
-                t2.Start("Обновление спецификаций 2");
+                t2.Start(MyStrings.TransactionSchedulesRefresh + " 2");
 
                 foreach (ScheduleSheetInstance ssi in ssis)
                 {

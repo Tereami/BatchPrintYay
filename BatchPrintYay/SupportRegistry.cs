@@ -44,7 +44,7 @@ namespace BatchPrintYay
             }
             catch
             {
-                string msg = "Не удалось настроить PDF-принтер, будут использованы настройки по-умолчанию. Выполните настройку принтера вручную";
+                string msg = MyStrings.MessageUnableToMakePdfSettings;
                 MessageBox msgbox = new MessageBox(msg);
                 msgbox.ShowDialog();
             }
@@ -75,9 +75,9 @@ namespace BatchPrintYay
             }
             catch (Exception ex)
             {
-                string msg = "Не удалось настроить PDFCreator! Если это первый запуск - попробуйте отправить на PDFCreator любой другой документ, например, из Word. После этого запустите печать еще раз.";
-                msg += "Устанавливаемое значение ключа реестра: " + text + ", значение ключа реестра: " + check + ". ";
-                msg = msg + "Текст ошибки: " + ex.Message;
+                string msg = MyStrings.MessageUnableToMakePdfSettingsFirstLaunch;
+                msg += MyStrings.MessageRegistryKeyName + text + MyStrings.MessageRegistryKeyValue + check + ". ";
+                msg = msg + MyStrings.MessageErrorText + ex.Message;
                 MessageBox msgbox = new MessageBox(msg);
                 msgbox.ShowDialog();
                 throw new Exception(msg);
@@ -101,7 +101,7 @@ namespace BatchPrintYay
             }
             catch
             {
-                string msg = "Не удалось восстановить настройки PDFCreator по умолчанию. Попробуйте переустановить принтер.";
+                string msg = MyStrings.MessageUnableToRestorePdfSettings;
                 MessageBox msgbox = new MessageBox(msg);
                 msgbox.ShowDialog();
                 throw new Exception(msg);

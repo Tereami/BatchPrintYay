@@ -28,108 +28,108 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.labelMsg = new System.Windows.Forms.Label();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormCreateCustomFormat));
             this.buttonOk = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.labelSheetName = new System.Windows.Forms.Label();
+            this.labelSheetDimensions = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            // 
-            // labelMsg
-            // 
-            this.labelMsg.Location = new System.Drawing.Point(8, 6);
-            this.labelMsg.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelMsg.Name = "labelMsg";
-            this.labelMsg.Size = new System.Drawing.Size(388, 30);
-            this.labelMsg.TabIndex = 0;
-            this.labelMsg.Text = "На листе \"01 - Общие данные\" применен лист с размерами \"999х999\".";
             // 
             // buttonOk
             // 
-            this.buttonOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonOk.Location = new System.Drawing.Point(9, 217);
-            this.buttonOk.Margin = new System.Windows.Forms.Padding(2);
+            resources.ApplyResources(this.buttonOk, "buttonOk");
             this.buttonOk.Name = "buttonOk";
-            this.buttonOk.Size = new System.Drawing.Size(89, 24);
-            this.buttonOk.TabIndex = 1;
-            this.buttonOk.Text = "ОК";
             this.buttonOk.UseVisualStyleBackColor = true;
             this.buttonOk.Click += new System.EventHandler(this.buttonOk_Click);
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            resources.ApplyResources(this.buttonCancel, "buttonCancel");
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(289, 217);
-            this.buttonCancel.Margin = new System.Windows.Forms.Padding(2);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(89, 24);
-            this.buttonCancel.TabIndex = 1;
-            this.buttonCancel.Text = "Отмена";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
             // label4
             // 
-            this.label4.Location = new System.Drawing.Point(8, 80);
-            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            resources.ApplyResources(this.label4, "label4");
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(354, 40);
-            this.label4.TabIndex = 4;
-            this.label4.Text = "Программа может попытаться самостоятельно добавить формат в принтер. Для этого на" +
-    "жмите ОК. Потребуются права администратора.";
             // 
             // label5
             // 
-            this.label5.Location = new System.Drawing.Point(8, 131);
-            this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            resources.ApplyResources(this.label5, "label5");
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(370, 67);
-            this.label5.TabIndex = 4;
-            this.label5.Text = "Если после нажатия ОК отобразилось соообщение об ошибке - значит, создание формат" +
-    "а не удалось. Обратитесь к системному администратору для запуска печати под учет" +
-    "ной записью администратора.";
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(8, 36);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            resources.ApplyResources(this.label1, "label1");
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(388, 44);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Данный формат отсутствует в доступных форматах принтера; печать приостановлена.";
+            // 
+            // label2
+            // 
+            resources.ApplyResources(this.label2, "label2");
+            this.label2.Name = "label2";
+            // 
+            // label6
+            // 
+            resources.ApplyResources(this.label6, "label6");
+            this.label6.Name = "label6";
+            // 
+            // labelSheetName
+            // 
+            resources.ApplyResources(this.labelSheetName, "labelSheetName");
+            this.labelSheetName.Name = "labelSheetName";
+            // 
+            // labelSheetDimensions
+            // 
+            resources.ApplyResources(this.labelSheetDimensions, "labelSheetDimensions");
+            this.labelSheetDimensions.Name = "labelSheetDimensions";
+            // 
+            // label7
+            // 
+            resources.ApplyResources(this.label7, "label7");
+            this.label7.Name = "label7";
             // 
             // FormCreateCustomFormat
             // 
             this.AcceptButton = this.buttonOk;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(389, 249);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOk);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.labelMsg);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.labelSheetDimensions);
+            this.Controls.Add(this.labelSheetName);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FormCreateCustomFormat";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Внимание!";
             this.Load += new System.EventHandler(this.FormCreateCustomFormat_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Label labelMsg;
         private System.Windows.Forms.Button buttonOk;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label labelSheetName;
+        private System.Windows.Forms.Label labelSheetDimensions;
+        private System.Windows.Forms.Label label7;
     }
 }
