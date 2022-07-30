@@ -172,6 +172,9 @@
   <data name="groupBox1.Text" xml:space="preserve">
     <value>Принтер</value>
   </data>
+  <data name="groupBox2.Text" xml:space="preserve">
+    <value>Обработка</value>
+  </data>
   <data name="radioButtonRastr.Size" type="System.Drawing.Size, System.Drawing">
     <value>79, 17</value>
   </data>
@@ -184,8 +187,8 @@
   <data name="radioButtonVector.Text" xml:space="preserve">
     <value>Векторная</value>
   </data>
-  <data name="groupBox2.Text" xml:space="preserve">
-    <value>Обработка</value>
+  <data name="groupBox3.Text" xml:space="preserve">
+    <value>Цветовая схема</value>
   </data>
   <data name="textBoxAlwaysColorParamName.Text" xml:space="preserve">
     <value>Цветной</value>
@@ -202,14 +205,20 @@
   <data name="comboBoxColors.Text" xml:space="preserve">
     <value>Оттенки серого</value>
   </data>
-  <data name="groupBox3.Text" xml:space="preserve">
-    <value>Цветовая схема</value>
-  </data>
   <data name="label4.Size" type="System.Drawing.Size, System.Drawing">
     <value>101, 13</value>
   </data>
   <data name="label4.Text" xml:space="preserve">
     <value>Листы для печати:</value>
+  </data>
+  <data name="labelVersion.Size" type="System.Drawing.Size, System.Drawing">
+    <value>97, 13</value>
+  </data>
+  <data name="labelVersion.Text" xml:space="preserve">
+    <value>v2022.07.30 14:12</value>
+  </data>
+  <data name="groupBox4.Text" xml:space="preserve">
+    <value>Другие опции</value>
   </data>
   <data name="textBoxDwgNameConstructor.Text" xml:space="preserve">
     <value>&lt;Номер проекта&gt;_&lt;Орг.КомплектЧертежей&gt;_&lt;Номер листа&gt;.dwg</value>
@@ -231,9 +240,6 @@
   </data>
   <data name="checkBoxExportDwg.Text" xml:space="preserve">
     <value>Экспортировать в DWG</value>
-  </data>
-  <data name="groupBox4.Text" xml:space="preserve">
-    <value>Другие опции</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>Пакетная печать</value>

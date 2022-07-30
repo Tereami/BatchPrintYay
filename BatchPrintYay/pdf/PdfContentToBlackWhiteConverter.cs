@@ -338,7 +338,7 @@ namespace BatchPrintYay.pdf
                 }
                 else if (subType == PdfName.IMAGE)
                 {
-                    this.Do_Image(xobjectStream);
+                    //this.Do_Image(xobjectStream); //картинки обрабатывать не буду
                 }
             }
 
@@ -364,10 +364,9 @@ namespace BatchPrintYay.pdf
 
         #endregion
 
-        #region Do_Image
-
+        /* Doing images isnt needed
         static int bmpfileidx = 0;
-
+        
         private void Do_Image(PdfStream stream)
         {
             byte[] imageBuffer = null;
@@ -460,9 +459,8 @@ namespace BatchPrintYay.pdf
                     prStream.Put(PdfName.LENGTH, new PdfNumber(imageBuffer.LongLength));
                 }
             }
-        }
+        } */
 
-        #endregion
 
         #region SetLineTo
 
@@ -502,8 +500,7 @@ namespace BatchPrintYay.pdf
 
         #endregion
 
-        #region CreateBitmapFromFlateDecodeImage
-
+        /*
         private Bitmap CreateBitmapFromFlateDecodeImage(byte[] buffer, int width, int height, int bpp)
         {
             PixelFormat pixelFormat;
@@ -546,10 +543,8 @@ namespace BatchPrintYay.pdf
                 return bmp.Clone() as Bitmap;
             }
         }
+        
 
-        #endregion
-
-        #region GetEncoder
 
         private ImageCodecInfo GetEncoder(ImageFormat format)
         {
@@ -566,10 +561,8 @@ namespace BatchPrintYay.pdf
             return null;
         }
 
-        #endregion
 
-        #region ConvertToGrayscale
-
+        
         private Bitmap ConvertToGrayscale(Bitmap original)
         {
             Bitmap newBitmap = new Bitmap(original.Width, original.Height);
@@ -586,7 +579,7 @@ namespace BatchPrintYay.pdf
             
 
             return newBitmap;
-        }
+        } */
 
         /*
         private Bitmap ConvertToBlackWhite(Bitmap original)
@@ -613,9 +606,7 @@ namespace BatchPrintYay.pdf
         }
         */
 
-        #endregion
 
-        #region CMYK_To_RGB
 
         /*
         private BaseColor Convert_CMYK_To_RGB(float c, float m, float y, float k)
@@ -626,20 +617,16 @@ namespace BatchPrintYay.pdf
 
             return new BaseColor(red, green, blue);
         }
-        */
-
-        #endregion
-
-        /*
         private GrayColor Convert_RGB_To_Grayscale(float r, float g, float b)
         {
             return this.Convert_RGB_To_Grayscale(new BaseColor(r, g, b));
         }
-        */
+        
 
         private GrayColor Convert_RGB_To_Grayscale(BaseColor color)
         {
             return new GrayColor((int)((color.R * 0.30f) + (color.G * 0.59) + (color.B * 0.11)));
         }
+        */
     }
 }
