@@ -82,10 +82,12 @@ namespace BatchPrintYay
                 FamilyInstance titleBlock = tempTitleBlocks.First();
                 Debug.WriteLine(" Id of used titleblock " + titleBlock.Id.IntegerValue.ToString());
 
-                widthMm = titleBlock.get_Parameter(BuiltInParameter.SHEET_WIDTH).AsDouble() * 304.8;
+                double widthFeets = titleBlock.get_Parameter(BuiltInParameter.SHEET_WIDTH).AsDouble();
+                widthMm = UnitUtils.ConvertFromInternalUnits(widthFeets, DisplayUnitType.DUT_MILLIMETERS);
                 Debug.WriteLine(" BuiltInParameter.SHEET_WIDTH = " + widthMm.ToString("F3"));
 
-                heigthMm = titleBlock.get_Parameter(BuiltInParameter.SHEET_HEIGHT).AsDouble() * 304.8;
+                double heightFeets = titleBlock.get_Parameter(BuiltInParameter.SHEET_HEIGHT).AsDouble();
+                heigthMm = UnitUtils.ConvertFromInternalUnits(heightFeets, DisplayUnitType.DUT_MILLIMETERS);
                 Debug.WriteLine(" BuiltInParameter.SHEET_HEIGHT = " + heigthMm.ToString("F3"));
 
                 Debug.WriteLine(" Check titleblock is correct ");

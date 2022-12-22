@@ -172,7 +172,8 @@ namespace BatchPrintYay
                     break;
                 case StorageType.Double:
                     double d = param.AsDouble();
-                    val = Math.Round(d * 304.8, 3).ToString();
+                    double d2 = UnitUtils.ConvertFromInternalUnits(d, param.DisplayUnitType);
+                    val = Math.Round(d2).ToString("F3");
                     break;
                 case StorageType.String:
                     val = param.AsString();
@@ -227,7 +228,7 @@ namespace BatchPrintYay
             }
             else
             {
-                throw new Exception("Невозможно сравнить два объекта");
+                throw new Exception("Unable to equals the objects");
             }
         }
     }

@@ -56,7 +56,6 @@
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
-            this.labelVersion = new System.Windows.Forms.Label();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.buttonHelp = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
@@ -73,6 +72,7 @@
             // 
             // groupBox1
             // 
+            resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Controls.Add(this.checkBoxRefresh);
             this.groupBox1.Controls.Add(this.checkBoxOrientation);
             this.groupBox1.Controls.Add(this.checkBoxMergePdfs);
@@ -87,7 +87,6 @@
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.comboBoxPrinters);
-            resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.TabStop = false;
             // 
@@ -177,17 +176,17 @@
             // 
             // comboBoxPrinters
             // 
-            this.comboBoxPrinters.FormattingEnabled = true;
             resources.ApplyResources(this.comboBoxPrinters, "comboBoxPrinters");
+            this.comboBoxPrinters.FormattingEnabled = true;
             this.comboBoxPrinters.Name = "comboBoxPrinters";
             this.comboBoxPrinters.SelectedIndexChanged += new System.EventHandler(this.comboBoxPrinters_SelectedIndexChanged);
             // 
             // groupBox2
             // 
+            resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Controls.Add(this.radioButtonRastr);
             this.groupBox2.Controls.Add(this.radioButtonVector);
             this.groupBox2.Controls.Add(this.comboBoxRasterQuality);
-            resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.TabStop = false;
             // 
@@ -220,11 +219,11 @@
             // 
             // groupBox3
             // 
+            resources.ApplyResources(this.groupBox3, "groupBox3");
             this.groupBox3.Controls.Add(this.textBoxAlwaysColorParamName);
             this.groupBox3.Controls.Add(this.label8);
             this.groupBox3.Controls.Add(this.buttonExcludesColor);
             this.groupBox3.Controls.Add(this.comboBoxColors);
-            resources.ApplyResources(this.groupBox3, "groupBox3");
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.TabStop = false;
             // 
@@ -247,12 +246,12 @@
             // 
             // comboBoxColors
             // 
+            resources.ApplyResources(this.comboBoxColors, "comboBoxColors");
             this.comboBoxColors.FormattingEnabled = true;
             this.comboBoxColors.Items.AddRange(new object[] {
             resources.GetString("comboBoxColors.Items"),
             resources.GetString("comboBoxColors.Items1"),
             resources.GetString("comboBoxColors.Items2")});
-            resources.ApplyResources(this.comboBoxColors, "comboBoxColors");
             this.comboBoxColors.Name = "comboBoxColors";
             this.comboBoxColors.SelectedIndexChanged += new System.EventHandler(this.comboBoxColors_SelectedIndexChanged);
             // 
@@ -275,16 +274,11 @@
             resources.ApplyResources(this.label4, "label4");
             this.label4.Name = "label4";
             // 
-            // labelVersion
-            // 
-            resources.ApplyResources(this.labelVersion, "labelVersion");
-            this.labelVersion.Name = "labelVersion";
-            // 
             // treeView1
             // 
+            resources.ApplyResources(this.treeView1, "treeView1");
             this.treeView1.CheckBoxes = true;
             this.treeView1.FullRowSelect = true;
-            resources.ApplyResources(this.treeView1, "treeView1");
             this.treeView1.Name = "treeView1";
             this.treeView1.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterCheck);
             // 
@@ -297,12 +291,12 @@
             // 
             // groupBox4
             // 
+            resources.ApplyResources(this.groupBox4, "groupBox4");
             this.groupBox4.Controls.Add(this.textBoxDwgNameConstructor);
             this.groupBox4.Controls.Add(this.label7);
             this.groupBox4.Controls.Add(this.comboBoxDwgProfiles);
             this.groupBox4.Controls.Add(this.label1);
             this.groupBox4.Controls.Add(this.checkBoxExportDwg);
-            resources.ApplyResources(this.groupBox4, "groupBox4");
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.TabStop = false;
             // 
@@ -343,7 +337,6 @@
             this.Controls.Add(this.label4);
             this.Controls.Add(this.buttonHelp);
             this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.labelVersion);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -387,7 +380,6 @@
         private System.Windows.Forms.RadioButton radioButtonPDF;
         private System.Windows.Forms.RadioButton radioButtonPaper;
         private System.Windows.Forms.CheckBox checkBoxMergePdfs;
-        private System.Windows.Forms.Label labelVersion;
         private System.Windows.Forms.TreeView treeView1;
         private System.Windows.Forms.CheckBox checkBoxOrientation;
         private System.Windows.Forms.Button buttonHelp;

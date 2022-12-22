@@ -205,17 +205,17 @@
   <data name="comboBoxColors.Text" xml:space="preserve">
     <value>Оттенки серого</value>
   </data>
+  <data name="btnCancel.Text" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
   <data name="label4.Size" type="System.Drawing.Size, System.Drawing">
     <value>101, 13</value>
   </data>
   <data name="label4.Text" xml:space="preserve">
     <value>Листы для печати:</value>
   </data>
-  <data name="labelVersion.Size" type="System.Drawing.Size, System.Drawing">
-    <value>97, 13</value>
-  </data>
-  <data name="labelVersion.Text" xml:space="preserve">
-    <value>v2022.07.30 14:12</value>
+  <data name="buttonHelp.Text" xml:space="preserve">
+    <value>Справка</value>
   </data>
   <data name="groupBox4.Text" xml:space="preserve">
     <value>Другие опции</value>

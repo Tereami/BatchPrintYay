@@ -46,7 +46,7 @@ namespace BatchPrintYay
         public FormPrint(Dictionary<string, List<MySheet>> SheetsBase, YayPrintSettings printSettings)
         {
             InitializeComponent();
-            //labelVersion.Text = System.IO.File.GetLastWriteTime(System.Reflection.Assembly.GetExecutingAssembly().Location).ToString();
+            this.Text += " ver. " + System.IO.File.GetLastWriteTime(System.Reflection.Assembly.GetExecutingAssembly().Location).ToString();
             this.AcceptButton = btnOk;
             this.CancelButton = btnCancel;
 

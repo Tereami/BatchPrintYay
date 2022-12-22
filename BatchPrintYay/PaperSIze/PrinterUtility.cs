@@ -26,12 +26,12 @@ namespace BatchPrintYay
     {
         public static PaperSize GetPaperSize(string printerName, double widthMM, double heigthMM)
         {
-            Debug.WriteLine("   пробую получить размер бумаги: ширина " + widthMM.ToString("F3") + "мм, высота " + heigthMM.ToString("F3"));
+            Debug.WriteLine("   trying to get sheet size: width " + widthMM.ToString("F3") + "mm, height " + heigthMM.ToString("F3"));
 
             int widthInches = (int)Math.Round(100 * widthMM / 25.4);
             int heigthInches = (int)Math.Round(100 * heigthMM / 25.4);
 
-            Debug.WriteLine("    после перевода в дюймы: " + widthInches + " х " + heigthInches);
+            Debug.WriteLine("   in inches: " + widthInches + " х " + heigthInches);
             PrinterSettings prntSettings = new PrinterSettings();
             prntSettings.PrinterName = printerName;
             PrinterSettings.PaperSizeCollection sizes = prntSettings.PaperSizes;
@@ -40,14 +40,14 @@ namespace BatchPrintYay
             {
                 int curWidth = size.Width;
                 int curHeigth = size.Height;
-                Debug.WriteLine("   проверяю размер бумаги " + size.PaperName + " размер в дюймах " + curWidth.ToString() + " x " + curHeigth.ToString());
+                Debug.WriteLine("   check paper size " + size.PaperName + " in inches " + curWidth.ToString() + " x " + curHeigth.ToString());
 
                 bool check1 = IntEquals(widthInches, curWidth, 5);
                 bool check2 = IntEquals(heigthInches, curHeigth, 5);
 
                 if (check1 && check2)
                 {
-                    Debug.WriteLine("    Формат найден, ширина равна ширине, высота равна высоте");
+                    Debug.WriteLine("    A sheet size is found, width equals width, height equals height");
                     return size;
                 }
                 else
@@ -56,18 +56,18 @@ namespace BatchPrintYay
                     bool check4 = IntEquals(heigthInches, curWidth, 5);
                     if (check3 && check4)
                     {
-                        Debug.WriteLine("    Ширина равна высоте, высота равна ширине - тоже подходит");
+                        Debug.WriteLine("    Width equals height, height equals width - is compatible too");
                         return size;
                     }
                     else
                     {
-                        Debug.WriteLine("    Формат не подходит");
+                        Debug.WriteLine("    Sheet size is not compatible");
                     }
 
                 }
             }
 
-            Debug.WriteLine("    Подходящий формат не найден");
+            Debug.WriteLine("    Sheet size is found");
             return null;
         }
 
@@ -188,12 +188,5 @@ namespace BatchPrintYay
             string defaultPrinterName = pd.PrinterSettings.PrinterName;
             return defaultPrinterName;
         }
-
-
     }
-
 }
-
-
-
-

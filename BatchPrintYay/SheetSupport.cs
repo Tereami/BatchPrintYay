@@ -96,10 +96,12 @@ namespace BatchPrintYay
 
             Debug.WriteLine("   Titleblock ID " + titleBlock.Id.IntegerValue.ToString());
 
-            double widthMm = titleBlock.get_Parameter(BuiltInParameter.SHEET_WIDTH).AsDouble() * 304.8;
+            double widthFeets = titleBlock.get_Parameter(BuiltInParameter.SHEET_WIDTH).AsDouble();
+            double widthMm = UnitUtils.ConvertFromInternalUnits(widthFeets, DisplayUnitType.DUT_MILLIMETERS);
             widthMm = Math.Round(widthMm);
-            double heigthMm = titleBlock.get_Parameter(BuiltInParameter.SHEET_HEIGHT).AsDouble() * 304.8;
-            heigthMm = Math.Round(heigthMm);
+            double heightFeets = titleBlock.get_Parameter(BuiltInParameter.SHEET_HEIGHT).AsDouble();
+            double heightMm = UnitUtils.ConvertFromInternalUnits(heightFeets, DisplayUnitType.DUT_MILLIMETERS);
+            heightMm = Math.Round(heightMm);
 
 
             double widthMmCheck = -1, heigthMmCheck = -1;
@@ -108,7 +110,7 @@ namespace BatchPrintYay
             if (checkWidthParam != null)
             {
                 
-                widthMmCheck = checkWidthParam.AsDouble() * 304.8;
+                widthMmCheck = UnitUtils.ConvertFromInternalUnits(checkWidthParam.AsDouble(), DisplayUnitType.DUT_MILLIMETERS);
                 widthMmCheck = Math.Round(widthMmCheck);
                 Debug.WriteLine(MyStrings.MessageParameterExists + " Ширина = " + widthMmCheck.ToString("F3"));
             }
@@ -116,7 +118,7 @@ namespace BatchPrintYay
             Parameter checkHeigthParam = titleBlock.LookupParameter("Высота");
             if (checkHeigthParam != null)
             {
-                heigthMmCheck = checkHeigthParam.AsDouble() * 304.8;
+                heigthMmCheck = UnitUtils.ConvertFromInternalUnits(checkHeigthParam.AsDouble(), DisplayUnitType.DUT_MILLIMETERS);
                 heigthMmCheck = Math.Round(heigthMmCheck);
                 Debug.WriteLine(MyStrings.MessageParameterExists + " Высота = " + heigthMmCheck.ToString("F3"));
             }
@@ -129,7 +131,7 @@ namespace BatchPrintYay
 
             double epsilon = 2.0;
             bool widthEquals = DoubleEquals(widthMm, widthMmCheck, epsilon);
-            bool heightEquals = DoubleEquals(heigthMm, heigthMmCheck, epsilon);
+            bool heightEquals = DoubleEquals(heightMm, heigthMmCheck, epsilon);
 
             if (!widthEquals || !heightEquals)
             {
@@ -141,10 +143,10 @@ namespace BatchPrintYay
                     message += "'Ширина': " + widthMmCheck.ToString("F0") + "мм, '" + 
                         MyStrings.ParameterBultinSheetWidth + "': " + widthMm.ToString("F0") + "мм.\n";
                 }
-                if (heigthMm != heigthMmCheck)
+                if (heightMm != heigthMmCheck)
                 {
                     message += "'Высота': " + heigthMmCheck.ToString("F0") + "мм, '" + 
-                        MyStrings.ParameterBultinSheetHeight + "': " + heigthMm.ToString("F0") + "мм.\n";
+                        MyStrings.ParameterBultinSheetHeight + "': " + heightMm.ToString("F0") + "мм.\n";
                 }
 
                 message += MyStrings.MessageCheckTitleblockSize;
