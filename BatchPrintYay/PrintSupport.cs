@@ -83,11 +83,11 @@ namespace BatchPrintYay
                 Debug.WriteLine(" Id of used titleblock " + titleBlock.Id.IntegerValue.ToString());
 
                 double widthFeets = titleBlock.get_Parameter(BuiltInParameter.SHEET_WIDTH).AsDouble();
-                widthMm = UnitUtils.ConvertFromInternalUnits(widthFeets, DisplayUnitType.DUT_MILLIMETERS);
+                widthMm = MyDimension.GetLengthInMillimeters(widthFeets);
                 Debug.WriteLine(" BuiltInParameter.SHEET_WIDTH = " + widthMm.ToString("F3"));
 
                 double heightFeets = titleBlock.get_Parameter(BuiltInParameter.SHEET_HEIGHT).AsDouble();
-                heigthMm = UnitUtils.ConvertFromInternalUnits(heightFeets, DisplayUnitType.DUT_MILLIMETERS);
+                heigthMm = MyDimension.GetLengthInMillimeters(heightFeets);
                 Debug.WriteLine(" BuiltInParameter.SHEET_HEIGHT = " + heigthMm.ToString("F3"));
 
                 Debug.WriteLine(" Check titleblock is correct ");

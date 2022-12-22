@@ -385,8 +385,6 @@ namespace BatchPrintYay
                         }
 
                         t.RollBack();
-
-                        
                     }
 
                     //если включен dwg - то ещё экспортирую этот лист

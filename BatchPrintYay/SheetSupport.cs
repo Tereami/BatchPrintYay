@@ -11,13 +11,13 @@ This code is provided 'as is'. Author disclaims any implied warranty.
 Zuev Aleksandr, 2020, all rigths reserved.*/
 #endregion
 #region usings
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text.RegularExpressions;
 #endregion
 
 namespace BatchPrintYay
@@ -97,28 +97,35 @@ namespace BatchPrintYay
             Debug.WriteLine("   Titleblock ID " + titleBlock.Id.IntegerValue.ToString());
 
             double widthFeets = titleBlock.get_Parameter(BuiltInParameter.SHEET_WIDTH).AsDouble();
-            double widthMm = UnitUtils.ConvertFromInternalUnits(widthFeets, DisplayUnitType.DUT_MILLIMETERS);
+            double widthMm = MyDimension.GetLengthInMillimeters(widthFeets);
             widthMm = Math.Round(widthMm);
             double heightFeets = titleBlock.get_Parameter(BuiltInParameter.SHEET_HEIGHT).AsDouble();
-            double heightMm = UnitUtils.ConvertFromInternalUnits(heightFeets, DisplayUnitType.DUT_MILLIMETERS);
+            double heightMm = MyDimension.GetLengthInMillimeters(heightFeets);
             heightMm = Math.Round(heightMm);
 
 
             double widthMmCheck = -1, heigthMmCheck = -1;
 
             Parameter checkWidthParam = titleBlock.LookupParameter("Ширина");
+            if(checkWidthParam == null)
+                checkWidthParam = titleBlock.LookupParameter("Widthа");
+
             if (checkWidthParam != null)
             {
-                
-                widthMmCheck = UnitUtils.ConvertFromInternalUnits(checkWidthParam.AsDouble(), DisplayUnitType.DUT_MILLIMETERS);
+                double feetsWidthCheck = checkWidthParam.AsDouble();
+                widthMmCheck = MyDimension.GetLengthInMillimeters(feetsWidthCheck);
                 widthMmCheck = Math.Round(widthMmCheck);
                 Debug.WriteLine(MyStrings.MessageParameterExists + " Ширина = " + widthMmCheck.ToString("F3"));
             }
 
-            Parameter checkHeigthParam = titleBlock.LookupParameter("Высота");
-            if (checkHeigthParam != null)
+            Parameter checkHeightParam = titleBlock.LookupParameter("Высота");
+            if(checkHeightParam == null)
+                checkHeightParam = titleBlock.LookupParameter("Height");
+
+            if (checkHeightParam != null)
             {
-                heigthMmCheck = UnitUtils.ConvertFromInternalUnits(checkHeigthParam.AsDouble(), DisplayUnitType.DUT_MILLIMETERS);
+                double feetsHeightCheck = checkHeightParam.AsDouble();
+                heigthMmCheck = MyDimension.GetLengthInMillimeters(feetsHeightCheck);
                 heigthMmCheck = Math.Round(heigthMmCheck);
                 Debug.WriteLine(MyStrings.MessageParameterExists + " Высота = " + heigthMmCheck.ToString("F3"));
             }
@@ -153,7 +160,7 @@ namespace BatchPrintYay
             }
             else
             {
-                Debug.WriteLine("    Incorrect titleblock size");
+                Debug.WriteLine("    Titleblock size is correct");
             }
 
             return message;

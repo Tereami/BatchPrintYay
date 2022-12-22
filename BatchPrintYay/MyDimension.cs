@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Autodesk.Revit.DB;
 
 namespace BatchPrintYay
 {
@@ -42,6 +43,16 @@ namespace BatchPrintYay
                 _feets = value;
                 _mms = (int)Math.Round((value * 304.8), 0);
             }
+        }
+
+        public static double GetLengthInMillimeters(double feets)
+        {
+#if R2017 || R2018 || R2019 || R2020
+            double mm = UnitUtils.ConvertFromInternalUnits(feets, DisplayUnitType.DUT_MILLIMETERS);
+#else
+            double mm = UnitUtils.ConvertFromInternalUnits(feets, UnitTypeId.Millimeters);
+#endif
+            return mm;
         }
     }
 }

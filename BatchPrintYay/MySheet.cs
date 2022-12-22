@@ -43,7 +43,7 @@ namespace BatchPrintYay
         public string PdfFileName;
 
         public int SheetNumberInt = -1;
-        
+
 
         /// <summary>
         /// Инициализация класса, без объявления формата листа и параметров печати
@@ -57,9 +57,9 @@ namespace BatchPrintYay
 
             ForceColored = false;
             Parameter isForceColoredParam = Sheet.LookupParameter(forceColoredParamName);
-            if(isForceColoredParam != null)
+            if (isForceColoredParam != null)
             {
-                if(isForceColoredParam.HasValue)
+                if (isForceColoredParam.HasValue)
                 {
                     if (isForceColoredParam.AsInteger() == 1)
                         ForceColored = true;
@@ -90,7 +90,7 @@ namespace BatchPrintYay
             return name;
         }
 
-        
+
 
         /// <summary>
         /// Формирует имя листа на базе строки-"конструктора", содержащего имена параметров,
@@ -106,7 +106,7 @@ namespace BatchPrintYay
             name = name + prefix;
 
             string[] sa = constructor.Split('<');
-            for(int i = 0; i < sa.Length; i++)
+            for (int i = 0; i < sa.Length; i++)
             {
                 string s = sa[i];
                 if (!s.Contains(">")) continue;
@@ -126,7 +126,7 @@ namespace BatchPrintYay
                              char.IsWhiteSpace(c) ||
                              c == '-' ||
                              c == '_' ||
-                             c == '.' )).ToArray();
+                             c == '.')).ToArray();
 
             name = new string(arr);
 
@@ -144,11 +144,11 @@ namespace BatchPrintYay
             string value = "";
 
             Parameter param = sheet.LookupParameter(paramName);
-            if(param == null)
+            if (param == null)
             {
                 param = sheet.Document.ProjectInformation.LookupParameter(paramName);
             }
-            if(param != null)
+            if (param != null)
             {
                 value = this.GetParameterValueAsString(param);
             }
@@ -172,7 +172,11 @@ namespace BatchPrintYay
                     break;
                 case StorageType.Double:
                     double d = param.AsDouble();
-                    double d2 = UnitUtils.ConvertFromInternalUnits(d, param.DisplayUnitType);
+#if R2017 || R2018 || R2019 || R2020
+                    double d2 = UnitUtils.ConvertFromInternalUnits(d, DisplayUnitType.DUT_MILLIMETERS);
+#else
+                    double d2 = UnitUtils.ConvertFromInternalUnits(d, UnitTypeId.Millimeters);
+#endif
                     val = Math.Round(d2).ToString("F3");
                     break;
                 case StorageType.String:
@@ -200,7 +204,7 @@ namespace BatchPrintYay
             {
                 sheetNumberString = sheetNumberString.Split('-').Last();
             }
-            if(sheetNumberString.Contains("_"))
+            if (sheetNumberString.Contains("_"))
             {
                 sheetNumberString = sheetNumberString.Split('_').Last();
             }
@@ -219,7 +223,7 @@ namespace BatchPrintYay
         public int CompareTo(object obj)
         {
             MySheet ms = obj as MySheet;
-            if(ms != null)
+            if (ms != null)
             {
                 int thisSheetNumber = this.SheetNumberInt;
                 int compareSheetNumber = ms.SheetNumberInt;
