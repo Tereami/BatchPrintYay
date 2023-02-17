@@ -43,6 +43,7 @@ namespace BatchPrintYay
         public string PdfFileName;
 
         public int SheetNumberInt = -1;
+        public int SheetSubNumber = 0;
 
 
         /// <summary>
@@ -70,7 +71,6 @@ namespace BatchPrintYay
         public MySheet(MySheet oldSheet)
         {
             sheet = oldSheet.sheet;
-            SheetNumberInt = oldSheet.SheetNumberInt;
             revitPaperSize = oldSheet.revitPaperSize;
             windowsPaperSize = oldSheet.windowsPaperSize;
             pSetting = oldSheet.pSetting;
@@ -82,6 +82,7 @@ namespace BatchPrintYay
             heigthMm = oldSheet.heigthMm;
             ForceColored = oldSheet.ForceColored;
             PdfFileName = oldSheet.PdfFileName;
+            SheetNumberInt = oldSheet.SheetNumberInt;
         }
 
         public override string ToString()

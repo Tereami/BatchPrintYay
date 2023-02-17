@@ -30,6 +30,8 @@ namespace BatchPrintYay
             Debug.Listeners.Clear();
             Debug.Listeners.Add(new RbsLogger.Logger("BatchPrint"));
             Debug.WriteLine("Print started");
+            string version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            Debug.WriteLine($"Assembly version: {version}");
 
             App.assemblyPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
 
@@ -343,11 +345,14 @@ namespace BatchPrintYay
 
                         for (int i = 0; i < msheet.titleBlocks.Count; i++)
                         {
+                            MySheet printedSheet = msheet;
                             string tempFilename = "";
                             if(msheet.titleBlocks.Count > 1)
                             {
                                 Debug.WriteLine("More than 1 titleblock on 1 sheet, print number " + i.ToString());
                                 tempFilename = fileName.Replace(".pdf", "_" +  i.ToString() + ".pdf");
+                                printedSheet = new MySheet(msheet);
+                                printedSheet.SheetSubNumber = i;
                             }
                             else
                             {
@@ -362,21 +367,22 @@ namespace BatchPrintYay
                             {
                                 throw new Exception(MyStrings.ExceptionFilenameTooLong + fullFilename);
                             }
+                            printedSheet.PdfFileName = fullFilename;
 
                             //смещаю область для печати многолистовых спецификаций
-                            double offsetX = -i * msheet.widthMm / 25.4; //смещение задается в дюймах!
+                            double offsetX = -i * printedSheet.widthMm / 25.4; //смещение задается в дюймах!
                             Debug.WriteLine("Offset X: " + offsetX.ToString("F3"));
 
-                            PrintSetting ps = PrintSupport.CreatePrintSetting(openedDoc, pManager, msheet, printSettings, offsetX, 0);
+                            PrintSetting ps = PrintSupport.CreatePrintSetting(openedDoc, pManager, printedSheet, printSettings, offsetX, 0);
 
                             pManager.PrintSetup.CurrentPrintSetting = ps;
                             Debug.WriteLine("Print settings are applied, " + ps.Name);
 
 
-                            PrintSupport.PrintView(msheet.sheet, pManager, ps, tempFilename);
+                            PrintSupport.PrintView(printedSheet.sheet, pManager, ps, tempFilename);
                             Debug.WriteLine("Sheet is send to the printer");
-                            msheet.PdfFileName = fullFilename;
-                            printedSheets.Add(new MySheet(msheet));
+                            
+                            printedSheets.Add(printedSheet);
                         }
 
                         if (printerName == "PDFCreator" && printSettings.useOrientation)
@@ -409,7 +415,11 @@ namespace BatchPrintYay
                 }
             }
             int printedSheetsCount = printedSheets.Count;
-            printedSheets.Sort();
+            printedSheets = printedSheets
+                .OrderBy(i => i.SheetNumberInt)
+                .ThenBy(i => i.SheetSubNumber)
+                .ToList();
+
 
             //если требуется постобработка файлов - ждем, пока они напечатаются
             if (printSettings.colorsType == ColorType.MonochromeWithExcludes || printSettings.mergePdfs)
