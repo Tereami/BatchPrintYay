@@ -80,7 +80,7 @@ namespace BatchPrintYay
 
                 msheet.titleBlocks = tempTitleBlocks;
                 FamilyInstance titleBlock = tempTitleBlocks.First();
-                Debug.WriteLine(" Id of used titleblock " + titleBlock.Id.IntegerValue.ToString());
+                Debug.WriteLine($" Id of used titleblock {titleBlock.GetElementId()}");
 
                 double widthFeets = titleBlock.get_Parameter(BuiltInParameter.SHEET_WIDTH).AsDouble();
                 widthMm = MyDimension.GetLengthInMillimeters(widthFeets);
@@ -246,8 +246,13 @@ namespace BatchPrintYay
 
             pps.PaperPlacement = PaperPlacementType.Margins;
             pps.MarginType = MarginType.UserDefined;
+#if R2017 || R2018 || R2019 || R2020 || R2021
             pps.UserDefinedMarginX = offsetX;
             pps.UserDefinedMarginY = offsetY;
+#else
+            pps.OriginOffsetX = offsetX;
+            pps.OriginOffsetY = offsetY;
+#endif
 
             //RasterQualityType rqt =(RasterQualityType)Enum.Parse(typeof(RasterQualityType), printSettings.rasterQuality);
             pps.RasterQuality = printSettings.rasterQuality;

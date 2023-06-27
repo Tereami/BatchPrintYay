@@ -58,7 +58,7 @@ namespace BatchPrintYay
                 if (sheet == null) continue;
                 sheetsIsChecked = true;
 
-                MySheet sheetInBase = allSheets[mainDocTitle].Where(i => i.sheet.Id.IntegerValue == sheet.Id.IntegerValue).First();
+                MySheet sheetInBase = allSheets[mainDocTitle].Where(i => i.sheet.GetElementId() == sheet.GetElementId()).First();
                 sheetInBase.IsPrintable = true;
 
                 //mSheets0.Add(new MySheet(sheet));
@@ -232,7 +232,7 @@ namespace BatchPrintYay
                     {
                         foreach (ViewSheet vs in linkSheets)
                         {
-                            if (ms.SheetId == vs.Id.IntegerValue)
+                            if (ms.SheetId == vs.GetElementId())
                             {
                                 MySheet newMs = new MySheet(vs, printSettings.alwaysColorParamName);
                                 tempSheets.Add(newMs);
@@ -356,7 +356,7 @@ namespace BatchPrintYay
                             }
                             else
                             {
-                                Debug.WriteLine("1 titleblock on sheet, Id " + msheet.titleBlocks.First().Id.IntegerValue.ToString());
+                                Debug.WriteLine($"1 titleblock on sheet, Id {msheet.titleBlocks.First().GetElementId()}");
                                 tempFilename = fileName;
                             }
                             

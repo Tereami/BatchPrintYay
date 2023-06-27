@@ -21,13 +21,17 @@ namespace BatchPrintYay
 {
     public static class SchedulesRefresh
     {
-        public static List<int> groupIds = new List<int>();
+        public static List<long> groupIds = new List<long>();
         public static void Start(Document doc, View sheet)
         {
             List<ScheduleSheetInstance> ssis = new FilteredElementCollector(doc)
                 .OfClass(typeof(ScheduleSheetInstance))
                 .Cast<ScheduleSheetInstance>()
+#if R2017 || R2018 || R2019 || R2020 || R2021 || R2022 || R2023
                 .Where(i => i.OwnerViewId.IntegerValue == sheet.Id.IntegerValue)
+#else
+                .Where(i => i.OwnerViewId.Value == sheet.Id.Value)
+#endif
                 .Where(i => !i.IsTitleblockRevisionSchedule)
                 .ToList();
 
@@ -39,7 +43,7 @@ namespace BatchPrintYay
 
                 foreach (ScheduleSheetInstance ssi in ssis)
                 {
-                    if(ssi.Pinned && (ssi.GroupId == null || ssi.GroupId == ElementId.InvalidElementId))
+                    if (ssi.Pinned && (ssi.GroupId == null || ssi.GroupId == ElementId.InvalidElementId))
                     {
                         ssi.Pinned = false;
                         pinnedSchedules.Add(ssi);
@@ -61,7 +65,7 @@ namespace BatchPrintYay
                     MoveScheduleOrGroup(doc, ssi, -0.1);
                 }
 
-                foreach(ScheduleSheetInstance ssi in pinnedSchedules)
+                foreach (ScheduleSheetInstance ssi in pinnedSchedules)
                 {
                     ssi.Pinned = true;
                 }
@@ -78,15 +82,20 @@ namespace BatchPrintYay
             }
             else
             {
+#if R2017 || R2018 || R2019 || R2020 || R2021 || R2022 || R2023
+                int groupId = ssi.GroupId.IntegerValue;
+#else
+                long groupId = ssi.GroupId.Value;
+#endif
                 Element group = doc.GetElement(ssi.GroupId);
-                if(groupIds.Contains(ssi.GroupId.IntegerValue)) return;
+                if (groupIds.Contains(groupId)) return;
 
-                if(group.Pinned)
+                if (group.Pinned)
                 {
                     group.Pinned = false;
                 }
                 ElementTransformUtils.MoveElement(doc, ssi.GroupId, new XYZ(distance, 0, 0));
-                groupIds.Add(ssi.GroupId.IntegerValue);
+                groupIds.Add(groupId);
             }
         }
     }

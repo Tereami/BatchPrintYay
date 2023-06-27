@@ -94,7 +94,7 @@ namespace BatchPrintYay
         {
             string message = "";
 
-            Debug.WriteLine("   Titleblock ID " + titleBlock.Id.IntegerValue.ToString());
+            Debug.WriteLine($"   Titleblock ID {titleBlock.GetElementId()}");
 
             double widthFeets = titleBlock.get_Parameter(BuiltInParameter.SHEET_WIDTH).AsDouble();
             double widthMm = MyDimension.GetLengthInMillimeters(widthFeets);

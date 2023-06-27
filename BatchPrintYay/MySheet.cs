@@ -31,7 +31,7 @@ namespace BatchPrintYay
         public System.Drawing.Printing.PaperSize windowsPaperSize;
         public IPrintSetting pSetting;
         public bool IsVertical;
-        public int SheetId;
+        public long SheetId;
         public bool IsPrintable;
 
         //параметры для печати нескольких листов на одном
@@ -53,7 +53,7 @@ namespace BatchPrintYay
         public MySheet(ViewSheet Sheet, string forceColoredParamName)
         {
             sheet = Sheet;
-            SheetId = Sheet.Id.IntegerValue;
+            SheetId = Sheet.GetElementId();
             SheetNumberInt = GetSheetNumberAsInt();
 
             ForceColored = false;
@@ -75,7 +75,7 @@ namespace BatchPrintYay
             windowsPaperSize = oldSheet.windowsPaperSize;
             pSetting = oldSheet.pSetting;
             IsVertical = oldSheet.IsVertical;
-            SheetId = oldSheet.sheet.Id.IntegerValue;
+            SheetId = oldSheet.sheet.GetElementId();
             IsPrintable = oldSheet.IsPrintable;
             titleBlocks = oldSheet.titleBlocks;
             widthMm = oldSheet.widthMm;
@@ -184,7 +184,11 @@ namespace BatchPrintYay
                     val = param.AsString();
                     break;
                 case StorageType.ElementId:
+#if R2017 || R2018 || R2019 || R2020 || R2021 || R2022 || R2023
                     val = param.AsElementId().IntegerValue.ToString();
+#else
+                    val = param.AsElementId().Value.ToString();
+#endif
                     break;
                 default:
                     break;

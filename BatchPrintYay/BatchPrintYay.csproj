@@ -83,7 +83,7 @@
     <OutputPath>bin\R2024\</OutputPath>
     <DefineConstants>DEBUG;R2024</DefineConstants>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <AssemblyName>$(AssemblyName)_2023</AssemblyName>
+    <AssemblyName>$(AssemblyName)_2024</AssemblyName>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -226,7 +226,7 @@
         </Reference>
       </ItemGroup>
     </When>
-	<When Condition=" '$(Configuration)'=='R2024' ">
+    <When Condition=" '$(Configuration)'=='R2024' ">
       <ItemGroup>
         <Reference Include="RevitAPI">
           <HintPath>C:\Program Files\Autodesk\Revit 2024\RevitAPI.dll</HintPath>
@@ -249,6 +249,7 @@
     <Compile Include="CommandBatchPrint.cs" />
     <Compile Include="CommandRefreshSchedules.cs" />
     <Compile Include="DwgSupport.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Forms\FormExcludeColors.cs">
       <SubType>Form</SubType>
     </Compile>
