@@ -13,6 +13,7 @@ Zuev Aleksandr, 2020, all rigths reserved.*/
 #region usings
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -57,15 +58,6 @@ namespace BatchPrintYay
             SheetNumberInt = GetSheetNumberAsInt();
 
             ForceColored = false;
-            Parameter isForceColoredParam = Sheet.LookupParameter(forceColoredParamName);
-            if (isForceColoredParam != null)
-            {
-                if (isForceColoredParam.HasValue)
-                {
-                    if (isForceColoredParam.AsInteger() == 1)
-                        ForceColored = true;
-                }
-            }
         }
 
         public MySheet(MySheet oldSheet)
@@ -238,6 +230,35 @@ namespace BatchPrintYay
             else
             {
                 throw new Exception("Unable to equals the objects");
+            }
+        }
+
+        public void CheckIsColored(string forceColoredParamName)
+        {
+            Debug.WriteLine($"Check parameter {forceColoredParamName} for sheet {this.sheet.Name}");
+            Parameter isForceColoredParam = sheet.LookupParameter(forceColoredParamName);
+            if (isForceColoredParam != null)
+            {
+                if (isForceColoredParam.HasValue)
+                {
+                    if (isForceColoredParam.AsInteger() == 1)
+                    {
+                        ForceColored = true;
+                        Debug.WriteLine($"{forceColoredParamName} equals 1, force colored");
+                    }
+                    else
+                    {
+                        Debug.WriteLine($"{forceColoredParamName} equals 0, not force colored");
+                    }
+                }
+                else
+                {
+                    Debug.WriteLine($"{forceColoredParamName} has no value, not force colored");
+                }
+            }
+            else
+            {
+                Debug.WriteLine($"...{forceColoredParamName} is null, not force colored");
             }
         }
     }

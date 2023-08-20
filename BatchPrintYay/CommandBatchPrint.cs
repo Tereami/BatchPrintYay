@@ -304,7 +304,8 @@ namespace BatchPrintYay
                         SchedulesRefresh.Start(openedDoc, msheet.sheet);
                         Debug.WriteLine("Schedules is refreshed succesfully");
                     }
-                
+
+                    msheet.CheckIsColored(printSettings.alwaysColorParamName);          
 
                     using (Transaction t = new Transaction(openedDoc))
                     {
