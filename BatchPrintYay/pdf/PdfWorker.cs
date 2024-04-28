@@ -100,18 +100,18 @@ namespace BatchPrintYay.pdf
                     for (int i = 0; i < names.Count; i++)
                     {
                         string fileName = names[i];
-                        Debug.WriteLine("File is processed: " + fileName);
+                        Trace.WriteLine("File is processed: " + fileName);
                         reader = new PdfReader(fileName);
                         writer.AddDocument(reader);
                         reader.Close();
-                        Debug.WriteLine("File merged succefully");
+                        Trace.WriteLine("File merged succefully");
                     }
                 }
                 catch
                 {
                     if (reader != null)
                     {
-                        Debug.WriteLine("Unable to merge file");
+                        Trace.WriteLine("Unable to merge file");
                         reader.Close();
                     }
                 }
@@ -121,7 +121,7 @@ namespace BatchPrintYay.pdf
                 }
 
             }
-            Debug.WriteLine("Merged to file: " + outFile);
+            Trace.WriteLine("Merged to file: " + outFile);
             return merged;
         }
     }

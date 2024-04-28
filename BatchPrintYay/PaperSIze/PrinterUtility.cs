@@ -26,12 +26,12 @@ namespace BatchPrintYay
     {
         public static PaperSize GetPaperSize(string printerName, double widthMM, double heigthMM)
         {
-            Debug.WriteLine("   trying to get sheet size: width " + widthMM.ToString("F3") + "mm, height " + heigthMM.ToString("F3"));
+            Trace.WriteLine("   trying to get sheet size: width " + widthMM.ToString("F3") + "mm, height " + heigthMM.ToString("F3"));
 
             int widthInches = (int)Math.Round(100 * widthMM / 25.4);
             int heigthInches = (int)Math.Round(100 * heigthMM / 25.4);
 
-            Debug.WriteLine("   in inches: " + widthInches + " х " + heigthInches);
+            Trace.WriteLine("   in inches: " + widthInches + " х " + heigthInches);
             PrinterSettings prntSettings = new PrinterSettings();
             prntSettings.PrinterName = printerName;
             PrinterSettings.PaperSizeCollection sizes = prntSettings.PaperSizes;
@@ -40,14 +40,14 @@ namespace BatchPrintYay
             {
                 int curWidth = size.Width;
                 int curHeigth = size.Height;
-                Debug.WriteLine("   check paper size " + size.PaperName + " in inches " + curWidth.ToString() + " x " + curHeigth.ToString());
+                Trace.WriteLine("   check paper size " + size.PaperName + " in inches " + curWidth.ToString() + " x " + curHeigth.ToString());
 
                 bool check1 = IntEquals(widthInches, curWidth, 5);
                 bool check2 = IntEquals(heigthInches, curHeigth, 5);
 
                 if (check1 && check2)
                 {
-                    Debug.WriteLine("    A sheet size is found, width equals width, height equals height");
+                    Trace.WriteLine("    A sheet size is found, width equals width, height equals height");
                     return size;
                 }
                 else
@@ -56,18 +56,18 @@ namespace BatchPrintYay
                     bool check4 = IntEquals(heigthInches, curWidth, 5);
                     if (check3 && check4)
                     {
-                        Debug.WriteLine("    Width equals height, height equals width - is compatible too");
+                        Trace.WriteLine("    Width equals height, height equals width - is compatible too");
                         return size;
                     }
                     else
                     {
-                        Debug.WriteLine("    Sheet size is not compatible");
+                        Trace.WriteLine("    Sheet size is not compatible");
                     }
 
                 }
             }
 
-            Debug.WriteLine("    Sheet size is found");
+            Trace.WriteLine("    Sheet size is found");
             return null;
         }
 

@@ -83,7 +83,7 @@ namespace BatchPrintYay
                     if (ps == null)
                     {
                         TaskDialog.Show("Warning", MyStrings.MessageUnableToGetSavedPrintSettings);
-                        Debug.WriteLine("Unable to get print setiings, set to default");
+                        Trace.WriteLine("Unable to get print setiings, set to default");
                         ps = new YayPrintSettings();
                     }
                 }

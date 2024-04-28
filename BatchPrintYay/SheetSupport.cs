@@ -94,7 +94,7 @@ namespace BatchPrintYay
         {
             string message = "";
 
-            Debug.WriteLine($"   Titleblock ID {titleBlock.GetElementId()}");
+            Trace.WriteLine($"   Titleblock ID {titleBlock.GetElementId()}");
 
             double widthFeets = titleBlock.get_Parameter(BuiltInParameter.SHEET_WIDTH).AsDouble();
             double widthMm = MyDimension.GetLengthInMillimeters(widthFeets);
@@ -115,7 +115,7 @@ namespace BatchPrintYay
                 double feetsWidthCheck = checkWidthParam.AsDouble();
                 widthMmCheck = MyDimension.GetLengthInMillimeters(feetsWidthCheck);
                 widthMmCheck = Math.Round(widthMmCheck);
-                Debug.WriteLine(MyStrings.MessageParameterExists + " Ширина = " + widthMmCheck.ToString("F3"));
+                Trace.WriteLine(MyStrings.MessageParameterExists + " Ширина = " + widthMmCheck.ToString("F3"));
             }
 
             Parameter checkHeightParam = titleBlock.LookupParameter("Высота");
@@ -127,12 +127,12 @@ namespace BatchPrintYay
                 double feetsHeightCheck = checkHeightParam.AsDouble();
                 heigthMmCheck = MyDimension.GetLengthInMillimeters(feetsHeightCheck);
                 heigthMmCheck = Math.Round(heigthMmCheck);
-                Debug.WriteLine(MyStrings.MessageParameterExists + " Высота = " + heigthMmCheck.ToString("F3"));
+                Trace.WriteLine(MyStrings.MessageParameterExists + " Высота = " + heigthMmCheck.ToString("F3"));
             }
 
             if (widthMmCheck == -1 || heigthMmCheck == -1)
             {
-                Debug.WriteLine("    Titleblock is not from Weandrevit template, unable to check size");
+                Trace.WriteLine("    Titleblock is not from Weandrevit template, unable to check size");
                 return string.Empty;
             }
 
@@ -142,7 +142,7 @@ namespace BatchPrintYay
 
             if (!widthEquals || !heightEquals)
             {
-                Debug.WriteLine(MyStrings.MessageSheetSizeProblem + epsilon.ToString("F3") + " mm");
+                Trace.WriteLine(MyStrings.MessageSheetSizeProblem + epsilon.ToString("F3") + " mm");
                 message += "Sheet '" + sheet.SheetNumber + " : " + sheet.Name;
                 message += "'. " + MyStrings.MessageUnableToGetTitleblockSize;
                 if (widthMm != widthMmCheck)
@@ -160,7 +160,7 @@ namespace BatchPrintYay
             }
             else
             {
-                Debug.WriteLine("    Titleblock size is correct");
+                Trace.WriteLine("    Titleblock size is correct");
             }
 
             return message;

@@ -309,7 +309,7 @@ namespace BatchPrintYay.pdf
         {
             PdfName xobjectName = (PdfName)operands[0];
 
-            //System.Diagnostics.Debug.WriteLine("Opr: " + xobjectName.ToString());
+            //System.Diagnostics.Trace.WriteLine("Opr: " + xobjectName.ToString());
 
             PdfDictionary xobjects = _modifier.ResourceDictionary.GetAsDict(PdfName.XOBJECT);
             PdfObject po = xobjects.Get(xobjectName);

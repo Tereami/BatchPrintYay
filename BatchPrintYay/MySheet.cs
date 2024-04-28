@@ -235,7 +235,7 @@ namespace BatchPrintYay
 
         public void CheckIsColored(string forceColoredParamName)
         {
-            Debug.WriteLine($"Check parameter {forceColoredParamName} for sheet {this.sheet.Name}");
+            Trace.WriteLine($"Check parameter {forceColoredParamName} for sheet {this.sheet.Name}");
             Parameter isForceColoredParam = sheet.LookupParameter(forceColoredParamName);
             if (isForceColoredParam != null)
             {
@@ -244,21 +244,21 @@ namespace BatchPrintYay
                     if (isForceColoredParam.AsInteger() == 1)
                     {
                         ForceColored = true;
-                        Debug.WriteLine($"{forceColoredParamName} equals 1, force colored");
+                        Trace.WriteLine($"{forceColoredParamName} equals 1, force colored");
                     }
                     else
                     {
-                        Debug.WriteLine($"{forceColoredParamName} equals 0, not force colored");
+                        Trace.WriteLine($"{forceColoredParamName} equals 0, not force colored");
                     }
                 }
                 else
                 {
-                    Debug.WriteLine($"{forceColoredParamName} has no value, not force colored");
+                    Trace.WriteLine($"{forceColoredParamName} has no value, not force colored");
                 }
             }
             else
             {
-                Debug.WriteLine($"...{forceColoredParamName} is null, not force colored");
+                Trace.WriteLine($"...{forceColoredParamName} is null, not force colored");
             }
         }
     }

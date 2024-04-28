@@ -36,7 +36,7 @@ namespace BatchPrintYay
             catch
             {
                 string msg = MyStrings.MessageUnableToSaveFiles + newFolder;
-                Debug.WriteLine(msg);
+                Trace.WriteLine(msg);
                 return msg;
             }
 
@@ -61,8 +61,8 @@ namespace BatchPrintYay
             PrintManager pManager = doc.PrintManager;
             foreach (MySheet msheet in mSheets)
             {
-                Debug.WriteLine(" ");
-                Debug.WriteLine(" Sheet is checking " + msheet.sheet.Name);
+                Trace.WriteLine(" ");
+                Trace.WriteLine(" Sheet is checking " + msheet.sheet.Name);
                 double widthMm = 0;
                 double heigthMm = 0;
 
@@ -70,7 +70,7 @@ namespace BatchPrintYay
                     .Where(i => i.get_Parameter(BuiltInParameter.SHEET_NUMBER).AsString() == msheet.sheet.SheetNumber)
                     .ToList();
 
-                Debug.WriteLine(" Titleblocks found: " + tempTitleBlocks.Count.ToString());
+                Trace.WriteLine(" Titleblocks found: " + tempTitleBlocks.Count.ToString());
                 if (tempTitleBlocks.Count == 0)
                 {
                     return MyStrings.MessageNoTitleblockOnSheet + msheet.sheet.Name;
@@ -80,17 +80,17 @@ namespace BatchPrintYay
 
                 msheet.titleBlocks = tempTitleBlocks;
                 FamilyInstance titleBlock = tempTitleBlocks.First();
-                Debug.WriteLine($" Id of used titleblock {titleBlock.GetElementId()}");
+                Trace.WriteLine($" Id of used titleblock {titleBlock.GetElementId()}");
 
                 double widthFeets = titleBlock.get_Parameter(BuiltInParameter.SHEET_WIDTH).AsDouble();
                 widthMm = MyDimension.GetLengthInMillimeters(widthFeets);
-                Debug.WriteLine(" BuiltInParameter.SHEET_WIDTH = " + widthMm.ToString("F3"));
+                Trace.WriteLine(" BuiltInParameter.SHEET_WIDTH = " + widthMm.ToString("F3"));
 
                 double heightFeets = titleBlock.get_Parameter(BuiltInParameter.SHEET_HEIGHT).AsDouble();
                 heigthMm = MyDimension.GetLengthInMillimeters(heightFeets);
-                Debug.WriteLine(" BuiltInParameter.SHEET_HEIGHT = " + heigthMm.ToString("F3"));
+                Trace.WriteLine(" BuiltInParameter.SHEET_HEIGHT = " + heigthMm.ToString("F3"));
 
-                Debug.WriteLine(" Check titleblock is correct ");
+                Trace.WriteLine(" Check titleblock is correct ");
                 string sizeCheckMessage = SheetSupport.CheckTitleblocSizeCorrects(msheet.sheet, titleBlock);
                 if (sizeCheckMessage != "")
                 {
@@ -108,12 +108,12 @@ namespace BatchPrintYay
                 //определяю ориентацию листа
                 if (widthMm > heigthMm)
                 {
-                    Debug.WriteLine(" Sheet is vertical oriented");
+                    Trace.WriteLine(" Sheet is vertical oriented");
                     msheet.IsVertical = false;
                 }
                 else
                 {
-                    Debug.WriteLine(" Sheet is horizontal oriented");
+                    Trace.WriteLine(" Sheet is horizontal oriented");
                     msheet.IsVertical = true;
                 }
 
@@ -122,7 +122,7 @@ namespace BatchPrintYay
 
                 if (winPaperSize != null) //есть подходящий формат
                 {
-                    Debug.WriteLine(" Found sheet with Windows format: " + winPaperSize.PaperName);
+                    Trace.WriteLine(" Found sheet with Windows format: " + winPaperSize.PaperName);
                     pManager = doc.PrintManager;
                     string paperSizeName = winPaperSize.PaperName;
                     PaperSize revitPaperSize = PrintSupport.SearchRevitPaperSizeByName(pManager, paperSizeName);
@@ -132,33 +132,33 @@ namespace BatchPrintYay
                     {
                         string message = MyStrings.MessageUnableToApplyRevitSheetFormat;
                         message += msheet.sheet.SheetNumber + " : " + msheet.sheet.Name + ". Format: " + paperSizeName;
-                        Debug.WriteLine("  " + message);
+                        Trace.WriteLine("  " + message);
                         return message;
                     }
 
-                    Debug.WriteLine(" Found Revit sheet format: " + revitPaperSize.Name);
+                    Trace.WriteLine(" Found Revit sheet format: " + revitPaperSize.Name);
                     msheet.revitPaperSize = revitPaperSize;
                 }
                 else //нет такого формата, нужно добавить в Сервер печати
                 {
                     string paperSizeName = widthMm.ToString("F0") + "x" + heigthMm.ToString("F0");
-                    Debug.WriteLine("Windows sheet format isnt found! " + paperSizeName);
+                    Trace.WriteLine("Windows sheet format isnt found! " + paperSizeName);
                     FormCreateCustomFormat formccf = new FormCreateCustomFormat(msheet.sheet.Title, paperSizeName);
                     formccf.ShowDialog();
                     if (formccf.DialogResult != System.Windows.Forms.DialogResult.OK) return "cancel";
 
                     paperSizeName = "UnknownFormat_" + paperSizeName;
-                    Debug.WriteLine(" Try to add sheet format to local print server " + paperSizeName);
+                    Trace.WriteLine(" Try to add sheet format to local print server " + paperSizeName);
 
                     try
                     {
                         PrinterUtility.AddFormatToAnyPdfPrinter(paperSizeName, widthMm / 10, heigthMm / 10);
-                        Debug.WriteLine(" Sheet format has been added succesfully!");
+                        Trace.WriteLine(" Sheet format has been added succesfully!");
                     }
                     catch (Exception ex)
                     {
                         string msg = MyStrings.MessageUnableToCreateSheetFormat + paperSizeName + MyStrings.MessageNoAdmin + ex.Message;
-                        Debug.WriteLine("  " + msg);
+                        Trace.WriteLine("  " + msg);
                         return msg;
                     }
 
@@ -168,17 +168,17 @@ namespace BatchPrintYay
 
                     pManager = doc.PrintManager;
 
-                    Debug.WriteLine(" Find sheet format again " + paperSizeName);
+                    Trace.WriteLine(" Find sheet format again " + paperSizeName);
                     PaperSize revitPaperSize = PrintSupport.SearchRevitPaperSizeByName(pManager, paperSizeName);
                     if (revitPaperSize == null)
                     {
                         string message = MyStrings.MessageNonStandardList;
                         message += msheet.sheet.SheetNumber + " : " + msheet.sheet.Name + ". Format " + paperSizeName;
-                        Debug.WriteLine("  " + message);
+                        Trace.WriteLine("  " + message);
                         return message;
                     }
 
-                    Debug.WriteLine(" Format is applied successfully: " + revitPaperSize.Name);
+                    Trace.WriteLine(" Format is applied successfully: " + revitPaperSize.Name);
                     msheet.revitPaperSize = revitPaperSize;
                 }
             }
