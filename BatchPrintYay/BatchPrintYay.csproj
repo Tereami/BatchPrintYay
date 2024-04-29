@@ -1,126 +1,96 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A666B372-13FA-442A-8A18-FCE286C19CCF}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BatchPrintYay</RootNamespace>
-    <AssemblyName>BatchPrintYay</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'R2017|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\R2017\</OutputPath>
-    <DefineConstants>DEBUG;R2017</DefineConstants>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <AssemblyName>$(AssemblyName)_2017</AssemblyName>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'R2018|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\R2018\</OutputPath>
-    <DefineConstants>DEBUG;R2018</DefineConstants>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <AssemblyName>$(AssemblyName)_2018</AssemblyName>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'R2019|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\R2019\</OutputPath>
-    <DefineConstants>DEBUG;R2019</DefineConstants>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
-    <AssemblyName>$(AssemblyName)_2019</AssemblyName>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'R2020|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\R2020\</OutputPath>
-    <DefineConstants>DEBUG;R2020</DefineConstants>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
-    <AssemblyName>$(AssemblyName)_2020</AssemblyName>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'R2021|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\R2021\</OutputPath>
-    <DefineConstants>DEBUG;R2021</DefineConstants>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <AssemblyName>$(AssemblyName)_2021</AssemblyName>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'R2022|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\R2022\</OutputPath>
-    <DefineConstants>DEBUG;R2022</DefineConstants>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <AssemblyName>$(AssemblyName)_2022</AssemblyName>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'R2023|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\R2023\</OutputPath>
-    <DefineConstants>DEBUG;R2023</DefineConstants>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <AssemblyName>$(AssemblyName)_2023</AssemblyName>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'R2024|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\R2024\</OutputPath>
-    <DefineConstants>DEBUG;R2024</DefineConstants>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <AssemblyName>$(AssemblyName)_2024</AssemblyName>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'R2025|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\R2025\</OutputPath>
-    <DefineConstants>DEBUG;R2025</DefineConstants>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <AssemblyName>$(AssemblyName)_2025</AssemblyName>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
-  </PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType>Library</OutputType>
+		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+		<UseWindowsForms>true</UseWindowsForms>
+		<UseWPF>true</UseWPF>
+		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+		<ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+			None
+		</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+		<AppendTargetFrameworkToOutputpath>false</AppendTargetFrameworkToOutputpath>
+		<Configurations>R2017;R2018;R2019;R2020;R2021;R2022;R2023;R2024;R2025</Configurations>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'R2017|AnyCPU' ">
+		<DebugSymbols>true</DebugSymbols>
+		<Optimize>false</Optimize>
+		<TargetFramework>net46</TargetFramework>
+		<OutputPath>bin\R2017\</OutputPath>
+		<DefineConstants>TRACE;DEBUG;R2017</DefineConstants>
+		<AssemblyName>$(AssemblyName)_2017</AssemblyName>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'R2018|AnyCPU' ">
+		<DebugSymbols>true</DebugSymbols>
+		<Optimize>false</Optimize>
+		<TargetFramework>net46</TargetFramework>
+		<OutputPath>bin\R2018\</OutputPath>
+		<DefineConstants>TRACE;DEBUG;R2018</DefineConstants>
+		<AssemblyName>$(AssemblyName)_2018</AssemblyName>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'R2019|AnyCPU' ">
+		<DebugSymbols>true</DebugSymbols>
+		<Optimize>false</Optimize>
+		<TargetFramework>net47</TargetFramework>
+		<OutputPath>bin\R2019\</OutputPath>
+		<DefineConstants>TRACE;DEBUG;R2019</DefineConstants>
+		<AssemblyName>$(AssemblyName)_2019</AssemblyName>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'R2020|AnyCPU' ">
+		<DebugSymbols>true</DebugSymbols>
+		<Optimize>false</Optimize>
+		<TargetFramework>net47</TargetFramework>
+		<OutputPath>bin\R2020\</OutputPath>
+		<DefineConstants>TRACE;DEBUG;R2020</DefineConstants>
+		<AssemblyName>$(AssemblyName)_2020</AssemblyName>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'R2021|AnyCPU' ">
+		<DebugSymbols>true</DebugSymbols>
+		<Optimize>false</Optimize>
+		<TargetFramework>net48</TargetFramework>
+		<OutputPath>bin\R2021\</OutputPath>
+		<DefineConstants>TRACE;DEBUG;R2021</DefineConstants>
+		<AssemblyName>$(AssemblyName)_2021</AssemblyName>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'R2022|AnyCPU' ">
+		<DebugSymbols>true</DebugSymbols>
+		<Optimize>false</Optimize>
+		<TargetFramework>net48</TargetFramework>
+		<OutputPath>bin\R2022\</OutputPath>
+		<DefineConstants>TRACE;DEBUG;R2022</DefineConstants>
+		<AssemblyName>$(AssemblyName)_2022</AssemblyName>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'R2023|AnyCPU' ">
+		<DebugSymbols>true</DebugSymbols>
+		<Optimize>false</Optimize>
+		<TargetFramework>net48</TargetFramework>
+		<OutputPath>bin\R2023\</OutputPath>
+		<DefineConstants>TRACE;DEBUG;R2023</DefineConstants>
+		<AssemblyName>$(AssemblyName)_2023</AssemblyName>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'R2024|AnyCPU' ">
+		<DebugSymbols>true</DebugSymbols>
+		<Optimize>false</Optimize>
+		<TargetFramework>net48</TargetFramework>
+		<OutputPath>bin\R2024\</OutputPath>
+		<DefineConstants>TRACE;DEBUG;R2024</DefineConstants>
+		<AssemblyName>$(AssemblyName)_2024</AssemblyName>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'R2025|AnyCPU' ">
+		<DebugSymbols>true</DebugSymbols>
+		<Optimize>false</Optimize>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<OutputPath>bin\R2025\</OutputPath>
+		<DefineConstants>TRACE;DEBUG;R2025</DefineConstants>
+		<AssemblyName>$(AssemblyName)_2025</AssemblyName>
+	</PropertyGroup>
   <ItemGroup>
-    <Reference Include="itextsharp, Version=5.5.13.1, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\iTextSharp.5.5.13.1\lib\itextsharp.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="PresentationCore" />
     <Reference Include="RbsLogger">
       <HintPath>..\..\RbsLogger\RbsLogger\bin\Debug\RbsLogger.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
     <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <Choose>
     <When Condition=" '$(Configuration)'=='R2017' ">
@@ -251,7 +221,7 @@
         </Reference>
       </ItemGroup>
     </When>
-	<When Condition=" '$(Configuration)'=='R2025' ">
+    <When Condition=" '$(Configuration)'=='R2025' ">
       <ItemGroup>
         <Reference Include="RevitAPI">
           <HintPath>C:\Program Files\Autodesk\Revit 2025\RevitAPI.dll</HintPath>
@@ -269,110 +239,6 @@
     </When>
   </Choose>
   <ItemGroup>
-    <Compile Include="App.cs" />
-    <Compile Include="BalloonTip.cs" />
-    <Compile Include="CommandBatchPrint.cs" />
-    <Compile Include="CommandRefreshSchedules.cs" />
-    <Compile Include="DwgSupport.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="Forms\FormExcludeColors.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormExcludeColors.Designer.cs">
-      <DependentUpon>FormExcludeColors.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\FormCreateCustomFormat.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormCreateCustomFormat.Designer.cs">
-      <DependentUpon>FormCreateCustomFormat.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\MessageBox.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\MessageBox.Designer.cs">
-      <DependentUpon>MessageBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\formNameConstructor.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\formNameConstructor.Designer.cs">
-      <DependentUpon>formNameConstructor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\FormPrint.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormPrint.Designer.cs">
-      <DependentUpon>FormPrint.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MyDimension.cs" />
-    <Compile Include="MySheet.cs" />
-    <Compile Include="MyStrings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MyStrings.resx</DependentUpon>
-    </Compile>
-    <Compile Include="pdf\PdfColor.cs" />
-    <Compile Include="pdf\PdfContentModifier.cs" />
-    <Compile Include="pdf\PdfContentOperatorHandler.cs" />
-    <Compile Include="pdf\PdfContentStreamBuilder.cs" />
-    <Compile Include="pdf\PdfContentToBlackWhiteConverter.cs" />
-    <Compile Include="pdf\PdfResourceDictionary.cs" />
-    <Compile Include="pdf\PdfWorker.cs" />
-    <Compile Include="PaperSIze\PrinterDefaultSetter.cs" />
-    <Compile Include="PaperSIze\PrinterUtility.cs" />
-    <Compile Include="PrintSupport.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="SaveCoordinates.cs" />
-    <Compile Include="SchedulesRefresh.cs" />
-    <Compile Include="SheetSupport.cs" />
-    <Compile Include="PaperSIze\WinApi.cs" />
-    <Compile Include="YayPrintSettings.cs" />
-    <Compile Include="SupportRegistry.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Forms\FormCreateCustomFormat.ru-RU.resx">
-      <DependentUpon>FormCreateCustomFormat.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormExcludeColors.resx">
-      <DependentUpon>FormExcludeColors.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormCreateCustomFormat.resx">
-      <DependentUpon>FormCreateCustomFormat.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormExcludeColors.ru-RU.resx">
-      <DependentUpon>FormExcludeColors.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\formNameConstructor.resx">
-      <DependentUpon>formNameConstructor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\formNameConstructor.ru-RU.resx">
-      <DependentUpon>formNameConstructor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormPrint.resx">
-      <DependentUpon>FormPrint.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormPrint.ru-RU.resx">
-      <DependentUpon>FormPrint.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\MessageBox.resx">
-      <DependentUpon>MessageBox.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MyStrings.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>MyStrings.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MyStrings.ru-RU.resx" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Resources\PrintBig.png" />
     <EmbeddedResource Include="Resources\PrintSmall.png" />
   </ItemGroup>
@@ -381,22 +247,18 @@
     <EmbeddedResource Include="Resources\UpdateSmall.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="BatchPrintYay.addin">
+    <None Update="BatchPrintYay.addin">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="formats.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <ItemGroup>
+    <PackageReference Include="iTextSharp" Version="5.5.13.1" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+  </ItemGroup>
 </Project>

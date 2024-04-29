@@ -37,7 +37,7 @@ namespace BatchPrintYay
 
             Selection sel = commandData.Application.ActiveUIDocument.Selection;
             Document mainDoc = commandData.Application.ActiveUIDocument.Document;
-            
+
             string mainDocTitle = SheetSupport.GetDocTitleWithoutRvt(mainDoc.Title);
 
             YayPrintSettings printSettings = YayPrintSettings.GetSavedPrintSettings();
@@ -102,10 +102,10 @@ namespace BatchPrintYay
             string printerName = printSettings.printerName;
             allSheets = form.sheetsSelected;
             Trace.WriteLine("Selected sheets");
-            foreach(var kvp in allSheets)
+            foreach (var kvp in allSheets)
             {
                 Trace.WriteLine(" File " + kvp.Key);
-                foreach(MySheet ms in kvp.Value)
+                foreach (MySheet ms in kvp.Value)
                 {
                     Trace.WriteLine("  Sheet " + ms.sheet.Name);
                 }
@@ -141,11 +141,11 @@ namespace BatchPrintYay
             string outputFolder = "";
             if (printToFile)
             {
-                outputFolder =  PrintSupport.CreateFolderToPrint(mainDoc, printerName, outputFolderCommon);
+                outputFolder = PrintSupport.CreateFolderToPrint(mainDoc, printerName, outputFolderCommon);
                 Trace.WriteLine("Folder for print is created: " + outputFolder);
             }
             //List<string> pfdFileNames = new List<string>();
-            
+
             //печатаю листы из каждого выбранного revit-файла
             List<MySheet> printedSheets = new List<MySheet>();
             foreach (string docTitle in allSheets.Keys)
@@ -193,7 +193,7 @@ namespace BatchPrintYay
                             .Where(i => i != null)
                             .Where(i => SheetSupport.GetDocTitleWithoutRvt(i.Title) == docTitle)
                             .ToList();
-                        if(linkDocs.Count == 0) throw new Exception("Cant find link file " + docTitle);
+                        if (linkDocs.Count == 0) throw new Exception("Cant find link file " + docTitle);
                         Document linkDoc = linkDocs.First();
 
                         if (linkDoc.IsWorkshared)
@@ -217,10 +217,10 @@ namespace BatchPrintYay
                     }
                     Trace.WriteLine("Link file is opened succesfully");
                 } //
-                
+
 
                 List<MySheet> mSheets = allSheets[docTitle];
-                
+
                 if (docTitle != mainDocTitle)
                 {
                     List<ViewSheet> linkSheets = new FilteredElementCollector(openedDoc)
@@ -277,14 +277,14 @@ namespace BatchPrintYay
 
                 //если включен экспорт dwg - нахожу параметры экспорта по имени 
                 DWGExportOptions dwgOptions = null;
-                if(printSettings.exportToDwg)
+                if (printSettings.exportToDwg)
                 {
                     List<ExportDWGSettings> curDwgSettings = DwgSupport.GetAllDwgExportSettingsNames(openedDoc)
                         .Where(i => i.Name == printSettings.selectedDwgExportProfileName)
                         .ToList();
-                    if(curDwgSettings.Count == 0)
+                    if (curDwgSettings.Count == 0)
                     {
-                        TaskDialog.Show("Error", MyStrings.MessageInFile + openedDoc.Title 
+                        TaskDialog.Show("Error", MyStrings.MessageInFile + openedDoc.Title
                             + MyStrings.MessageDwgNotFound + printSettings.selectedDwgExportProfileName);
                         dwgOptions = DwgSupport.GetAllDwgExportSettingsNames(openedDoc).First().GetDWGExportOptions();
                     }
@@ -305,7 +305,7 @@ namespace BatchPrintYay
                         Trace.WriteLine("Schedules is refreshed succesfully");
                     }
 
-                    msheet.CheckIsColored(printSettings.alwaysColorParamName);          
+                    msheet.CheckIsColored(printSettings.alwaysColorParamName);
 
                     using (Transaction t = new Transaction(openedDoc))
                     {
@@ -322,7 +322,7 @@ namespace BatchPrintYay
                             fileName0 = msheet.NameByConstructor(printSettings.nameConstructor);
                         }
                         string fileName = SheetSupport.ClearIllegalCharacters(fileName0);
-                        if(fileName.Length > 128)
+                        if (fileName.Length > 128)
                         {
                             Trace.WriteLine("Sheet name length is longer than 128 symbols, will be cut");
                             string cutname = fileName.Substring(0, 63);
@@ -348,10 +348,10 @@ namespace BatchPrintYay
                         {
                             MySheet printedSheet = msheet;
                             string tempFilename = "";
-                            if(msheet.titleBlocks.Count > 1)
+                            if (msheet.titleBlocks.Count > 1)
                             {
                                 Trace.WriteLine("More than 1 titleblock on 1 sheet, print number " + i.ToString());
-                                tempFilename = fileName.Replace(".pdf", "_" +  i.ToString() + ".pdf");
+                                tempFilename = fileName.Replace(".pdf", "_" + i.ToString() + ".pdf");
                                 printedSheet = new MySheet(msheet);
                                 printedSheet.SheetSubNumber = i;
                             }
@@ -360,11 +360,11 @@ namespace BatchPrintYay
                                 Trace.WriteLine($"1 titleblock on sheet, Id {msheet.titleBlocks.First().GetElementId()}");
                                 tempFilename = fileName;
                             }
-                            
+
                             string fullFilename = System.IO.Path.Combine(outputFolder, tempFilename);
                             Trace.WriteLine("File full name: " + fullFilename);
 
-                            if(fullFilename.Length > 256)
+                            if (fullFilename.Length > 256)
                             {
                                 throw new Exception(MyStrings.ExceptionFilenameTooLong + fullFilename);
                             }
@@ -382,7 +382,7 @@ namespace BatchPrintYay
 
                             PrintSupport.PrintView(printedSheet.sheet, pManager, ps, tempFilename);
                             Trace.WriteLine("Sheet is send to the printer");
-                            
+
                             printedSheets.Add(printedSheet);
                         }
 
@@ -395,7 +395,7 @@ namespace BatchPrintYay
                     }
 
                     //если включен dwg - то ещё экспортирую этот лист
-                    if(printSettings.exportToDwg)
+                    if (printSettings.exportToDwg)
                     {
                         List<ElementId> sheetsIds = new List<ElementId> { msheet.sheet.Id };
                         string sheetname = msheet.NameByConstructor(printSettings.dwgNameConstructor);
@@ -405,7 +405,7 @@ namespace BatchPrintYay
 
                 if (rlt != null)
                 {
-                    
+
                     openedDoc.Close(false);
 #if R2017
                     RevitLinkLoadResult LoadResult = rlt.Reload();
@@ -437,7 +437,7 @@ namespace BatchPrintYay
                     }
                     System.Threading.Thread.Sleep(500);
                     watchTimer++;
-                    
+
 
                     if (watchTimer > 100)
                     {
@@ -448,10 +448,10 @@ namespace BatchPrintYay
                 }
             }
 
-            
+
             List<string> pdfFileNames = printedSheets.Select(i => i.PdfFileName).ToList();
             Trace.WriteLine("PDF files should be printed");
-            foreach(string pdfname in pdfFileNames)
+            foreach (string pdfname in pdfFileNames)
             {
                 Trace.WriteLine("  " + pdfname);
             }
@@ -510,7 +510,15 @@ namespace BatchPrintYay
 
             if (printToFile)
             {
-                System.Diagnostics.Process.Start(outputFolder);
+                if (System.IO.Directory.Exists(outputFolder))
+                {
+                    System.Diagnostics.Process.Start("explorer.exe", outputFolder);
+                }
+                else
+                {
+                    throw new Exception($"No folder {outputFolder}");
+                }
+
                 Trace.WriteLine("Folder is opened " + outputFolder);
             }
 
