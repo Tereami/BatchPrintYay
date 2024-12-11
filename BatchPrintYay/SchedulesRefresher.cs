@@ -19,7 +19,7 @@ using Autodesk.Revit.DB;
 
 namespace BatchPrintYay
 {
-    public static class SchedulesRefresh
+    public static class SchedulesRefresher
     {
         public static List<long> groupIds = new List<long>();
         public static void Start(Document doc, View sheet)

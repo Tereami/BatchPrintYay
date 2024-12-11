@@ -35,7 +35,6 @@
             this.checkBoxMergePdfs = new System.Windows.Forms.CheckBox();
             this.radioButtonPDF = new System.Windows.Forms.RadioButton();
             this.radioButtonPaper = new System.Windows.Forms.RadioButton();
-            this.buttonFormatsSetup = new System.Windows.Forms.Button();
             this.btnOpenNameConstructor = new System.Windows.Forms.Button();
             this.textBoxNameConstructor = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -78,7 +77,6 @@
             this.groupBox1.Controls.Add(this.checkBoxMergePdfs);
             this.groupBox1.Controls.Add(this.radioButtonPDF);
             this.groupBox1.Controls.Add(this.radioButtonPaper);
-            this.groupBox1.Controls.Add(this.buttonFormatsSetup);
             this.groupBox1.Controls.Add(this.btnOpenNameConstructor);
             this.groupBox1.Controls.Add(this.textBoxNameConstructor);
             this.groupBox1.Controls.Add(this.label6);
@@ -126,14 +124,6 @@
             resources.ApplyResources(this.radioButtonPaper, "radioButtonPaper");
             this.radioButtonPaper.Name = "radioButtonPaper";
             this.radioButtonPaper.UseVisualStyleBackColor = true;
-            this.radioButtonPaper.CheckedChanged += new System.EventHandler(this.radioButtonPaper_CheckedChanged);
-            // 
-            // buttonFormatsSetup
-            // 
-            resources.ApplyResources(this.buttonFormatsSetup, "buttonFormatsSetup");
-            this.buttonFormatsSetup.Name = "buttonFormatsSetup";
-            this.buttonFormatsSetup.UseVisualStyleBackColor = true;
-            this.buttonFormatsSetup.Click += new System.EventHandler(this.buttonFormatsSetup_Click);
             // 
             // btnOpenNameConstructor
             // 
@@ -376,7 +366,6 @@
         private System.Windows.Forms.Button btnOpenNameConstructor;
         private System.Windows.Forms.TextBox textBoxNameConstructor;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Button buttonFormatsSetup;
         private System.Windows.Forms.RadioButton radioButtonPDF;
         private System.Windows.Forms.RadioButton radioButtonPaper;
         private System.Windows.Forms.CheckBox checkBoxMergePdfs;

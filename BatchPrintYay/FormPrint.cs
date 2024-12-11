@@ -13,18 +13,14 @@ Zuev Aleksandr, 2020, all rigths reserved.*/
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 
 namespace BatchPrintYay
 {
-    public partial class FormPrint : Form
+    public partial class FormPrint : System.Windows.Forms.Form
     {
         private YayPrintSettings _printSettings;
         public YayPrintSettings printSettings
@@ -33,41 +29,25 @@ namespace BatchPrintYay
         }
 
         //public List<MySheet> sheetsToPrint = new List<MySheet>();
-        private Dictionary<string, List<MySheet>> sheetsBaseToPrint =
-            new Dictionary<string, List<MySheet>>();
+        //private Dictionary<string, List<MySheet>> sheetsBaseToPrint =
+        //    new Dictionary<string, List<MySheet>>();
+        List<MyRevitDocument> AllDocuments;
 
-        public Dictionary<string, List<MySheet>> sheetsSelected =
-            new Dictionary<string, List<MySheet>>();
-
+        public List<MyRevitDocument> PrintableDocuments;
 
         public bool printToFile = false;
 
 
-        public FormPrint(Dictionary<string, List<MySheet>> SheetsBase, YayPrintSettings printSettings)
+        public FormPrint(List<MyRevitDocument> allDocuments, YayPrintSettings printSettings)
         {
             InitializeComponent();
             this.Text += " ver. " + System.IO.File.GetLastWriteTime(System.Reflection.Assembly.GetExecutingAssembly().Location).ToString();
             this.AcceptButton = btnOk;
             this.CancelButton = btnCancel;
 
-            sheetsBaseToPrint = SheetsBase;
+            AllDocuments = allDocuments;
 
-            //заполняю treeView
-            foreach (var docWithSheets in sheetsBaseToPrint)
-            {
-                TreeNode docNode = new TreeNode(docWithSheets.Key);
-                bool haveChecked = false;
-                foreach (MySheet sheet in docWithSheets.Value)
-                {
-                    string sheetTitle = sheet.ToString();
-                    TreeNode sheetNode = new TreeNode(sheetTitle);
-                    sheetNode.Checked = sheet.IsPrintable;
-                    if (sheet.IsPrintable) haveChecked = true;
-                    docNode.Nodes.Add(sheetNode);
-                }
-                if (haveChecked) docNode.Expand();
-                treeView1.Nodes.Add(docNode);
-            }
+            BuildTreeView(AllDocuments);
 
             //заполняю параметры печати
             _printSettings = printSettings;
@@ -101,7 +81,7 @@ namespace BatchPrintYay
             radioButtonPaper.Checked = !radioButtonPDF.Checked;
 
 
-            if (_printSettings.hiddenLineProcessing == Autodesk.Revit.DB.HiddenLineViewsType.VectorProcessing)                
+            if (_printSettings.hiddenLineProcessing == Autodesk.Revit.DB.HiddenLineViewsType.VectorProcessing)
             {
                 radioButtonVector.Checked = true;
                 radioButtonRastr.Checked = false;
@@ -119,7 +99,7 @@ namespace BatchPrintYay
             comboBoxRasterQuality.DataSource = rasterTypes;
             try
             {
-                comboBoxRasterQuality.SelectedItem = _printSettings.rasterQuality; 
+                comboBoxRasterQuality.SelectedItem = _printSettings.rasterQuality;
                 //rasterQualityTypes.Where(i => Enum.GetName(typeof(Autodesk.Revit.DB.RasterQualityType), i).Equals()).First();
             }
             catch { }
@@ -141,28 +121,47 @@ namespace BatchPrintYay
             }
         }
 
+        private void BuildTreeView(List<MyRevitDocument> docs)
+        {
+            foreach (MyRevitDocument myDoc in docs)
+            {
+                TreeNode docNode = new TreeNode(myDoc.Name);
+                docNode.Tag = myDoc;
+                bool haveCheckedSheets = false;
+                foreach (MySheet sheet in myDoc.Sheets)
+                {
+                    string sheetTitle = sheet.ToString();
+                    TreeNode sheetNode = new TreeNode(sheetTitle);
+                    sheetNode.Tag = sheet;
+                    sheetNode.Checked = sheet.IsPrintable;
+                    if (sheet.IsPrintable) haveCheckedSheets = true;
+                    docNode.Nodes.Add(sheetNode);
+                }
+                if (haveCheckedSheets) docNode.Expand();
+                treeView1.Nodes.Add(docNode);
+            }
+        }
+
         private void btnOk_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.OK;
 
+            PrintableDocuments = new List<MyRevitDocument>();
             foreach (TreeNode docNode in treeView1.Nodes)
             {
-                string docNodeTitle = docNode.Text;
+                MyRevitDocument myDoc = docNode.Tag as MyRevitDocument;
                 //string revitDocTitle = sheetsBaseToPrint.Keys.Where(d => d == docNodeTitle).First();
-                List<MySheet> selectedSheetsInDoc = new List<MySheet>();
+                myDoc.Sheets.Clear();
                 foreach (TreeNode sheetNode in docNode.Nodes)
                 {
                     if (!sheetNode.Checked) continue;
-                    string sheetTitle = sheetNode.Text;
 
-                    var tempSheets = sheetsBaseToPrint[docNodeTitle].Where(s => sheetTitle == s.ToString()).ToList();
-                    if (tempSheets.Count == 0) throw new Exception("Cant get sheets from TreeNode");
-                    MySheet msheet = tempSheets.First();
-                    selectedSheetsInDoc.Add(msheet);
+                    MySheet sheet = sheetNode.Tag as MySheet;
+                    myDoc.Sheets.Add(sheet);
                 }
-                if (selectedSheetsInDoc.Count == 0) continue;
+                if (myDoc.Sheets.Count == 0) continue;
 
-                sheetsSelected.Add(docNodeTitle, selectedSheetsInDoc);
+                PrintableDocuments.Add(myDoc);
             }
 
 
@@ -174,7 +173,7 @@ namespace BatchPrintYay
             //Enum.GetName(typeof(Autodesk.Revit.DB.HiddenLineViewsType), Autodesk.Revit.DB.HiddenLineViewsType.RasterProcessing);
 
             _printSettings.rasterQuality = (Autodesk.Revit.DB.RasterQualityType)comboBoxRasterQuality.SelectedValue;
-                //Enum.GetName(typeof(Autodesk.Revit.DB.RasterQualityType), comboBoxRasterQuality.SelectedValue);
+            //Enum.GetName(typeof(Autodesk.Revit.DB.RasterQualityType), comboBoxRasterQuality.SelectedValue);
             _printSettings.outputFolder = txtBoxOutputFolder.Text;
             _printSettings.printerName = comboBoxPrinters.SelectedItem.ToString();
 
@@ -210,7 +209,7 @@ namespace BatchPrintYay
 
             _printSettings.exportToDwg = checkBoxExportDwg.Checked;
             _printSettings.dwgNameConstructor = textBoxDwgNameConstructor.Text;
-            if(comboBoxDwgProfiles.SelectedItem != null)
+            if (comboBoxDwgProfiles.SelectedItem != null)
                 _printSettings.selectedDwgExportProfileName = comboBoxDwgProfiles.SelectedItem.ToString();
 
             this.Close();
@@ -244,59 +243,48 @@ namespace BatchPrintYay
             formName.Dispose();
         }
 
-        private void buttonFormatsSetup_Click(object sender, EventArgs e)
-        {
+        //private void buttonFormatsSetup_Click(object sender, EventArgs e)
+        //{
 
-        }
+        //}
 
         private void radioButtonPDF_CheckedChanged(object sender, EventArgs e)
         {
-            txtBoxOutputFolder.Enabled = true;
-            buttonBrowse.Enabled = true;
-            textBoxNameConstructor.Enabled = true;
-            btnOpenNameConstructor.Enabled = true;
-            label5.Enabled = true;
-            label6.Enabled = true;
-            checkBoxMergePdfs.Enabled = true;
-            checkBoxOrientation.Enabled = true;
+            bool chkPdf = radioButtonPDF.Checked;
 
-            List<ColorType> colorTypes = Enum.GetValues(typeof(ColorType))
-                .Cast<ColorType>()
-                .ToList();
-            comboBoxColors.DataSource = colorTypes;
-            comboBoxColors.SelectedItem = _printSettings.colorsType;
-        }
+            txtBoxOutputFolder.Enabled = chkPdf;
+            buttonBrowse.Enabled = chkPdf;
+            textBoxNameConstructor.Enabled = chkPdf;
+            btnOpenNameConstructor.Enabled = chkPdf;
+            label5.Enabled = chkPdf;
+            label6.Enabled = chkPdf;
+            checkBoxMergePdfs.Enabled = chkPdf;
+            checkBoxOrientation.Enabled = chkPdf;
 
-        private void radioButtonPaper_CheckedChanged(object sender, EventArgs e)
-        {
-            txtBoxOutputFolder.Enabled = false;
-            buttonBrowse.Enabled = false;
-            textBoxNameConstructor.Enabled = false;
-            btnOpenNameConstructor.Enabled = false;
-            label5.Enabled = false;
-            label6.Enabled = false;
-            checkBoxMergePdfs.Enabled = false;
-            checkBoxOrientation.Enabled = false;
-
-            List<ColorType> colorTypes = new List<ColorType> { ColorType.Color, ColorType.GrayScale, ColorType.Monochrome };
-            comboBoxColors.DataSource = colorTypes;
-            comboBoxColors.SelectedItem = ColorType.Monochrome;
+            if (chkPdf)
+            {
+                List<ColorType> colorTypes = Enum.GetValues(typeof(ColorType))
+                    .Cast<ColorType>()
+                    .ToList();
+                comboBoxColors.DataSource = colorTypes;
+                comboBoxColors.SelectedItem = _printSettings.colorsType;
+            }
+            else
+            {
+                List<ColorType> colorTypes = new List<ColorType> { ColorType.Color, ColorType.GrayScale, ColorType.Monochrome };
+                comboBoxColors.DataSource = colorTypes;
+                comboBoxColors.SelectedItem = ColorType.Monochrome;
+            }
         }
 
         private void checkBoxMergePdfs_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkBoxMergePdfs.Checked == true)
-            {
-                textBoxNameConstructor.Enabled = false;
-                btnOpenNameConstructor.Enabled = false;
-                label6.Enabled = false;
-            }
-            else
-            {
-                textBoxNameConstructor.Enabled = true;
-                btnOpenNameConstructor.Enabled = true;
-                label6.Enabled = true;
-            }
+            bool chk = !checkBoxMergePdfs.Checked;
+
+            textBoxNameConstructor.Enabled = chk;
+            btnOpenNameConstructor.Enabled = chk;
+            label6.Enabled = chk;
+
         }
 
         private void comboBoxColors_SelectedIndexChanged(object sender, EventArgs e)

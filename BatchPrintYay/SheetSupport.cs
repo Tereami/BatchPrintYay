@@ -12,11 +12,8 @@ Zuev Aleksandr, 2020, all rigths reserved.*/
 #endregion
 #region usings
 using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Text.RegularExpressions;
 #endregion
 
@@ -24,77 +21,27 @@ namespace BatchPrintYay
 {
     public static class SheetSupport
     {
-        /// <summary>
-        /// Получает листы из всех открытых документов
-        /// </summary>
-        /// <param name="commandData"></param>
-        /// <returns></returns>
-        public static Dictionary<string, List<MySheet>> GetAllSheets(ExternalCommandData commandData, YayPrintSettings printSets)
-        {
-            Dictionary<string, List<MySheet>> data = new Dictionary<string, List<MySheet>>();
-            Document mainDoc = commandData.Application.ActiveUIDocument.Document;
-            string mainDocTitle = GetDocTitleWithoutRvt(mainDoc.Title);
-
-            List<RevitLinkInstance> links = new FilteredElementCollector(mainDoc)
-                .OfClass(typeof(RevitLinkInstance))
-                .Cast<RevitLinkInstance>()
-                .ToList();
-
-            List<MySheet> mainSheets = GetSheetsFromDocument(mainDoc, printSets);
-            data.Add(mainDocTitle, mainSheets);
-
-            foreach (RevitLinkInstance rli in links)
-            {
-                Document linkDoc = rli.GetLinkDocument();
-                if (linkDoc == null) continue;
-                string linkDocTitle = GetDocTitleWithoutRvt(linkDoc.Title);
-                if (data.ContainsKey(linkDocTitle)) continue;
-
-                RevitLinkType rlt = mainDoc.GetElement(rli.GetTypeId()) as RevitLinkType;
-                List<MySheet> curSheets = GetSheetsFromDocument(linkDoc, printSets);
-                
-                data.Add(linkDocTitle, curSheets);
-            }
-
-            return data;
-        }
-
-
-        public static string GetDocTitleWithoutRvt(string docTitle)
-        {
-            string result = docTitle;
-            if (docTitle.EndsWith(".rvt")) result = docTitle.Substring(0, docTitle.Length - 4);
-            return result;
-        }
-
         public static string ClearIllegalCharacters(string line)
         {
             if (string.IsNullOrEmpty(line)) return string.Empty;
-            string regexSearch = new string(System.IO.Path.GetInvalidFileNameChars()) 
+            string regexSearch = new string(System.IO.Path.GetInvalidFileNameChars())
                 + new string(System.IO.Path.GetInvalidPathChars());
             Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
             string line2 = r.Replace(line, "");
             return line2;
         }
 
-        private static List<MySheet> GetSheetsFromDocument(Document doc, YayPrintSettings printSets)
-        {
-            List<MySheet> sheets = new FilteredElementCollector(doc)
-                    .WhereElementIsNotElementType()
-                    .OfClass(typeof(ViewSheet))
-                    .Cast<ViewSheet>()
-                    .Select(i => new MySheet(i, printSets.alwaysColorParamName))
-                    .ToList();
+        //private static List<MySheet> GetSheetsFromDocument(Document doc)
+        //{
 
-            sheets.Sort();
-            return sheets;
-        }
+        //    return sheets;
+        //}
 
         public static string CheckTitleblocSizeCorrects(ViewSheet sheet, FamilyInstance titleBlock)
         {
             string message = "";
 
-            Trace.WriteLine($"   Titleblock ID {titleBlock.GetElementId()}");
+            Trace.WriteLine($"   Check Titleblock ID {titleBlock.Id}");
 
             double widthFeets = titleBlock.get_Parameter(BuiltInParameter.SHEET_WIDTH).AsDouble();
             double widthMm = MyDimension.GetLengthInMillimeters(widthFeets);
@@ -107,8 +54,8 @@ namespace BatchPrintYay
             double widthMmCheck = -1, heigthMmCheck = -1;
 
             Parameter checkWidthParam = titleBlock.LookupParameter("Ширина");
-            if(checkWidthParam == null)
-                checkWidthParam = titleBlock.LookupParameter("Widthа");
+            if (checkWidthParam == null)
+                checkWidthParam = titleBlock.LookupParameter("Width");
 
             if (checkWidthParam != null)
             {
@@ -119,7 +66,7 @@ namespace BatchPrintYay
             }
 
             Parameter checkHeightParam = titleBlock.LookupParameter("Высота");
-            if(checkHeightParam == null)
+            if (checkHeightParam == null)
                 checkHeightParam = titleBlock.LookupParameter("Height");
 
             if (checkHeightParam != null)
@@ -147,12 +94,12 @@ namespace BatchPrintYay
                 message += "'. " + MyStrings.MessageUnableToGetTitleblockSize;
                 if (widthMm != widthMmCheck)
                 {
-                    message += "'Ширина': " + widthMmCheck.ToString("F0") + "мм, '" + 
+                    message += "'Ширина': " + widthMmCheck.ToString("F0") + "мм, '" +
                         MyStrings.ParameterBultinSheetWidth + "': " + widthMm.ToString("F0") + "мм.\n";
                 }
                 if (heightMm != heigthMmCheck)
                 {
-                    message += "'Высота': " + heigthMmCheck.ToString("F0") + "мм, '" + 
+                    message += "'Высота': " + heigthMmCheck.ToString("F0") + "мм, '" +
                         MyStrings.ParameterBultinSheetHeight + "': " + heightMm.ToString("F0") + "мм.\n";
                 }
 

@@ -11,13 +11,12 @@ This code is provided 'as is'. Author disclaims any implied warranty.
 Zuev Aleksandr, 2020, all rigths reserved.*/
 #endregion
 #region usings
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Diagnostics;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
-using Autodesk.Revit.UI.Selection;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 #endregion
 
 namespace BatchPrintYay
@@ -35,86 +34,69 @@ namespace BatchPrintYay
 
             App.assemblyPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
 
-            Selection sel = commandData.Application.ActiveUIDocument.Selection;
             Document mainDoc = commandData.Application.ActiveUIDocument.Document;
 
-            string mainDocTitle = SheetSupport.GetDocTitleWithoutRvt(mainDoc.Title);
+
+            //string mainDocTitle = SheetSupport.GetDocTitleWithoutRvt(mainDoc.Title);
 
             YayPrintSettings printSettings = YayPrintSettings.GetSavedPrintSettings();
             printSettings.dwgProfiles = DwgSupport.GetAllDwgExportSettingsNames(mainDoc);
 
 
             //листы из всех открытых файлов, ключ - имя файла, значение - список листов
-            Dictionary<string, List<MySheet>> allSheets = SheetSupport.GetAllSheets(commandData, printSettings);
+            //Dictionary<string, List<MySheet>> allSheets = SheetSupport.GetAllSheets(commandData, printSettings);
+            List<MyRevitDocument> allDocuments = new List<MyRevitDocument>();
 
-            //получаю выбранные листы в диспетчере проекта
-            List<ElementId> selIds = sel.GetElementIds().ToList();
-            //List<MySheet> mSheets0 = new List<MySheet>();
-            bool sheetsIsChecked = false;
-            foreach (ElementId id in selIds)
-            {
-                Element elem = mainDoc.GetElement(id);
-                ViewSheet sheet = elem as ViewSheet;
-                if (sheet == null) continue;
-                sheetsIsChecked = true;
-
-                MySheet sheetInBase = allSheets[mainDocTitle].Where(i => i.sheet.GetElementId() == sheet.GetElementId()).First();
-                sheetInBase.IsPrintable = true;
-
-                //mSheets0.Add(new MySheet(sheet));
-            }
-            if (!sheetsIsChecked)
+            MyRevitMainDocument myMainDocument = new MyRevitMainDocument(mainDoc, commandData.Application.ActiveUIDocument.Selection);
+            if (myMainDocument.SelectedSheetsCount == 0)
             {
                 message = MyStrings.MessageNoSelectedSheets;
                 Trace.WriteLine("Print has been stopped, no selected sheets");
                 return Result.Failed;
             }
+            allDocuments.Add(myMainDocument);
+
+            List<MyRevitLinkDocument> linkDocuments = myMainDocument.GetLinkDocuments();
+            allDocuments.AddRange(linkDocuments);
+
+            ////получаю выбранные листы в диспетчере проекта
+            //List<ElementId> selIds = sel.GetElementIds().ToList();
+            ////List<MySheet> mSheets0 = new List<MySheet>();
+            //bool sheetsIsChecked = false;
+            //foreach (ElementId id in selIds)
+            //{
+            //    Element elem = mainDoc.GetElement(id);
+            //    ViewSheet sheet = elem as ViewSheet;
+            //    if (sheet == null) continue;
+            //    sheetsIsChecked = true;
+
+            //    MySheet sheetInBase = allSheets[mainDocTitle].Where(i => i.sheet.GetElementId() == sheet.GetElementId()).First();
+            //    sheetInBase.IsPrintable = true;
+
+            //    //mSheets0.Add(new MySheet(sheet));
+            //}
+            //if (!sheetsIsChecked)
+            //{
+
+            //}
 
 
-            //запись статистики по файлу
-            //ProjectRating.Worker.Execute(commandData);
+            FormPrint form = new FormPrint(allDocuments, printSettings);
 
-            //очистка старых Schema при необходимости
-            /*try
+            if (form.ShowDialog() != System.Windows.Forms.DialogResult.OK)
             {
-                Autodesk.Revit.DB.ExtensibleStorage.Schema sch =
-                     Autodesk.Revit.DB.ExtensibleStorage.Schema.Lookup(new Guid("414447EA-4228-4B87-A97C-612462722AD4"));
-                Autodesk.Revit.DB.ExtensibleStorage.Schema.EraseSchemaAndAllEntities(sch, true);
-
-                Autodesk.Revit.DB.ExtensibleStorage.Schema sch2 =
-                     Autodesk.Revit.DB.ExtensibleStorage.Schema.Lookup(new Guid("414447EA-4228-4B87-A97C-612462722AD5"));
-                Autodesk.Revit.DB.ExtensibleStorage.Schema.EraseSchemaAndAllEntities(sch2, true);
-                Trace.WriteLine("Schema очищены");
+                Trace.WriteLine("Cancelled");
+                return Result.Cancelled;
             }
-            catch
-            {
-                Trace.WriteLine("Не удалось очистить Schema");
-            }
-            */
-
-            FormPrint form = new FormPrint(allSheets, printSettings);
-            form.ShowDialog();
-
-            if (form.DialogResult != System.Windows.Forms.DialogResult.OK) return Result.Cancelled;
-            Trace.WriteLine("Click OK, print has started");
+            Trace.WriteLine("Click OK, print start");
             printSettings = form.printSettings;
 
             string printerName = printSettings.printerName;
-            allSheets = form.sheetsSelected;
-            Trace.WriteLine("Selected sheets");
-            foreach (var kvp in allSheets)
-            {
-                Trace.WriteLine(" File " + kvp.Key);
-                foreach (MySheet ms in kvp.Value)
-                {
-                    Trace.WriteLine("  Sheet " + ms.sheet.Name);
-                }
-            }
+            List<MyRevitDocument> printableDocuments = form.PrintableDocuments;
+
 
             string outputFolderCommon = printSettings.outputFolder;
 
-            YayPrintSettings.SaveSettings(printSettings);
-            Trace.WriteLine("Print settings is saved");
 
             //Дополнительные возможности работают только с PDFCreator
             if (printerName != "PDFCreator")
@@ -126,7 +108,7 @@ namespace BatchPrintYay
                     printSettings.mergePdfs = false;
                     printSettings.excludeColors = new List<PdfColor>();
                     printSettings.useOrientation = false;
-                    Trace.WriteLine("Settings is not compatible for " + printerName);
+                    Trace.WriteLine("Settings is not compatible with " + printerName);
                 }
             }
             else
@@ -144,106 +126,24 @@ namespace BatchPrintYay
                 outputFolder = PrintSupport.CreateFolderToPrint(mainDoc, printerName, outputFolderCommon);
                 Trace.WriteLine("Folder for print is created: " + outputFolder);
             }
-            //List<string> pfdFileNames = new List<string>();
 
             //печатаю листы из каждого выбранного revit-файла
             List<MySheet> printedSheets = new List<MySheet>();
-            foreach (string docTitle in allSheets.Keys)
+            foreach (MyRevitDocument myDoc in printableDocuments)
             {
-                Document openedDoc = null;
-                Trace.WriteLine("Print from file: " + docTitle);
-
-                RevitLinkType rlt = null;
+                Trace.WriteLine("Print from file: " + myDoc.Name);
 
                 //проверяю, текущий это документ или полученный через ссылку
-                if (docTitle == mainDocTitle)
+                if (myDoc is MyRevitLinkDocument)
                 {
-                    openedDoc = mainDoc;
-                    Trace.WriteLine("This is not a link document");
+                    MyRevitLinkDocument linkDocument = myDoc as MyRevitLinkDocument;
+                    linkDocument.OpenLinkDocument(commandData, false);
                 }
-                else
-                {
-                    List<RevitLinkType> linkTypes = new FilteredElementCollector(mainDoc)
-                        .OfClass(typeof(RevitLinkType))
-                        .Cast<RevitLinkType>()
-                        .Where(i => SheetSupport.GetDocTitleWithoutRvt(i.Name) == docTitle)
-                        .ToList();
-                    if (linkTypes.Count == 0) throw new Exception("Cant find opened link file " + docTitle);
-                    rlt = linkTypes.First();
 
-                    //проверю, не открыт ли уже документ, который пытаемся печатать
-                    foreach (Document testOpenedDoc in commandData.Application.Application.Documents)
-                    {
-                        if (testOpenedDoc.IsLinked) continue;
-                        if (testOpenedDoc.Title == docTitle || testOpenedDoc.Title.StartsWith(docTitle) || docTitle.StartsWith(testOpenedDoc.Title))
-                        {
-                            openedDoc = testOpenedDoc;
-                            Trace.WriteLine("It is an opened link document");
-                        }
-                    }
-
-                    //иначе придется открывать документ через ссылку
-                    if (openedDoc == null)
-                    {
-                        Trace.WriteLine("It is a closed link document. Try to open");
-                        List<Document> linkDocs = new FilteredElementCollector(mainDoc)
-                            .OfClass(typeof(RevitLinkInstance))
-                            .Cast<RevitLinkInstance>()
-                            .Select(i => i.GetLinkDocument())
-                            .Where(i => i != null)
-                            .Where(i => SheetSupport.GetDocTitleWithoutRvt(i.Title) == docTitle)
-                            .ToList();
-                        if (linkDocs.Count == 0) throw new Exception("Cant find link file " + docTitle);
-                        Document linkDoc = linkDocs.First();
-
-                        if (linkDoc.IsWorkshared)
-                        {
-                            Trace.WriteLine("It is a workshared file, try to open with detouch");
-                            ModelPath mpath = linkDoc.GetWorksharingCentralModelPath();
-                            OpenOptions oo = new OpenOptions();
-                            oo.DetachFromCentralOption = DetachFromCentralOption.DetachAndPreserveWorksets;
-                            WorksetConfiguration wc = new WorksetConfiguration(WorksetConfigurationOption.OpenAllWorksets);
-                            oo.SetOpenWorksetsConfiguration(wc);
-                            rlt.Unload(new SaveCoordinates());
-                            openedDoc = commandData.Application.Application.OpenDocumentFile(mpath, oo);
-                        }
-                        else
-                        {
-                            Trace.WriteLine("It is a single-user file");
-                            string docPath = linkDoc.PathName;
-                            rlt.Unload(new SaveCoordinates());
-                            openedDoc = commandData.Application.Application.OpenDocumentFile(docPath);
-                        }
-                    }
-                    Trace.WriteLine("Link file is opened succesfully");
-                } //
-
-
-                List<MySheet> mSheets = allSheets[docTitle];
-
-                if (docTitle != mainDocTitle)
-                {
-                    List<ViewSheet> linkSheets = new FilteredElementCollector(openedDoc)
-                        .OfClass(typeof(ViewSheet))
-                        .Cast<ViewSheet>()
-                        .ToList();
-                    List<MySheet> tempSheets = new List<MySheet>();
-                    foreach (MySheet ms in mSheets)
-                    {
-                        foreach (ViewSheet vs in linkSheets)
-                        {
-                            if (ms.SheetId == vs.GetElementId())
-                            {
-                                MySheet newMs = new MySheet(vs, printSettings.alwaysColorParamName);
-                                tempSheets.Add(newMs);
-                            }
-                        }
-                    }
-                    mSheets = tempSheets;
-                }
+                Document openedDoc = myDoc.Doc;
+                List<MySheet> mSheets = myDoc.Sheets;
                 Trace.WriteLine("Sheets found in this file: " + mSheets.Count.ToString());
 
-                Trace.WriteLine(": " + mSheets.Count.ToString());
                 PrintManager pManager = openedDoc.PrintManager;
                 Trace.WriteLine("Current selected printer: " + pManager.PrinterName);
                 Trace.WriteLine("Try to set printer: " + printerName);
@@ -297,11 +197,10 @@ namespace BatchPrintYay
                 //печатаю каждый лист
                 foreach (MySheet msheet in mSheets)
                 {
-                    Trace.WriteLine(" ");
-                    Trace.WriteLine("Sheet is printing: " + msheet.sheet.Name);
+                    Trace.WriteLine("\nSheet is printing: " + msheet.sheet.Name);
                     if (printSettings.refreshSchedules)
                     {
-                        SchedulesRefresh.Start(openedDoc, msheet.sheet);
+                        SchedulesRefresher.Start(openedDoc, msheet.sheet);
                         Trace.WriteLine("Schedules is refreshed succesfully");
                     }
 
@@ -357,7 +256,7 @@ namespace BatchPrintYay
                             }
                             else
                             {
-                                Trace.WriteLine($"1 titleblock on sheet, Id {msheet.titleBlocks.First().GetElementId()}");
+                                Trace.WriteLine($"Single titleblock on sheet, Id {msheet.titleBlocks.First().GetElementId()}");
                                 tempFilename = fileName;
                             }
 
@@ -403,14 +302,14 @@ namespace BatchPrintYay
                     }
                 }
 
-                if (rlt != null)
+                if (myDoc is MyRevitLinkDocument)
                 {
-
                     openedDoc.Close(false);
+                    MyRevitLinkDocument mylinkdoc = myDoc as MyRevitLinkDocument;
 #if R2017
-                    RevitLinkLoadResult LoadResult = rlt.Reload();
+                    RevitLinkLoadResult LoadResult = mylinkdoc.LinkType.Reload();
 #else
-                    LinkLoadResult loadResult = rlt.Reload();
+                    LinkLoadResult loadResult = mylinkdoc.LinkType.Reload();
 #endif
                     Trace.WriteLine("Link document is closed");
                 }
@@ -480,14 +379,11 @@ namespace BatchPrintYay
                     pdf.PdfWorker.SetExcludeColors(printSettings.excludeColors);
                     pdf.PdfWorker.ConvertToGrayScale(file, outFile);
 
-                    //GrayscaleConvertTools.ConvertPdf(file, outFile, ColorType.Grayscale, new List<ExcludeRectangle> { rect, rect2 });
-
                     System.IO.File.Delete(file);
                     System.IO.File.Move(outFile, file);
                     Trace.WriteLine("Sheet os converted successfully");
                 }
             }
-
 
 
             //объединяю файлы при необходимости
@@ -522,13 +418,7 @@ namespace BatchPrintYay
                 Trace.WriteLine("Folder is opened " + outputFolder);
             }
 
-            //восстанавливаю настройки PDFCreator
-            //if(printerName == "PDFCreator")
-            //{
-            //    SupportRegistry.RestoreSettingsForPDFCreator();
-            //}
-
-
+            YayPrintSettings.SaveSettings(printSettings);
             string msg = MyStrings.MessageSheetsPrinted + printedSheetsCount;
             BalloonTip.Show(MyStrings.MessageFinishPrintTItle, msg);
             Trace.WriteLine("Print has been finished successfully, sheets have been printed: " + printedSheetsCount);

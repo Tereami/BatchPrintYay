@@ -11,13 +11,11 @@ This code is provided 'as is'. Author disclaims any implied warranty.
 Zuev Aleksandr, 2020, all rigths reserved.*/
 #endregion
 #region usings
+using Autodesk.Revit.DB;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Autodesk.Revit.DB;
 #endregion
 
 namespace BatchPrintYay
@@ -51,7 +49,7 @@ namespace BatchPrintYay
         /// Инициализация класса, без объявления формата листа и параметров печати
         /// </summary>
         /// <param name="Sheet"></param>
-        public MySheet(ViewSheet Sheet, string forceColoredParamName)
+        public MySheet(ViewSheet Sheet)
         {
             sheet = Sheet;
             SheetId = Sheet.GetElementId();
