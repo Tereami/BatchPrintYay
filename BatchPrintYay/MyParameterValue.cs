@@ -14,13 +14,20 @@ namespace BatchPrintYay
         public int IntegerValue;
         public int ElementIdValue;
 
+        public string ParameterName;
+
         public MyParameterValue(Parameter revitParam)
         {
             if (!revitParam.HasValue)
             {
+                StringValue = "";
+                DoubleValue = 0;
+                IntegerValue = 0;
+                ElementIdValue = -1;
                 IsNull = true;
                 return;
             }
+            ParameterName = revitParam.Definition.Name;
             storageType = revitParam.StorageType;
             switch (storageType)
             {
@@ -70,6 +77,9 @@ namespace BatchPrintYay
         public void SetValue(Parameter revitParam)
         {
             if (revitParam.IsReadOnly) return;
+
+            if (IsNull && !revitParam.HasValue) return;
+
             switch (revitParam.StorageType)
             {
                 case StorageType.None:

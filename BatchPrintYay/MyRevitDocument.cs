@@ -48,6 +48,7 @@ namespace BatchPrintYay
                     .WhereElementIsNotElementType()
                     .OfClass(typeof(ViewSheet))
                     .Cast<ViewSheet>()
+                    .Where(i => !i.IsPlaceholder)
                     .Select(i => new MySheet(i))
                     .ToList();
             sheets.Sort();

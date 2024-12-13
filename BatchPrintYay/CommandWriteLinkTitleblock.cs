@@ -39,9 +39,17 @@ namespace BatchPrintYay
             FamilyInstance titleBlock = getTitleblockIsSelected(commandData.Application.ActiveUIDocument);
             if (titleBlock == null)
             {
-                message = "Please select a titleblock to copy poperties";
+                message = "Please select a titleblock to copy properties";
                 return Result.Failed;
             }
+
+            ViewSheet openedSheet = mainDoc.ActiveView as ViewSheet;
+            if (openedSheet == null)
+            {
+                message = "Please open a sheet to copy parameters";
+                return Result.Failed;
+            }
+            List<MyParameterValue> sheetParameters = GetParameterValues(openedSheet);
 
             List<MyParameterValue> instanceParameters = GetParameterValues(titleBlock);
 
@@ -51,8 +59,67 @@ namespace BatchPrintYay
             ProjectInfo pi = mainDoc.ProjectInformation;
             List<MyParameterValue> projectParameters = GetParameterValues(pi);
 
+            MyRevitMainDocument myMainDoc = new MyRevitMainDocument(mainDoc);
+            List<MyRevitLinkDocument> linkDocs = myMainDoc.GetLinkDocuments();
 
+            FormSelectLinks formSelectLinks = new FormSelectLinks(linkDocs);
+            if (formSelectLinks.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+            {
+                Trace.WriteLine("Cancelled");
+                return Result.Cancelled;
+            }
 
+            foreach (MyRevitLinkDocument myLinkDoc in formSelectLinks.selectedLinks)
+            {
+                myLinkDoc.OpenLinkDocument(commandData, false);
+
+                Document linkDoc = myLinkDoc.Doc;
+
+                using (Transaction t = new Transaction(linkDoc))
+                {
+                    t.Start("Write parameters");
+
+                    foreach (MySheet mySheet in myLinkDoc.Sheets)
+                    {
+                        string oldSheetName = mySheet.sheet.Name;
+                        string oldSheetNumber = mySheet.sheet.SheetNumber;
+                        if (mySheet.titleBlocks.Count != 1)
+                        {
+                            message = $"More that 1 titleblock on the sheet in the file {myLinkDoc.Name}.";
+                            linkDoc.Close(false);
+                            return Result.Failed;
+                        }
+                        FamilyInstance linkTitleblockInstance = mySheet.titleBlocks[0];
+                        ElementType linkTitleBlockType = linkDoc.GetElement(linkTitleblockInstance.GetTypeId()) as ElementType;
+
+                        WriteParameterValues(linkDoc.ProjectInformation, projectParameters);
+
+                        WriteParameterValues(mySheet.sheet, sheetParameters);
+
+                        WriteParameterValues(linkTitleblockInstance, instanceParameters);
+
+                        WriteParameterValues(linkTitleBlockType, typeParameters);
+
+                        mySheet.sheet.Name = oldSheetName;
+                        mySheet.sheet.SheetNumber = oldSheetNumber;
+                    }
+                    t.Commit();
+                }
+
+                if (linkDoc.IsWorkshared)
+                {
+                    TransactWithCentralOptions transOptions = new TransactWithCentralOptions();
+                    SynchronizeWithCentralOptions syncOptions = new SynchronizeWithCentralOptions() { SaveLocalBefore = true };
+                    RelinquishOptions relinqOptions = new RelinquishOptions(true);
+                    syncOptions.SetRelinquishOptions(relinqOptions);
+                    linkDoc.SynchronizeWithCentral(transOptions, syncOptions);
+                }
+                else
+                {
+                    linkDoc.Save();
+                }
+                linkDoc.Close(false);
+            }
 
             return Result.Succeeded;
         }
@@ -63,9 +130,22 @@ namespace BatchPrintYay
             foreach (Parameter p in elem.Parameters)
             {
                 MyParameterValue mpv = new MyParameterValue(p);
+                if (mpv.IsNull) continue;
                 values.Add(mpv);
             }
             return values;
+        }
+
+        private void WriteParameterValues(Element elem, List<MyParameterValue> values)
+        {
+            foreach (Parameter p in elem.ParametersMap)
+            {
+                if (p.IsReadOnly) continue;
+                string paramName = p.Definition.Name;
+                MyParameterValue sourceValue = values.FirstOrDefault(i => i.ParameterName == paramName);
+                if (sourceValue == null) continue;
+                sourceValue.SetValue(p);
+            }
         }
 
         private FamilyInstance getTitleblockIsSelected(UIDocument uidoc)

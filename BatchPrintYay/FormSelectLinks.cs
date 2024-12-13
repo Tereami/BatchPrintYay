@@ -1,14 +1,14 @@
-﻿using Autodesk.Revit.DB;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace BatchPrintYay
 {
     public partial class FormSelectLinks : System.Windows.Forms.Form
     {
-        public List<RevitLinkType> selectedLinks;
-        public FormSelectLinks(List<RevitLinkType> links)
+        public List<MyRevitLinkDocument> selectedLinks;
+        public FormSelectLinks(List<MyRevitLinkDocument> links)
         {
             InitializeComponent();
 
@@ -24,6 +24,7 @@ namespace BatchPrintYay
 
         private void buttonNext_Click(object sender, EventArgs e)
         {
+            selectedLinks = checkedListBox1.CheckedItems.Cast<MyRevitLinkDocument>().ToList();
             this.DialogResult = DialogResult.OK;
             this.Close();
         }

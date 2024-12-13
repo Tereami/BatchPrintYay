@@ -11,13 +11,6 @@ This code is provided 'as is'. Author disclaims any implied warranty.
 Zuev Aleksandr, 2020, all rigths reserved.*/
 #endregion
 #region usings
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Autodesk.Revit.ApplicationServices;
-using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using System.Windows.Media.Imaging;
 #endregion
@@ -31,7 +24,7 @@ namespace BatchPrintYay
         public static string assemblyPath = "";
         //public static Dictionary<Document, List<ViewSheet>> allSheets
         //    = new Dictionary<Document, List<ViewSheet>>();
-       
+
 
         public Result OnStartup(UIControlledApplication application)
         {
@@ -54,6 +47,13 @@ namespace BatchPrintYay
                 "Refresh\nschedules",
                 assemblyPath,
                 "BatchPrintYay.CommandRefreshSchedules")
+                ) as PushButton;
+
+            PushButton btnWriteLink = panel1.AddItem(new PushButtonData(
+                "WriteLink",
+                "Write\nLink",
+                assemblyPath,
+                "BatchPrintYay.CommandWriteLinkTitleblock")
                 ) as PushButton;
 
 
